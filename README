@@ -1,2 +1,6 @@
-MoodMap
+StoneDB
 =======
+
+step 1:
+a. install Boost C++ library.
+b. use autotools to set up compilation environment.
