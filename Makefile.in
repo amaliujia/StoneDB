@@ -81,7 +81,7 @@ subdir = .
 DIST_COMMON = $(srcdir)/Makefile.in $(srcdir)/Makefile.am \
 	$(top_srcdir)/configure $(am__configure_deps) \
 	$(srcdir)/config.h.in depcomp AUTHORS COPYING ChangeLog \
-	INSTALL NEWS README compile install-sh missing
+	INSTALL NEWS compile install-sh missing
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
 am__aclocal_m4_deps = $(top_srcdir)/configure.in
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
@@ -279,9 +279,9 @@ emeralddb_SOURCES = \
 	bson/src/bsonobj.cpp bson/src/util/json.cpp bson/src/oid.cpp \
 	bson/src/lib/base64.cpp bson/src/lib/md5.cpp bson/src/lib/nonce.cpp
 
-emeralddb_CXXFLAGS = -I../boost -I./bson/src -I./include -D_FILE_OFFSET_BITS=64 -ggdb -Wall -O0
+emeralddb_CXXFLAGS = -I../boost -I./bson/src -I./include -D_FILE_OFFSET_BITS=64 -g -Wall -O0
 emeralddb_LDADD = -lpthread -lm -lboost_system -lboost_thread -lboost_program_options 
-emeralddb_LDFLAGS = -fPIC -rdynamic -L../boost/stage/lib -pthread -1rt
+emeralddb_LDFLAGS = -fPIC -rdynamic -L../boost/stage/lib -pthread 
 all: config.h
 	$(MAKE) $(AM_MAKEFLAGS) all-am
 
