@@ -34,3 +34,9 @@ a. design of BSON and structure of data records.
 b. design of data files.
 
 step 8:
+a. to finish the operations like insert, delete, query, etc.
+b. to finish relating functions on client.
+
+step 9:
+a. implement hash function on keys.
+b. achieve automatically establishing index as soon as StoneDB launchs.  
