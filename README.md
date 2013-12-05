@@ -1,6 +1,8 @@
 StoneDB
 =======
-This is a big project, which is expected to be done in next two months.
+This is a NoSQL Database, which is expected to be done in next two months.
+
+It is conducted by my own.
 
 The step 1 has been done.
 
