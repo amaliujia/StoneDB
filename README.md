@@ -66,3 +66,28 @@ step 9:
 a. implement hash function on keys.
 
 b. achieve automatically establishing index as soon as StoneDB launchs.  
+
+
+step 10:
+
+understand basic concepts of DB, including transaction, log, ect.
+
+
+step 11:
+
+finish java driver.
+
+
+step 12:
+
+build a snapshot monitor for StoneDB.
+
+
+step 13:
+
+understand software testing.
+
+
+step 14:
+
+build a java app, which can communicate with StoneDB via java driver.
