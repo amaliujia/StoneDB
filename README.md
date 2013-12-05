@@ -1,6 +1,6 @@
 StoneDB
 =======
-This is a big project, which is expected to be done in next two month.
+This is a big project, which is expected to be done in next two months.
 
 The step 1 has been done.
 
