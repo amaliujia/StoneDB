@@ -1,6 +1,6 @@
 StoneDB
 =======
 
-step 1:
+step 1 (Done):
 a. install Boost C++ library.
 b. use autotools to set up compilation environment.
