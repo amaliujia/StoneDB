@@ -1,6 +1,6 @@
 StoneDB
 =======
-This is a NoSQL Database, which is expected to be done in next two months.
+This is a NoSQL Database, which is expected to be done in next three months.
 
 It is conducted by my own.
 
