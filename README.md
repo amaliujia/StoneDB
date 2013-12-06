@@ -4,6 +4,8 @@ This is a NoSQL Database, which is expected to be done in next two months.
 
 It is conducted by my own.
 
+Code expected: 10,000 ~ 30,000 lines.
+
 The step 1 has been done.
 
 Milestone
