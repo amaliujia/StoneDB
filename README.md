@@ -17,7 +17,7 @@ a. install Boost C++ library.
 
 b. use autotools to set up compiling environment.
 
----relating files: Makefile.am, build.sh
+---relating files: Makefile.am, build.sh, configure.in, configure.in.bak.
 
 step 2:
 
@@ -25,7 +25,7 @@ a. send requests from client to server.
 
 b. server can handle requests from different clients through multithreading.
 
----relating files: core.hpp, ossSocket.hpp, ossSocket.cpp
+---relating files: core.hpp, ossSocket.hpp, ossSocket.cpp.
 
 step 3:
 
