@@ -138,7 +138,45 @@ _ossSocket :: _ossSocket(int *sock, int timeout)
       _init = false;  
    }else{
       rc = getpeername(_fd, (sockaddr*)&_peerAddress, &_peerAddressLen);
+      if (rc)
+      {
+         printf("Failed to get peer name,error = %d", SOCK_GETLASTERROR);
+      }
    }
 
-
 }
+
+int ossSocket::initSocket()
+{
+   int rc = EDB_OK;
+   if (_init)     
+   {
+      goto done;
+   }
+   memset(&_peerAddress, 0, sizeof(sockaddr_in));
+   _peerAddressLen = sizeof(_peerAddress);
+   _fd = sock(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+   if (-1 == _fd)
+   {
+      printf("Failed to initialize socket,error = %d", SOCK_GETLASTERROR);
+      rc = EDB_NETWORK;
+      goto error;     
+   }
+   _init = true;
+   //set timeout
+   setTimeout(_timeout);
+   done:
+      return rc;
+   error:
+      goto done;   
+}
+
+int ossSocket :: setSocketLi(int lonoff, int linger)
+{
+   int rc = EDB_OK;
+   struct  linger = _linger;
+   _linger.l_onoff = lonoff;
+   _linger.l_linger = linger;
+   
+}
+
