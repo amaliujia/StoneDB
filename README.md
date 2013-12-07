@@ -17,6 +17,7 @@ a. install Boost C++ library.
 
 b. use autotools to set up compiling environment.
 
+---relating files: Makefile.am, Build_boost.sh
 
 step 2:
 
