@@ -42,7 +42,7 @@ protected:
    int _getAddress(sockaddr_in *addr, char *pAddress,unsigned int length);
 public:
    int setSocketLi(int lonoff,int linger);
-   void setAdress(const char *pHostName, unsigned int port);
+   void setAddress(const char *pHostName, unsigned int port);
 
    //create a listening socket
    _ossSocket();

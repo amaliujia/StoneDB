@@ -33,7 +33,7 @@ protected:
    int _getAddress(sockaddr_in *addr, char *pAddress,unsigned int length);
 public:
    int setSocketLi(int lonoff,int linger);
-   void setAdress(const char *pHostName, unsigned int port);
+   void setAddress(const char *pHostName, unsigned int port);
 
    //create a listening socket
    _ossSocket();
@@ -177,6 +177,24 @@ int ossSocket :: setSocketLi(int lonoff, int linger)
    struct  linger = _linger;
    _linger.l_onoff = lonoff;
    _linger.l_linger = linger;
-   
+   rc = setsockopt(_fd,SOL_SOCKET,SO_LINGER,(const char*)&_linger,sizeof(_linger));
+   return rc;
+}
+
+void ossSocket::setAddress(const char *pHostname, unsigned int port)
+{
+   struct hostent *hp;
+   memset(&_sockAddress, 0, sizeof(sockaddr_in));
+   memset(&_peerAddress, 0, sizeof(sockaddr_in));
+   _peerAddressLen = sizeof(_peerAddress);
+   _sockAddress.sin_family = AF_INET;
+   if ((hp = gethostbyname(pHostname)))
+   {
+      _sockAddress.sin_addr.s_addr = *((int*)hp -> h_addr_list[0]);
+   }else{
+      _sockAddress.sin_addr.s_addr = inet_addr(pHostname);
+   }
+   _sockAddress.sin_port = htons(port);
+   _addressLen = sizeof(_sockAddress);
 }
 
