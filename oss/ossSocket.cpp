@@ -13,18 +13,9 @@
    You should have received a copy of the GNU Affero General Public License
    along with this program. If not, see <http://www.gnu.org/license/>.
 *******************************************************************************/
-#ifndef OSSSOCKET_HPP__
-#define OSSSOCKET_HPP__
 
-#include "core.hpp"
-#define SOCKET_GETLASTERROR errno
-
-//default 10ms timeout
-$define OSS_SOCKET_DET_TIMEOUT 10000
-
-//MAX hostname
-#define OSS_MAX_HOSTNAME NI_MAXHOST
-#define OSS_MAX_SERVICENAME NI_MAXSERV
+#include "ossSocket.hpp"
+#include <stdio.h>
 
 class _ossSocket
 {
@@ -81,7 +72,73 @@ public:
 
 };
 
-typedef class _ossSocket ossSocket;  
+
+//create a listening socket 
+_ossSocket::_ossSocket(unsigned int port,int timeout)
+{
+   _init = false;
+   _fd = 0;
+   _timeout = timeout;
+   memset(&_socketAddress, 0, sizeof(sockaddr_in));
+   memset(&_peerAddress, 0, sizeof(sockaddr_in));
+   _peerAddressLen = sizeof(_peerAddress);
+   _socketAddress.sin_family = AF_INET;
+   _socketAddress.sin_addr.s_addr = htonl(INADDR_ANY);
+   _socketAddress.sin_port = htons(port);
+   _addressLen = sizeof(_socketAddress);
+}
+
+// create a socket
+_ossSocket :: _ossSocket()
+{
+   _init = false;
+   _fd = 0;
+   _timeout = timeout;
+   memset(&_socketAddress, 0, sizeof(sockaddr_in));
+   memset(&_peerAddress, 0, sizeof(sockaddr_in));
+   _peerAddressLen = sizeof(_peerAddress);
+   _addressLen = sizeof(_socketAddress);
+}
+
+//create a connecting socket 
+_ossSocket :: _ossSocket(int char *pHostname, unsigned int port, int timeout)
+{
+   struct hostent *hp;
+   _init = false;
+   _timeout = timeout;
+   _fd = 0
+   memset(&_socketAddress, 0, sizeof(sockaddr_in));
+   memset(&_peerAddress, 0, sizeof(sockaddr_in));
+   _peerAddressLen = sizeof(_peerAddress);
+   _socketAddress.sin_family = AF_INET;
+   if (hp = getHostName(pHostname))
+   {     
+      _socketAddress.sin_addr.s_addr = *((int *)hp -> h_addr_list[0]);
+   }else{
+      _socketAddress.sin_addr.s_addr = inet_addr(pHostname);
+   }
+   _socketAddress.sin_port = htons(port);
+   _addressLen = sizeof(_socketAddress);
+}
+
+// create from a exiting socket
+_ossSocket :: _ossSocket(int *sock, int timeout)
+{
+   int rc = EDB_OK;
+   _fd = *sock;
+   _init = true;
+   _timeout = timeout;
+   _addressLen = sizeof(_socketAddress);
+   memset(&_socketAddress, 0, sizeof(sockaddr_in));
+   _peerAddressLen = sizeof(_peerAddress);
+   rc = getsockname(_fd, (sockaddr*)&_sockAddress, &_addressLen);
+   if (rc)
+   {
+      printf("Failed to get sock name, error = %d\n", SOCK_GETLASTERROR);
+      _init = false;  
+   }else{
+      rc = getpeername(_fd, (sockaddr*)&_peerAddress, &_peerAddressLen);
+   }
 
 
-#endif
+}
