@@ -23,6 +23,8 @@ step 2 (In progress):
 
 a. encapsulate all necessary socket functions into ossSocket.
 
+b. coding and compiling source code of server and client.
+
 b. send requests from client to server.
 
 c. server can handle requests from different clients through multithreading.
