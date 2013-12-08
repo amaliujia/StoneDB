@@ -335,7 +335,7 @@ int _ossSocket::recv(char *pMsg, int len, int atimeout, int flags)
       goto done;
 }
 
-int _ossSocket::recvNF(char *pMsg, int &len,int atimeout)
+int _ossSocket::recvNF(char *pMsg, int len,int atimeout)
 {
    int rc = EDB_OK ;
    int retries = 0 ;

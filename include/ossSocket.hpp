@@ -60,7 +60,7 @@ public:
    int bind_listen();
    int send(const char *pMsg, int len, int timeout = OSS_SOCKET_DET_TIMEOUT, int flags = 0);
    int recv(char *pMsg, int len, int timeout = OSS_SOCKET_DET_TIMEOUT, int flags = 0);
-   int recvNF(char *pMsg, int &len,int timeout=OSS_SOCKET_DET_TIMEOUT);
+   int recvNF(char *pMsg, int len,int timeout=OSS_SOCKET_DET_TIMEOUT);
    int connect();
    void close();
    int accept(int *sock,struct sockaddr *addr,socklen_t *addrlen, int timeout = OSS_SOCKET_DET_TIMEOUT);
