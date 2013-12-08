@@ -21,12 +21,12 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <linux/limits.h>
+//#include <linux/limits.h>
 #include <sys/time.h>
 #include <time.h>
 #include <stdarg.h>
 #include <unistd.h>
-#include <syscall.h>
+//#include <syscall.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <errno.h>

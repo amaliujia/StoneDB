@@ -17,75 +17,19 @@
 #include "ossSocket.hpp"
 #include <stdio.h>
 
-class _ossSocket
-{
-private:
-   int _fd;
-   socklen_t _addressLen;
-   socklen_t _peerAddressLen;
-   struct sockaddr_in _sockAddress;
-   struct sockaddr_in _peerAddress;
-   bool _init;
-   int _timeout;
-
-protected:
-   unsigned int _getPort(sockaddr_in *addr);
-   int _getAddress(sockaddr_in *addr, char *pAddress,unsigned int length);
-public:
-   int setSocketLi(int lonoff,int linger);
-   void setAddress(const char *pHostName, unsigned int port);
-
-   //create a listening socket
-   _ossSocket();
-   _ossSocket(unsigned int port, int timeout = 0);
-
-   //create a connect socket 
-   _ossSocket(const char *pHostName, unsigned int port, int timeout=0);
-
-   //create a socket from exiting socket
-   _ossSocket(int *sock, int timeout = 0);
-   ~_ossSocket{
-      close();
-   }
-   int initSocket();
-   int bind_listen();
-   int send(const char *pMsg, int len,
-            int timeout = OSS_SOCKET_DET_TIMEOUT,
-            int flags = 0);
-   int recv(char *pMsg, int len,
-            int timeout = OSS_SOCKET_DET_TIMEOUT,
-            int flags = 0);
-   int recvNF(char *pMsg, int len,
-            int timeout = OSS_SOCKET_DET_TIMEOUT);
-   int connnect();
-   void close();
-   int accept(int *sock,struct sockaddr *addr,socklen_t *addrlen,
-            int timeout = OSS_SOCKET_DET_TIMEOUT);
-   int disableNagle();
-   unsigned int getPeerPort();
-   int getPeerAddress(char *pAddress,unsigned int length);
-   unsigned int getLocalPort();
-   int getLocalAddress(char *pAddress, unsigned int length);
-   int setTimeout(int seconds);
-   static getHostName(char *pName,int nameLen);
-   static int getPort(const char *pServiceName, unsigned short &port);
-
-};
-
-
 //create a listening socket 
-_ossSocket::_ossSocket(unsigned int port,int timeout)
+_ossSocket::_ossSocket(unsigned int port,int atimeout)
 {
    _init = false;
    _fd = 0;
-   _timeout = timeout;
-   memset(&_socketAddress, 0, sizeof(sockaddr_in));
+   _timeout = atimeout;
+   memset(&_sockAddress, 0, sizeof(sockaddr_in));
    memset(&_peerAddress, 0, sizeof(sockaddr_in));
    _peerAddressLen = sizeof(_peerAddress);
-   _socketAddress.sin_family = AF_INET;
-   _socketAddress.sin_addr.s_addr = htonl(INADDR_ANY);
-   _socketAddress.sin_port = htons(port);
-   _addressLen = sizeof(_socketAddress);
+   _sockAddress.sin_family = AF_INET;
+   _sockAddress.sin_addr.s_addr = htonl(INADDR_ANY);
+   _sockAddress.sin_port = htons(port);
+   _addressLen = sizeof(_sockAddress);
 }
 
 // create a socket
@@ -93,43 +37,43 @@ _ossSocket::_ossSocket()
 {
    _init = false;
    _fd = 0;
-   _timeout = timeout;
-   memset(&_socketAddress, 0, sizeof(sockaddr_in));
+   _timeout = 0;
+   memset(&_sockAddress, 0, sizeof(sockaddr_in));
    memset(&_peerAddress, 0, sizeof(sockaddr_in));
    _peerAddressLen = sizeof(_peerAddress);
-   _addressLen = sizeof(_socketAddress);
+   _addressLen = sizeof(_sockAddress);
 }
 
 //create a connecting socket 
-_ossSocket::_ossSocket(int char *pHostname, unsigned int port, int timeout)
+_ossSocket::_ossSocket(const char *pHostname, unsigned int port, int atimeout)
 {
    struct hostent *hp;
    _init = false;
-   _timeout = timeout;
-   _fd = 0
-   memset(&_socketAddress, 0, sizeof(sockaddr_in));
+   _timeout = atimeout;
+    _fd = 0;
+   memset(&_sockAddress, 0, sizeof(sockaddr_in));
    memset(&_peerAddress, 0, sizeof(sockaddr_in));
    _peerAddressLen = sizeof(_peerAddress);
-   _socketAddress.sin_family = AF_INET;
-   if (hp = getHostName(pHostname))
+   _sockAddress.sin_family = AF_INET;
+   if ((hp = gethostbyname(pHostname)))
    {     
-      _socketAddress.sin_addr.s_addr = *((int *)hp -> h_addr_list[0]);
+      _sockAddress.sin_addr.s_addr = *((int *)hp -> h_addr_list[0]);
    }else{
-      _socketAddress.sin_addr.s_addr = inet_addr(pHostname);
+      _sockAddress.sin_addr.s_addr = inet_addr(pHostname);
    }
-   _socketAddress.sin_port = htons(port);
-   _addressLen = sizeof(_socketAddress);
+   _sockAddress.sin_port = htons(port);
+   _addressLen = sizeof(_sockAddress);
 }
 
 // create from a exiting socket
-_ossSocket::_ossSocket(int *sock, int timeout)
+_ossSocket::_ossSocket(int *sock, int atimeout)
 {
    int rc = EDB_OK;
    _fd = *sock;
    _init = true;
-   _timeout = timeout;
-   _addressLen = sizeof(_socketAddress);
-   memset(&_socketAddress, 0, sizeof(sockaddr_in));
+   _timeout = atimeout;
+   _addressLen = sizeof(_sockAddress);
+   memset(&_sockAddress, 0, sizeof(sockaddr_in));
    _peerAddressLen = sizeof(_peerAddress);
    rc = getsockname(_fd, (sockaddr*)&_sockAddress, &_addressLen);
    if (rc)
@@ -146,7 +90,7 @@ _ossSocket::_ossSocket(int *sock, int timeout)
 
 }
 
-int ossSocket::initSocket()
+int _ossSocket::initSocket()
 {
    int rc = EDB_OK;
    if (_init)     
@@ -155,7 +99,7 @@ int ossSocket::initSocket()
    }
    memset(&_peerAddress, 0, sizeof(sockaddr_in));
    _peerAddressLen = sizeof(_peerAddress);
-   _fd = sock(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+   _fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
    if (-1 == _fd)
    {
       printf("Failed to initialize socket,error = %d\n", SOCKET_GETLASTERROR);
@@ -171,17 +115,17 @@ int ossSocket::initSocket()
       goto done;   
 }
 
-int ossSocket::setSocketLi(int lonoff, int linger)
+int _ossSocket::setSocketLi(int lonoff, int linger)
 {
    int rc = EDB_OK;
-   struct  linger = _linger;
+   struct  linger  _linger;
    _linger.l_onoff = lonoff;
    _linger.l_linger = linger;
    rc = setsockopt(_fd,SOL_SOCKET,SO_LINGER,(const char*)&_linger,sizeof(_linger));
    return rc;
 }
 
-void ossSocket::setAddress(const char *pHostname, unsigned int port)
+void _ossSocket::setAddress(const char *pHostname, unsigned int port)
 {
    struct hostent *hp;
    memset(&_sockAddress, 0, sizeof(sockaddr_in));
@@ -198,7 +142,7 @@ void ossSocket::setAddress(const char *pHostname, unsigned int port)
    _addressLen = sizeof(_sockAddress);
 }
 
-int ossSocket::bind_listen()
+int _ossSocket::bind_listen()
 {
    int rc = EDB_OK;
    int temp = 1;
@@ -233,15 +177,15 @@ error:
    goto done;
 }
 
-int ossSocket::send(const char *pMsg, int len,int timeout, int flags)
+int _ossSocket::send(const char *pMsg, int len,int atimeout, int flags)
 {
    int rc = EDB_OK;
    int maxFD = _fd;
    struct timeval maxSelectTime;
    fd_set fds;
 
-   maxSelectTime.tv_sec = timeout / 1000000;
-   maxSelectTime.tv_usec = timeout % 1000000;
+   maxSelectTime.tv_sec = atimeout / 1000000;
+   maxSelectTime.tv_usec = atimeout % 1000000;
    //if len = 0, then let's just return
    if (len == 0)
    {
@@ -252,11 +196,11 @@ int ossSocket::send(const char *pMsg, int len,int timeout, int flags)
    {
       FD_ZERO(&fds);
       FD_SET(_fd,&fds);
-      rc = select(maxFD + 1, NULL, &fds, NULL, timeout>=0?&maxSelectTime:NULL);
+      rc = select(maxFD + 1, NULL, &fds, NULL, atimeout>=0?&maxSelectTime:NULL);
       if (0 == rc)
       {
          //timeout
-         rc = EDB_TIMEOUT:
+          rc = EDB_TIMEOUT;
          goto done;
       }
       //if < 0 ,something wrong
@@ -279,7 +223,8 @@ int ossSocket::send(const char *pMsg, int len,int timeout, int flags)
    while(len > 0)
    {
       //MSG_NOSIGNAL; Requests not to send SIGPIPE on errors on strm oriented sockets when the other end breaks the connection. The EPIPE error is still returned.
-      rc = :: send(_fd, pMsg, len,MSG_NOSIGNAL | flags);
+      //SO_NOSIGPIPE. There is no MSG_NOSIGNAL under Mac (or BSD platefrom), therefore we can use SO_NOSIGPIPE instead
+      rc = ::send(_fd, pMsg, len, SO_NOSIGPIPE | flags);
       if (-1 == rc)
        {
           printf("Failed to send, rc = %d", SOCKET_GETLASTERROR);
@@ -289,16 +234,16 @@ int ossSocket::send(const char *pMsg, int len,int timeout, int flags)
        pMsg += rc; 
    }   
    rc = EDB_OK;
-   done:
-      return rc;
-   error:
-      return done;
+done:
+    return rc;
+error:
+    goto done;
 }
 
-bool ossSocket::isConnected()
+bool _ossSocket::isConnected()
 {
    int rc = EDB_OK;
-   rc = :: send(_fd, "", 0, MSG_NOSIGNAL);
+   rc = :: send(_fd, "", 0, SO_NOSIGPIPE);
    if (rc < 0)
    {
       return false;
@@ -307,7 +252,7 @@ bool ossSocket::isConnected()
 }
 
 #define MAX_RECV_RETRIES 5
-int ossSocket::recv(char *pMsg, int len, int timeout, int flags)
+int _ossSocket::recv(char *pMsg, int len, int atimeout, int flags)
 {
    int rc = EDB_OK;
    int retries = 0;
@@ -319,13 +264,13 @@ int ossSocket::recv(char *pMsg, int len, int timeout, int flags)
    {
       return EDB_OK;
    }
-   maxSelectTime.tv_sec = timeout / 1000000;
-   maxSelectTime.tv_usec = timeout % 1000000;
+   maxSelectTime.tv_sec = atimeout / 1000000;
+   maxSelectTime.tv_usec = atimeout % 1000000;
    while(true)
    {
       FD_ZERO(&fds);
       FD_SET(_fd,&fds);
-      rc = select(maxFD + 1, &fds, NULL, NULL, timeout>=0?&maxSelectTime:NULL);
+      rc = select(maxFD + 1, &fds, NULL, NULL, atimeout>=0?&maxSelectTime:NULL);
 
       // 0 means timeout
       if (0 == rc)
@@ -352,7 +297,7 @@ int ossSocket::recv(char *pMsg, int len, int timeout, int flags)
    }
    while(len > 0)
    {
-      rc = ::recv(_fd, pMsg, len, MSG_NOSIGNAL|flags);
+      rc = ::recv(_fd, pMsg, len, SO_NOSIGPIPE|flags);
       if (rc > 0)
       {
          if (flags & MSG_PEEK)
@@ -367,7 +312,7 @@ int ossSocket::recv(char *pMsg, int len, int timeout, int flags)
          goto error;
       }else{
          rc = SOCKET_GETLASTERROR;
-         if ((EAGAGIN == rc || EWOULDBLOCK == rc) && (_timeout > 0))
+         if ((EAGAIN == rc || EWOULDBLOCK == rc) && (_timeout > 0))
          {
             printf("Recv() timeout: rc = %d\n",rc);
             rc = EDB_NETWORK;
@@ -390,7 +335,7 @@ int ossSocket::recv(char *pMsg, int len, int timeout, int flags)
       goto done;
 }
 
-int ossSocket::recvNF ( char *pMsg, int &len, int timeout )
+int _ossSocket::recvNF(char *pMsg, int &len,int atimeout)
 {
    int rc = EDB_OK ;
    int retries = 0 ;
@@ -402,15 +347,15 @@ int ossSocket::recvNF ( char *pMsg, int &len, int timeout )
    if ( 0 == len )
       return EDB_OK ;
 
-   maxSelectTime.tv_sec = timeout / 1000000 ;
-   maxSelectTime.tv_usec = timeout % 1000000 ;
+   maxSelectTime.tv_sec = atimeout / 1000000 ;
+   maxSelectTime.tv_usec = atimeout % 1000000 ;
    // wait loop until either we timeout or get a message
    while ( true )
    {
       FD_ZERO ( &fds ) ;
       FD_SET ( _fd, &fds ) ;
       rc = select ( maxFD + 1, &fds, NULL, NULL,
-                    timeout>=0?&maxSelectTime:NULL ) ;
+                    atimeout>=0?&maxSelectTime:NULL ) ;
 
       // 0 means timeout
       if ( 0 == rc )
@@ -443,7 +388,7 @@ int ossSocket::recvNF ( char *pMsg, int &len, int timeout )
    // MSG_NOSIGNAL : Requests not to send SIGPIPE on errors on stream
    // oriented sockets when the other end breaks the connection. The EPIPE
    // error is still returned.
-   rc = ::recv ( _fd, pMsg, len, MSG_NOSIGNAL ) ;
+   rc = ::recv ( _fd, pMsg, len, SO_NOSIGPIPE ) ;
 
    if ( rc > 0 )
    {
@@ -485,7 +430,7 @@ error :
    goto done ;
 }
 
-int ossSocket::connect()
+int _ossSocket::connect()
 {
    int rc = EDB_OK;
    rc = :: connect(_fd, (struct sockaddr *)&_sockAddress,_addressLen);
@@ -515,7 +460,7 @@ int ossSocket::connect()
       goto done;
 }
 
-void ossSocket::close()
+void _ossSocket::close()
 {
    if (_init)
    {
@@ -529,21 +474,21 @@ void ossSocket::close()
    }
 }
 
-int ossSocket::accept(int *sock, struct sockaddr *addr, socklen_t *addrlen, int timeout)
+int _ossSocket::accept(int *sock, struct sockaddr *addr, socklen_t *addrlen, int atimeout)
 {
    int rc = EDB_OK ;
    int maxFD = _fd ;
    struct timeval maxSelectTime ;
 
    fd_set fds ;
-   maxSelectTime.tv_sec = timeout / 1000000 ;
-   maxSelectTime.tv_usec = timeout % 1000000 ;
+   maxSelectTime.tv_sec = atimeout / 1000000 ;
+   maxSelectTime.tv_usec = atimeout % 1000000 ;
    while ( true )
    {
       FD_ZERO ( &fds ) ;
       FD_SET ( _fd, &fds ) ;
       rc = select ( maxFD + 1, &fds, NULL, NULL,
-                    timeout>=0?&maxSelectTime:NULL ) ;
+                    atimeout>=0?&maxSelectTime:NULL ) ;
 
       // 0 means timeout
       if ( 0 == rc )
@@ -588,7 +533,7 @@ error :
    goto done ;
 }
 
-int ossSocket::disableNagle ()
+int _ossSocket::disableNagle ()
 {
    int rc = EDB_OK ;
    int temp = 1 ;
@@ -608,12 +553,12 @@ int ossSocket::disableNagle ()
    return rc ;
 }
 
-unsigned int ossSocket::_getPort ( sockaddr_in *addr )
+unsigned int _ossSocket::_getPort ( sockaddr_in *addr )
 {
    return ntohs ( addr->sin_port ) ;
 }
 
-int ossSocket::_getAddress ( sockaddr_in *addr, char *pAddress, unsigned int length
+int _ossSocket::_getAddress ( sockaddr_in *addr, char *pAddress, unsigned int length
 )
 {
    int rc = EDB_OK ;
@@ -632,27 +577,27 @@ done :
 error :
    goto done ;
 }
-unsigned int ossSocket::getLocalPort ()
+unsigned int _ossSocket::getLocalPort ()
 {
    return _getPort ( &_sockAddress ) ;
 }
 
-unsigned int ossSocket::getPeerPort ()
+unsigned int _ossSocket::getPeerPort ()
 {
    return _getPort ( &_peerAddress ) ;
 }
 
-int ossSocket::getLocalAddress ( char * pAddress, unsigned int length )
+int _ossSocket::getLocalAddress ( char * pAddress, unsigned int length )
 {
    return _getAddress ( &_sockAddress, pAddress, length ) ;
 }
 
-int ossSocket::getPeerAddress ( char * pAddress, unsigned int length )
+int _ossSocket::getPeerAddress ( char * pAddress, unsigned int length )
 {
    return _getAddress ( &_peerAddress, pAddress, length ) ;
 }
 
-int ossSocket::setTimeout ( int seconds )
+int _ossSocket::setTimeout ( int seconds )
 {
    int rc = EDB_OK ;
    struct timeval tv ;
