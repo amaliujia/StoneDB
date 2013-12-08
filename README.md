@@ -21,9 +21,11 @@ b. use autotools to set up compiling environment.
 
 step 2 (In progress):
 
-a. send requests from client to server.
+a. encapsulate all necessary socket functions into ossSocket.
 
-b. server can handle requests from different clients through multithreading.
+b. send requests from client to server.
+
+c. server can handle requests from different clients through multithreading.
 
 ---relating files: core.hpp, ossSocket.hpp, ossSocket.cpp.
 
