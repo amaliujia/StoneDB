@@ -19,7 +19,7 @@ b. use autotools to set up compiling environment.
 
 ---relating files: Makefile.am, build.sh, configure.in, configure.in.bak.
 
-step 2:
+step 2 (In progress):
 
 a. send requests from client to server.
 
