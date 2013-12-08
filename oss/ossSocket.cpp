@@ -485,3 +485,107 @@ error :
    goto done ;
 }
 
+int ossSocket::connect()
+{
+   int rc = EDB_OK;
+   rc = :: connect(_fd, (struct sockaddr *)&_sockAddress,_addressLen);
+   if (rc)
+   {
+      printf("Failed to connect, rc = %d\n", SOCKET_GETLASTERROR);
+      rc = EDB_NETWORK;
+      goto error;
+   }
+   rc = getsockname(_fd, (sockaddr*)&_sockAddress, &_addressLen);
+   if (rc)
+   {
+      printf("Failed to get local address, rc = %d\n",rc );
+      rc = EDB_NETWORK;
+      goto error;
+   }
+   rc = getpeername(_fd, (sockaddr*)&_peerAddress, &_peerAddressLen);
+   if (rc)
+   {
+      printf("Failed to get peer address, rc = %d\n",rc);
+      rc = EDB_NETWORK;
+      goto error;
+   }
+   done:
+      return rc;
+   error:
+      goto done;
+}
+
+void ossSocket::close()
+{
+   if (_init)
+   {
+      int i = 0;
+      i = ::close(_fd);
+      if (i < 0)
+      {
+         i = -1;
+      }
+      _init = false;
+   }
+}
+
+int ossSocket::accept(int *sock, struct sockaddr *addr, socklen_t *addrlen, int timeout)
+{
+   int rc = EDB_OK ;
+   int maxFD = _fd ;
+   struct timeval maxSelectTime ;
+
+   fd_set fds ;
+   maxSelectTime.tv_sec = timeout / 1000000 ;
+   maxSelectTime.tv_usec = timeout % 1000000 ;
+   while ( true )
+   {
+      FD_ZERO ( &fds ) ;
+      FD_SET ( _fd, &fds ) ;
+      rc = select ( maxFD + 1, &fds, NULL, NULL,
+                    timeout>=0?&maxSelectTime:NULL ) ;
+
+      // 0 means timeout
+      if ( 0 == rc )
+      {
+         *sock = 0 ;
+         rc = EDB_TIMEOUT ;
+         goto done ;
+      }
+      // if < 0, means something wrong
+      if ( 0 > rc )
+      {
+         rc = SOCKET_GETLASTERROR ;
+         // if we failed due to interrupt, let's continue
+         if ( EINTR == rc )
+         {
+            continue ;
+         }
+         printf ( "Failed to select from socket, rc = %d", SOCKET_GETLASTERROR);
+         rc = EDB_NETWORK ;
+         goto error ;
+      }
+
+      // if the socket we interested is not receiving anything, let's continue
+      if ( FD_ISSET ( _fd, &fds ) )
+      {
+         break ;
+      }
+   }
+   // reset rc back to EDB_OK, since the rc now is the result from select()
+   rc = EDB_OK ;
+   *sock = ::accept ( _fd, addr, addrlen ) ;
+   if ( -1 == *sock )
+   {
+      printf ( "Failed to accept socket, rc = %d", SOCKET_GETLASTERROR ) ;
+      rc = EDB_NETWORK ;
+      goto error ;
+   }
+done :
+   return rc ;
+error :
+   close () ;
+   goto done ;
+}
+
+
