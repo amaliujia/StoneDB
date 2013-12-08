@@ -25,9 +25,9 @@ a. encapsulate all necessary socket functions into ossSocket.
 
 b. coding and compiling source code of server and client.
 
-b. send requests from client to server.
+c. send requests from client to server.
 
-c. server can handle requests from different clients through multithreading.
+d. server can handle requests from different clients through multithreading.
 
 ---relating files: core.hpp, ossSocket.hpp, ossSocket.cpp.
 
