@@ -89,7 +89,7 @@ _ossSocket::_ossSocket(unsigned int port,int timeout)
 }
 
 // create a socket
-_ossSocket :: _ossSocket()
+_ossSocket::_ossSocket()
 {
    _init = false;
    _fd = 0;
@@ -101,7 +101,7 @@ _ossSocket :: _ossSocket()
 }
 
 //create a connecting socket 
-_ossSocket :: _ossSocket(int char *pHostname, unsigned int port, int timeout)
+_ossSocket::_ossSocket(int char *pHostname, unsigned int port, int timeout)
 {
    struct hostent *hp;
    _init = false;
@@ -122,7 +122,7 @@ _ossSocket :: _ossSocket(int char *pHostname, unsigned int port, int timeout)
 }
 
 // create from a exiting socket
-_ossSocket :: _ossSocket(int *sock, int timeout)
+_ossSocket::_ossSocket(int *sock, int timeout)
 {
    int rc = EDB_OK;
    _fd = *sock;
@@ -140,7 +140,7 @@ _ossSocket :: _ossSocket(int *sock, int timeout)
       rc = getpeername(_fd, (sockaddr*)&_peerAddress, &_peerAddressLen);
       if (rc)
       {
-         printf("Failed to get peer name,error = %d", SOCK_GETLASTERROR);
+         printf("Failed to get peer name,error = %d\n", SOCK_GETLASTERROR);
       }
    }
 
@@ -158,7 +158,7 @@ int ossSocket::initSocket()
    _fd = sock(AF_INET, SOCK_STREAM, IPPROTO_TCP);
    if (-1 == _fd)
    {
-      printf("Failed to initialize socket,error = %d", SOCK_GETLASTERROR);
+      printf("Failed to initialize socket,error = %d\n", SOCK_GETLASTERROR);
       rc = EDB_NETWORK;
       goto error;     
    }
@@ -171,7 +171,7 @@ int ossSocket::initSocket()
       goto done;   
 }
 
-int ossSocket :: setSocketLi(int lonoff, int linger)
+int ossSocket::setSocketLi(int lonoff, int linger)
 {
    int rc = EDB_OK;
    struct  linger = _linger;
@@ -196,5 +196,90 @@ void ossSocket::setAddress(const char *pHostname, unsigned int port)
    }
    _sockAddress.sin_port = htons(port);
    _addressLen = sizeof(_sockAddress);
+}
+
+int ossSocket::bind_listen()
+{
+   int rc = EDB_OK;
+   int temp = 1;
+   rc = setsockopt(_fd, SOL_SOCKET, SOCK_GETLASTERROR,(char*)&temp,sizeof(int));
+   if (rc)
+   {
+      printf("Failed to setsockopt SO_REUSEADDR,rc = %d\n",SOCK_GETLASTERROR);
+   }
+   rc = setSocketLi(1,30);
+   if (rc)
+   {
+      printf("Failed to set socket SO_LINGER, rc = %d\n", SOCK_GETLASTERROR);
+   }
+   rc = ::bind(_fd,(struct sockaddr*)&_sockAddress,_addressLen);
+   if (rc)
+   {
+      printf("Failed to bind socket, rc = %d\n", SOCK_GETLASTERROR);
+      rc = EDB_NETWORK;
+      goto error;
+   }
+   rc = listen(_fd, SOMAXCONN);
+   if (rc )
+   {
+      printf("Failed to listen socket, rc = %d\n",SOCK_GETLASTERROR );
+      rc = EDB_NETWORK;
+      goto error;
+   }
+done:
+   return rc;
+error:
+   close();
+   goto done;
+}
+
+int ossSocket::send(const char *pMsg, int len,int timeout, int flags)
+{
+   int rc = EDB_OK;
+   int maxFD = _fd;
+   struct timeval maxSelectTime;
+   fd_set fds;
+
+   maxSelectTime.tv_sec = timeout / 1000000;
+   maxSelectTime.tv_usec = timeout % 1000000;
+   //if len = 0, then let's just return
+   if (len == 0)
+   {
+      return EDB_OK;
+   }
+   //wait loop until socket is ready
+   while(true)
+   {
+      FD_ZERO(&fds);
+      FD_SET(_fd,&fds);
+      rc = select(maxFD + 1, NULL, &fds, NULL, timeout>=0?&maxSelectTime:NULL);
+      if (0 == rc)
+      {
+         //timeout
+         rc = EDB_TIMEOUT:
+         goto done;
+      }
+      //if < 0 ,something wrong
+      if (0 > rc)
+      {
+         rc = SOCK_GETLASTERROR;
+         if (EINTR == rc)
+         {
+            continue;
+         }
+         printf("Failed to select from socket, rc = %d\n",rc);
+         rc = EDB_NETWORK;
+         goto error;
+      }
+      if (FD_ISSET(_fd,&fds))
+      {
+         break;
+      }
+   }
+   while(len > 0)
+   {
+      //MSG_NOSIGNAL; Requests not to send SIGPIPE on errors on strm oriented sockets when the other end breaks the connection. The EPIPE error is still returned.
+       
+   }   
 }
 
