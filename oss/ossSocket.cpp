@@ -134,13 +134,13 @@ _ossSocket::_ossSocket(int *sock, int timeout)
    rc = getsockname(_fd, (sockaddr*)&_sockAddress, &_addressLen);
    if (rc)
    {
-      printf("Failed to get sock name, error = %d\n", SOCK_GETLASTERROR);
+      printf("Failed to get sock name, error = %d\n", SOCKET_GETLASTERROR);
       _init = false;  
    }else{
       rc = getpeername(_fd, (sockaddr*)&_peerAddress, &_peerAddressLen);
       if (rc)
       {
-         printf("Failed to get peer name,error = %d\n", SOCK_GETLASTERROR);
+         printf("Failed to get peer name,error = %d\n", SOCKET_GETLASTERROR);
       }
    }
 
@@ -158,7 +158,7 @@ int ossSocket::initSocket()
    _fd = sock(AF_INET, SOCK_STREAM, IPPROTO_TCP);
    if (-1 == _fd)
    {
-      printf("Failed to initialize socket,error = %d\n", SOCK_GETLASTERROR);
+      printf("Failed to initialize socket,error = %d\n", SOCKET_GETLASTERROR);
       rc = EDB_NETWORK;
       goto error;     
    }
@@ -202,27 +202,27 @@ int ossSocket::bind_listen()
 {
    int rc = EDB_OK;
    int temp = 1;
-   rc = setsockopt(_fd, SOL_SOCKET, SOCK_GETLASTERROR,(char*)&temp,sizeof(int));
+   rc = setsockopt(_fd, SOL_SOCKET, SOCKET_GETLASTERROR,(char*)&temp,sizeof(int));
    if (rc)
    {
-      printf("Failed to setsockopt SO_REUSEADDR,rc = %d\n",SOCK_GETLASTERROR);
+      printf("Failed to setsockopt SO_REUSEADDR,rc = %d\n",SOCKET_GETLASTERROR);
    }
    rc = setSocketLi(1,30);
    if (rc)
    {
-      printf("Failed to set socket SO_LINGER, rc = %d\n", SOCK_GETLASTERROR);
+      printf("Failed to set socket SO_LINGER, rc = %d\n", SOCKET_GETLASTERROR);
    }
    rc = ::bind(_fd,(struct sockaddr*)&_sockAddress,_addressLen);
    if (rc)
    {
-      printf("Failed to bind socket, rc = %d\n", SOCK_GETLASTERROR);
+      printf("Failed to bind socket, rc = %d\n", SOCKET_GETLASTERROR);
       rc = EDB_NETWORK;
       goto error;
    }
    rc = listen(_fd, SOMAXCONN);
    if (rc )
    {
-      printf("Failed to listen socket, rc = %d\n",SOCK_GETLASTERROR );
+      printf("Failed to listen socket, rc = %d\n",SOCKET_GETLASTERROR );
       rc = EDB_NETWORK;
       goto error;
    }
@@ -262,7 +262,7 @@ int ossSocket::send(const char *pMsg, int len,int timeout, int flags)
       //if < 0 ,something wrong
       if (0 > rc)
       {
-         rc = SOCK_GETLASTERROR;
+         rc = SOCKET_GETLASTERROR;
          if (EINTR == rc)
          {
             continue;
@@ -279,7 +279,209 @@ int ossSocket::send(const char *pMsg, int len,int timeout, int flags)
    while(len > 0)
    {
       //MSG_NOSIGNAL; Requests not to send SIGPIPE on errors on strm oriented sockets when the other end breaks the connection. The EPIPE error is still returned.
-       
+      rc = :: send(_fd, pMsg, len,MSG_NOSIGNAL | flags);
+      if (-1 == rc)
+       {
+          printf("Failed to send, rc = %d", SOCKET_GETLASTERROR);
+          rc = EDB_NETWORK;
+       }
+       len -= rc;
+       pMsg += rc; 
    }   
+   rc = EDB_OK;
+   done:
+      return rc;
+   error:
+      return done;
+}
+
+bool ossSocket::isConnected()
+{
+   int rc = EDB_OK;
+   rc = :: send(_fd, "", 0, MSG_NOSIGNAL);
+   if (rc < 0)
+   {
+      return false;
+   }
+   return true;
+}
+
+#define MAX_RECV_RETRIES 5
+int ossSocket::recv(char *pMsg, int len, int timeout, int flags)
+{
+   int rc = EDB_OK;
+   int retries = 0;
+   int maxFD = _fd;
+   struct timeval maxSelectTime;
+   fd_set fds;
+
+   if (0 == len)
+   {
+      return EDB_OK;
+   }
+   maxSelectTime.tv_sec = timeout / 1000000;
+   maxSelectTime.tv_usec = timeout % 1000000;
+   while(true)
+   {
+      FD_ZERO(&fds);
+      FD_SET(_fd,&fds);
+      rc = select(maxFD + 1, &fds, NULL, NULL, timeout>=0?&maxSelectTime:NULL);
+
+      // 0 means timeout
+      if (0 == rc)
+      {
+         rc = EDB_TIMEOUT;
+         goto done;
+      }
+      //if < 0 something wrong
+      if (rc < 0)
+      {
+         rc = SOCKET_GETLASTERROR;  
+         if (EINTR == rc )
+         {
+            continue;
+         }
+         printf("Failed to select from socket, rc = %d", rc);
+         rc = EDB_NETWORK;
+         goto error;
+      }
+      if (FD_ISSET(_fd, &fds))
+        {
+           break;
+        }  
+   }
+   while(len > 0)
+   {
+      rc = ::recv(_fd, pMsg, len, MSG_NOSIGNAL|flags);
+      if (rc > 0)
+      {
+         if (flags & MSG_PEEK)
+         {
+            goto done;
+         }
+         len -= rc;
+         pMsg += rc;
+      }else if(rc == 0){
+         printf("Peer unexpected shutdown\n");
+         rc = EDB_NETWORK_CLOSE;
+         goto error;
+      }else{
+         rc = SOCKET_GETLASTERROR;
+         if ((EAGAGIN == rc || EWOULDBLOCK == rc) && (_timeout > 0))
+         {
+            printf("Recv() timeout: rc = %d\n",rc);
+            rc = EDB_NETWORK;
+            goto error;
+         }
+         if ((EINTR == rc) && (retries < MAX_RECV_RETRIES))
+         {
+            retries ++;
+            continue;
+         }
+         printf("Recv() Failed: rc = %d\n", rc);
+         rc = EDB_NETWORK;
+         goto error;
+      }
+   }
+   rc = EDB_OK;
+   done:
+      return rc;
+   error:
+      goto done;
+}
+
+int ossSocket::recvNF ( char *pMsg, int &len, int timeout )
+{
+   int rc = EDB_OK ;
+   int retries = 0 ;
+   int maxFD = _fd ;
+   struct timeval maxSelectTime ;
+   fd_set fds ;
+
+   // if we don't expect to receive anything, no need to continue
+   if ( 0 == len )
+      return EDB_OK ;
+
+   maxSelectTime.tv_sec = timeout / 1000000 ;
+   maxSelectTime.tv_usec = timeout % 1000000 ;
+   // wait loop until either we timeout or get a message
+   while ( true )
+   {
+      FD_ZERO ( &fds ) ;
+      FD_SET ( _fd, &fds ) ;
+      rc = select ( maxFD + 1, &fds, NULL, NULL,
+                    timeout>=0?&maxSelectTime:NULL ) ;
+
+      // 0 means timeout
+      if ( 0 == rc )
+      {
+         rc = EDB_TIMEOUT ;
+         goto done ;
+      }
+      // if < 0, means something wrong
+      if ( 0 > rc )
+      {
+         rc = SOCKET_GETLASTERROR ;
+         // if we failed due to interrupt, let's continue
+         if ( EINTR == rc )
+         {
+            continue ;
+         }
+         printf ( "Failed to select from socket, rc = %d",
+                 rc);
+         rc = EDB_NETWORK ;
+         goto error ;
+      }
+
+      // if the socket we interested is not receiving anything, let's continue
+      if ( FD_ISSET ( _fd, &fds ) )
+      {
+         break ;
+      }
+   }
+
+   // MSG_NOSIGNAL : Requests not to send SIGPIPE on errors on stream
+   // oriented sockets when the other end breaks the connection. The EPIPE
+   // error is still returned.
+   rc = ::recv ( _fd, pMsg, len, MSG_NOSIGNAL ) ;
+
+   if ( rc > 0 )
+   {
+      len = rc ;
+   }
+   else if ( rc == 0 )
+   {
+      printf ( "Peer unexpected shutdown" ) ;
+      rc = EDB_NETWORK_CLOSE ;
+      goto error ;
+   }
+   else
+   {
+      // if rc < 0
+      rc = SOCKET_GETLASTERROR ;
+      if ( (EAGAIN == rc || EWOULDBLOCK == rc) &&
+           _timeout > 0 )
+      {
+         // if we timeout, it's partial message and we should restart
+         printf ( "Recv() timeout: rc = %d", rc ) ;
+         rc = EDB_NETWORK ;
+         goto error ;
+      }
+      if ( ( EINTR == rc ) && ( retries < MAX_RECV_RETRIES ) )
+      {
+         // less than max_recv_retries number, let's retry
+         retries ++ ;
+      }
+      // something bad when get here
+      printf ( "Recv() Failed: rc = %d", rc ) ;
+      rc = EDB_NETWORK ;
+      goto error ;
+   }
+   // Everything is fine when get here
+   rc = EDB_OK ;
+done :
+   return rc ;
+error :
+   goto done ;
 }
 
