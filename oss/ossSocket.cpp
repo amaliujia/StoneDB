@@ -588,4 +588,108 @@ error :
    goto done ;
 }
 
+int ossSocket::disableNagle ()
+{
+   int rc = EDB_OK ;
+   int temp = 1 ;
+   rc = setsockopt ( _fd, IPPROTO_TCP, TCP_NODELAY, (char *) &temp,
+                     sizeof ( int ) ) ;
+   if ( rc )
+   {
+      printf ( "Failed to setsockopt, rc = %d", SOCKET_GETLASTERROR ) ;
+   }
 
+   rc = setsockopt ( _fd, SOL_SOCKET, SO_KEEPALIVE, (char *) &temp,
+                     sizeof ( int ) ) ;
+   if ( rc )
+   {
+      printf ( "Failed to setsockopt, rc = %d", SOCKET_GETLASTERROR ) ;
+   }
+   return rc ;
+}
+
+unsigned int ossSocket::_getPort ( sockaddr_in *addr )
+{
+   return ntohs ( addr->sin_port ) ;
+}
+
+int ossSocket::_getAddress ( sockaddr_in *addr, char *pAddress, unsigned int length
+)
+{
+   int rc = EDB_OK ;
+   length = length < NI_MAXHOST ? length : NI_MAXHOST ;
+   rc = getnameinfo ( (struct sockaddr *)addr, sizeof(sockaddr), pAddress,
+length,
+                       NULL, 0, NI_NUMERICHOST ) ;
+   if ( rc )
+   {
+      printf ( "Failed to getnameinfo, rc = %d", SOCKET_GETLASTERROR ) ;
+      rc = EDB_NETWORK ;
+      goto error ;
+   }
+done :
+   return rc ;
+error :
+   goto done ;
+}
+unsigned int ossSocket::getLocalPort ()
+{
+   return _getPort ( &_sockAddress ) ;
+}
+
+unsigned int ossSocket::getPeerPort ()
+{
+   return _getPort ( &_peerAddress ) ;
+}
+
+int ossSocket::getLocalAddress ( char * pAddress, unsigned int length )
+{
+   return _getAddress ( &_sockAddress, pAddress, length ) ;
+}
+
+int ossSocket::getPeerAddress ( char * pAddress, unsigned int length )
+{
+   return _getAddress ( &_peerAddress, pAddress, length ) ;
+}
+
+int ossSocket::setTimeout ( int seconds )
+{
+   int rc = EDB_OK ;
+   struct timeval tv ;
+   tv.tv_sec = seconds ;
+   tv.tv_usec = 0 ;
+   // windows take milliseconds as parameter
+   // but linux takes timeval as input
+
+   rc = setsockopt ( _fd, SOL_SOCKET, SO_RCVTIMEO, ( char* ) &tv,
+                     sizeof ( tv ) ) ;
+   if ( rc )
+   {
+      printf ( "Failed to setsockopt, rc = %d", SOCKET_GETLASTERROR ) ;
+   }
+
+   rc = setsockopt ( _fd, SOL_SOCKET, SO_SNDTIMEO, ( char* ) &tv,
+                     sizeof ( tv ) ) ;
+   if ( rc )
+   {
+      printf ( "Failed to setsockopt, rc = %d", SOCKET_GETLASTERROR ) ;
+   }
+
+   return rc ;
+}
+int _ossSocket::getHostName ( char *pName, int nameLen )
+{
+   return gethostname ( pName, nameLen ) ;
+}
+
+int _ossSocket::getPort ( const char *pServiceName, unsigned short &port )
+{
+   int rc = EDB_OK ;
+   struct servent *servinfo ;
+   servinfo = getservbyname ( pServiceName, "tcp" ) ;
+   if ( !servinfo )
+      port = atoi ( pServiceName ) ;
+   else
+      port = (unsigned short)ntohs(servinfo->s_port) ;
+   return rc ;
+}
