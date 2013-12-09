@@ -1,30 +1,45 @@
+/*******************************************************************************
+   Copyright (C) 2013 SequoiaDB Software Inc.
+
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU Affero General Public License, version 3,
+   as published by the Free Software Foundation.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+   GNU Affero General Public License for more details.
+
+   You should have received a copy of the GNU Affero General Public License
+   along with this program. If not, see <http://www.gnu.org/license/>.
+*******************************************************************************/
 #include <iostream>
 #include <sstream>
-#include "core.hpp"
 #include "edb.hpp"
+#include "core.hpp"
 #include "command.hpp"
 
-const char SPACE  = ' ';
-const char TAB    = '\t';
-const char BACK_SLANT   = '\\';
-const char NEW_LINE = '\n';
+const char    SPACE             =  ' ';
+const char    TAB               =  '\t';
+const char    BACK_SLANT        =  '\\';
+const char    NEW_LINE          =   '\n';
 
 int gQuit = 0;
 
-void Edb::start()
+
+void Edb::start(void)
 {
-   std::cout<< "Welcome to StoneDB Shell!!"<<std::endl;
-   std::cout<< "edb help for help. Ctrl+c or quit to exit." <<std::endl;
+   std::cout << "Welcome to EmeraldDB Shell!" << std::endl;
+   std::cout << "edb help for help, Ctrl+c or quit to exit" << std::endl;
    while(0==gQuit)
    {
       prompt();
    }
 }
-
 void Edb::prompt(void)
 {
    int ret = EDB_OK;
-   ret = readInput("sdb", 0);
+   ret = readInput("edb", 0);
 
    if(ret)
    {
@@ -71,7 +86,7 @@ int Edb::readInput(const char *pPrompt, int numIndent)
    {
       std::cout << TAB;
    }
-   // print "sdb> "
+   // print "edb> "
    std::cout << pPrompt << ">  ";
    // read a line from cmd
    readLine(_cmdBuffer,CMD_BUFFER_SIZE-1);
@@ -98,7 +113,7 @@ int Edb::readInput(const char *pPrompt, int numIndent)
    return EDB_OK;
 }
 
-char* Edb::readLine(char *p, int length)
+char *Edb::readLine(char *p, int length)
 {
    int len = 0;
    int ch;
@@ -136,9 +151,10 @@ void Edb::split(const std::string &text, char delim, std::vector<std::string> &r
    return;
 }
 
-int main(int argc, char **argv)
+int main(int argc, char** argv)
 {
    Edb edb;
    edb.start();
    return 0;
 }
+

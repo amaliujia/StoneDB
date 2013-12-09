@@ -1,10 +1,24 @@
-#ifndef _COMMAND_HPP
-#define _COMMAND_HPP
+/*******************************************************************************
+   Copyright (C) 2013 SequoiaDB Software Inc.
 
-#include "core.hpp"
+   This program is free software: you can redistribute it and/or modify
+   it under the terms of the GNU Affero General Public License, version 3,
+   as published by the Free Software Foundation.
+
+   This program is distributed in the hope that it will be useful,
+   but WITHOUT ANY WARRANTY; without even the implied warranty of
+   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+   GNU Affero General Public License for more details.
+
+   You should have received a copy of the GNU Affero General Public License
+   along with this program. If not, see <http://www.gnu.org/license/>.
+*******************************************************************************/
+#ifndef _COMMAND_HPP_
+#define _COMMAND_HPP_
+#include <vector>
 #include <bson/src/util/json.h>
-#include "ossSocket.hpp"
 
+#include "ossSocket.hpp"
 #define COMMAND_QUIT         "quit"
 #define COMMAND_INSERT       "insert"
 #define COMMAND_QUERY        "query"
@@ -51,32 +65,28 @@ class ICommand
       std::string _jsonString;
 };
 
-class ConnectCommand: public ICommand
+class ConnectCommand : public ICommand
 {
-public:
-	ConnectCommand();
-	~ConnectCommand();
-	int execute(ossSocket &sock, std::vector<std::string> &argVec);
-private:
-	str::string _address;
-	int _port;
+   public:
+      int execute ( ossSocket & sock, std::vector<std::string> & argVec );
+   private:
+      std::string _address;
+      int         _port;
 };
 
-class QuitCommand: public ICommand
+class QuitCommand : public ICommand
 {
-public:
-	QuitCommand();
-	~QuitCommand();
-	int execute(ossSocket &sock, std::vector<std::string> &argVec);
-protected:
-	int handleReply();
+   public:
+      int execute(ossSocket & sock, std::vector<std::string> & argVec );
+   protected:
+      int handleReply();
 };
 
-class HelpCommand: public ICommand
+class HelpCommand : public ICommand
 {
-public:
-	HelpCommand();
-	~HelpCommand();
-	int execute(ossSocket &sock, std::vector<std::string> &argVec);
+   public:
+      int execute(ossSocket & sock, std::vector<std::string> & argVec );
 };
+
 #endif
+
