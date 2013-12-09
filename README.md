@@ -29,7 +29,7 @@ c. send requests from client to server.
 
 d. server can handle requests from different clients through multithreading.
 
----relating files: core.hpp, ossSocket.hpp, ossSocket.cpp.
+---relating files: core.hpp, ossSocket.hpp, ossSocket.cpp, command.cpp, command.hpp, commandFactory.cpp, commandFactory.hpp, edb.cpp, edb.hpp.
 
 step 3:
 
