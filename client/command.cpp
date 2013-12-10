@@ -161,7 +161,7 @@ int ICommand::recvReply( ossSocket & sock )
 
 int ICommand::sendOrder( ossSocket & sock, OnMsgBuild onMsgBuild  )
 {
-   int ret = EDB_OK;
+    int ret = EDB_OK;
    bson::BSONObj bsonData;
    try {
       bsonData = bson::fromjson(_jsonString);
@@ -181,25 +181,42 @@ int ICommand::sendOrder( ossSocket & sock, OnMsgBuild onMsgBuild  )
    {
       return getError(EDB_SOCK_SEND_FAILD);
    }
-   return ret;
+    return ret;
 
 }
 
 int ICommand::sendOrder( ossSocket & sock, int opCode )
 {
    int ret = EDB_OK;
+   //printf("Coming in sendOrder\n");
    memset(_sendBuf, 0, SEND_BUF_SIZE);
    char * pSendBuf = _sendBuf;
-   const char *pStr = "hello world" ;
-   *(int*)pSendBuf=strlen(pStr)+1 + sizeof(int) ;
+   const char *pStr = "Hello world" ;
+   *(int*) pSendBuf=strlen(pStr)+1 + sizeof(int) ;
    memcpy ( &pSendBuf[4], pStr, strlen(pStr)+1 ) ;
    /*MsgHeader *header = (MsgHeader*)pSendBuf;
    header->messageLen = sizeof(MsgHeader);
    header->opCode = opCode;*/
-   ret = sock.send(pSendBuf, *(int*)pSendBuf);
+   //std::cout<<pSendBuf<<std::endl;
+   ret = sock.send(&pSendBuf[4], *(int*)pSendBuf - 4);
    return ret;
 }
 
+// int ICommand::sendOrder( ossSocket & sock, int opCode )
+// {
+//    int ret = EDB_OK;
+//    memset(_sendBuf, 0, SEND_BUF_SIZE);
+//    char * pSendBuf = _sendBuf;
+//    //const char *pStr = "hello world" ;
+//    const char *pStr = "N";
+//    *(int*)pSendBuf=strlen(pStr)+1 + sizeof(int) ;
+//    memcpy ( &pSendBuf[4], pStr, strlen(pStr)+1 ) ;
+//    /*MsgHeader *header = (MsgHeader*)pSendBuf;
+//    header->messageLen = sizeof(MsgHeader);
+//    header->opCode = opCode;*/
+//    ret = sock.send(pSendBuf, *(int*)pSendBuf);
+//    return ret;
+// }
 /******************************ConnectCommand****************************************/
 int ConnectCommand::execute( ossSocket & sock, std::vector<std::string> & argVec )
 {

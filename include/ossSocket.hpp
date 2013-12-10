@@ -58,7 +58,7 @@ public:
    }
    int initSocket();
    int bind_listen();
-   int send(const char *pMsg, int len, int timeout = OSS_SOCKET_DET_TIMEOUT, int flags = 0);
+   int send (const char *pMsg,int len,int timeout = OSS_SOCKET_DET_TIMEOUT,int flags = 0 ) ;
    int recv(char *pMsg, int len, int timeout = OSS_SOCKET_DET_TIMEOUT, int flags = 0);
    int recvNF(char *pMsg, int len,int timeout=OSS_SOCKET_DET_TIMEOUT);
    int connect();

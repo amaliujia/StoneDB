@@ -146,10 +146,10 @@ int _ossSocket::bind_listen()
 {
    int rc = EDB_OK;
    int temp = 1;
-   rc = setsockopt(_fd, SOL_SOCKET, SOCKET_GETLASTERROR,(char*)&temp,sizeof(int));
+   rc = setsockopt(_fd, SOL_SOCKET, SO_REUSEADDR,(char*)&temp,sizeof(int));
    if (rc)
    {
-      printf("Failed to setsockopt SO_REUSEADDR,rc = %d\n",SOCKET_GETLASTERROR);
+      printf("Failed to set sockopt SO_REUSEADDR,rc = %d\n",SOCKET_GETLASTERROR);
    }
    rc = setSocketLi(1,30);
    if (rc)
