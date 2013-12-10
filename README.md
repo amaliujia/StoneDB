@@ -6,7 +6,7 @@ It is conducted by my own.
 
 Code expected: 10,000 ~ 30,000 lines.
 
-The step 1 has been done.
+The step 1,2 have been done.
 
 Milestone
 =======
@@ -19,7 +19,7 @@ b. use autotools to set up compiling environment.
 
 ---relating files: Makefile.am, build.sh, configure.in, configure.in.bak.
 
-step 2 (In progress):
+step 2 (Done):
 
 a. encapsulate all necessary socket functions into ossSocket.
 
@@ -29,9 +29,9 @@ c. send requests from client to server.
 
 d. server can handle requests from different clients through multithreading.
 
----relating files: core.hpp, ossSocket.hpp, ossSocket.cpp, command.cpp, command.hpp, commandFactory.cpp, commandFactory.hpp, edb.cpp, edb.hpp.
+---relating files: core.hpp, ossSocket.hpp, ossSocket.cpp, command.cpp, command.hpp, commandFactory.cpp, commandFactory.hpp, edb.cpp, edb.hpp, pmdTcpListener.cpp.
 
-step 3:
+step 3(In progress):
 
 set up some fundamental components, such as log. 
 
