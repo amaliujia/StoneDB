@@ -31,7 +31,7 @@ d. server can handle requests from different clients through multithreading.
 
 ---relating files: core.hpp, ossSocket.hpp, ossSocket.cpp, command.cpp, command.hpp, commandFactory.cpp, commandFactory.hpp, edb.cpp, edb.hpp, pmdTcpListener.cpp.
 
-step 3(In progress):
+step 3 (In progress):
 
 set up some fundamental components, such as log. 
 
