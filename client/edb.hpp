@@ -26,7 +26,6 @@ class Edb {
 public:
    Edb(){}
    ~Edb(){};
-public:
    void     start(void);
 protected:
    void    prompt(void);
@@ -34,7 +33,6 @@ private:
    void     split(const std::string &text, char delim, std::vector<std::string> &result);
    char*    readLine(char *p, int length);
    int      readInput(const char *pPrompt, int numIndent);
-private:
    ossSocket      _sock;
    CommandFactory _cmdFactory;
    char           _cmdBuffer[CMD_BUFFER_SIZE];
