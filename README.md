@@ -25,9 +25,9 @@ a. encapsulate all necessary socket functions into ossSocket.
 
 b. coding and compiling source code of server and client.
 
-c. send requests from client to server.
+c. define several basic commands of client, like help, connect and etc.
 
-d. server can handle requests from different clients through multithreading.
+d. send requests from client to server.
 
 ---relating files: core.hpp, ossSocket.hpp, ossSocket.cpp, command.cpp, command.hpp, commandFactory.cpp, commandFactory.hpp, edb.cpp, edb.hpp, pmdTcpListener.cpp.
 
