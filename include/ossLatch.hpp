@@ -57,9 +57,9 @@ public:
 
 class ossSLatch
 {
-public:
-	oss_rwlock_t _lock;
 private:
+	oss_rwlock_t _lock;
+public:
 	ossSLatch()
 	{
 		oss_rwlock_init(&_lock,0);
