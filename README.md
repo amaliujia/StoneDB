@@ -39,7 +39,7 @@ b. coding queue structure with mutex and conditional variable.
 
 c. build fundamental file operations component.
 
----relating files: ossXLatch.hpp, ossSLatch.hpp, ossPrimitiveFileOp.hpp, ossPrimitiveFileOp.cpp.
+---relating files: ossLatch.hpp, ossPrimitiveFileOp.hpp, ossPrimitiveFileOp.cpp.
 
 step 4:
 
