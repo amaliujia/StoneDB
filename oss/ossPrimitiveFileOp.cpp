@@ -1,73 +1,3 @@
-#define OSS_HANDLE		   int
-#define OSS_F_GETLK        F_GETLK64
-#define OSS_F_SETLK        F_SETLK64
-#define OSS_F_SETLKW       F_SETLKW64
-
-#define oss_struct_statfs  struct statfs64
-#define oss_statfs         statfs64
-#define oss_fstatfs        fstatfs64
-#define oss_struct_statvfs struct statvfs64
-#define oss_statvfs        statvfs64
-#define oss_fstatvfs       fstatvfs64
-#define oss_struct_stat    struct stat64
-#define oss_struct_flock   struct flock64
-#define oss_stat           stat64
-#define oss_lstat          lstat64
-#define oss_fstat          fstat64
-#define oss_open           open64
-#define oss_lseek          lseek64
-#define oss_ftruncate      ftruncate64
-#define oss_off_t          off64_t
-#define oss_close          close
-#define oss_access         access
-#define oss_chmod          chmod
-#define oss_read           read
-#define oss_write          write
-#define OSS_INVALID_HANDLE_FD_VALUE (-1)
-
-#define OSS_PRIMITIVE_FILE_OP_FWRITE_BUF_SIZE 2048
-#define OSS_PRIMITIVE_FILE_OP_READ_ONLY     (((unsigned int)1) << 1)
-#define OSS_PRIMITIVE_FILE_OP_WRITE_ONLY    (((unsigned int)1) << 2)
-#define OSS_PRIMITIVE_FILE_OP_OPEN_EXISTING (((unsigned int)1) << 3)
-#define OSS_PRIMITIVE_FILE_OP_OPEN_ALWAYS   (((unsigned int)1) << 4)
-#define OSS_PRIMITIVE_FILE_OP_OPEN_TRUNC    (((unsigned int)1) << 5)
-
-typedef oss_off_t offsetType;
-
-class ossPrimitiveFileOp
-{
-Public:
-	typedef OSS_HANDLE handleType;
-private:
-	handleType _fileHandle;
-	ossPrimitiveFileOp(const ossPrimitiveFileOp &){}
-	const ossPrimitiveFileOp &operator= (const ossPrimitiveFileOp &);
-	bool _bIsStdout;
-protected:
-	void setFileHandle(handleType handle);
-public:
-	ossPrimitiveFileOp();
-	~ossPrimitiveFileOp();
-	int Open(
-			const char *pFilePath,
-			unsigned int options = OSS_PRIMITIVE_FILE_OP_OPEN_ALWAYS
-		);
-	void openStdout();
-	void Close();
-	bool isValid(void);
-	int Read(const size_t size, void *const pBuf, int * const pBytesRead);
-	int Write(cosnt void* pBuf, size_t len = 0);
-	int fWrite(cosnt char* fmt, ...);
-	offsetType getCurrentOffset(void) const;
-	void seekToOffset(offsetType offset);
-	void seekToEnd(void);
-	int getSize(offsetType * const pFileSize);
-	handleType getHandle(void) const
-	{
-		return _fileHandle;
-	}
-};
-
 #include "core.hpp"
 #include "ossPrimitiveFileOp.hpp"
 
@@ -111,4 +41,147 @@ int ossPrimitiveFileOp::Open(const char *pFilePath, unsigned int options)
 	{
 		mode |= O_CREAT;
 	}
+	if (options & OSS_PRIMITIVE_FILE_OP_OPEN_TRUNC)
+	{
+		mode |= O_TRUNC;
+	}
+
+	do
+	{
+		_fileHandle = oss_open(pFilePath, mode, 0644);
+	}while((-1 == _fileHandle) && (EINTR == errno));
+
+	if (_fileHandle <= OSS_INVALID_HANDLE_FD_VALUE)
+	{
+		rc = errno;
+		goto exit;
+	}
+exit:
+	return rc;
+}
+
+void ossPrimitiveFileOp::openStdout()
+{
+	setFileHandle(STDOUT_FILENO);
+	_bIsStdout = true;
+}
+
+offsetType ossPrimitiveFileOp:: getCurrentOffset() const
+{
+	return oss_lseek(_fileHandle, 0, SEEK_CUR);
+}
+
+void ossPrimitiveFileOp:: seekToEnd(void)
+{
+	oss_lseek(_fileHandle, 0, SEEK_END);
+}
+
+void ossPrimitiveFileOp::seekToOffset(offsetType offset)
+{
+	if((oss_off_t)-1 != offset)
+	{
+		oss_lseek(_fileHandle, offset, SEEK_SET);
+	}
+}
+
+int ossPrimitiveFileOp::Read( const size_t size, void * const pBuffer, int * const  pBytesRead )
+{
+   int     retval    = 0 ;
+   ssize_t bytesRead = 0 ;
+   if(isValid())
+   {
+      do
+      {
+         bytesRead = oss_read(_fileHandle, pBuffer, size);
+      }while((-1 == bytesRead) && (EINTR == errno));
+      if(-1 == bytesRead)
+      {
+         goto err_read;
+      }
+   }
+   else
+   {
+      goto err_read;
+   }
+
+   if (pBytesRead)
+   {
+      *pBytesRead = bytesRead;
+   }
+exit:
+   return retval;
+
+err_read :
+   *pBytesRead = 0;
+   retval = errno;
+   goto exit;
+}
+
+int ossPrimitiveFileOp::Write(const void *pBuffer, size_t size)
+{
+   int rc = 0;
+   size_t currentSize = 0;
+   if (0 == size)
+   {
+      size = strlen((char *)pBuffer);
+   }
+
+   if (isValid())
+   {
+      do
+      {
+         rc = oss_write(_fileHandle, &((char*)pBuffer)[currentSize],
+                         size-currentSize) ;
+         if (rc >= 0)
+            currentSize += rc;
+      } while ((( -1 == rc ) && ( EINTR == errno )) ||
+               (( -1 != rc ) && ( currentSize != size )));
+      if (-1 == rc)
+      {
+         rc = errno ;
+         goto exit ;
+      }
+      rc = 0 ;
+   }
+exit :
+   return rc ;
+}
+
+int ossPrimitiveFileOp::fWrite( const char * format, ... )
+{
+   int rc = 0 ;
+   va_list ap ;
+   char buf[OSS_PRIMITIVE_FILE_OP_FWRITE_BUF_SIZE] = { 0 } ;
+
+   va_start( ap, format ) ;
+   vsnprintf( buf, sizeof( buf ), format, ap ) ;
+   va_end( ap ) ;
+
+   rc = Write( buf ) ;
+
+   return rc ;
+}
+
+void ossPrimitiveFileOp::setFileHandle(handleType handle)
+{
+	_fileHandle = handle;
+}
+
+int ossPrimitiveFileOp::getSize(offsetType * const pFileSize)
+{
+	int rc = 0;
+	oss_struct_stat buf = {0};
+	if (oss_fstat(_fileHandle, &buf) == -1)
+	{
+		rc = errno;
+		goto error;
+	}
+
+	*pFileSize = buf.st_size;
+
+exit:
+	return rc;
+error:
+	*pFileSize = 0;
+	goto exit;
 }
