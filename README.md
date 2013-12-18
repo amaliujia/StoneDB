@@ -33,8 +33,13 @@ d. send requests from client to server.
 
 step 3 (In progress):
 
-set up some fundamental components, such as log. 
+a. build lock component to keep multi-threading safety.
 
+b. coding queue structure with mutex and conditional variable.
+
+c. build fundamental file operations component.
+
+---relating files: ossXLatch.hpp, ossSLatch.hpp, ossPrimitiveFileOp.hpp, ossPrimitiveFileOp.cpp.
 
 step 4:
 
