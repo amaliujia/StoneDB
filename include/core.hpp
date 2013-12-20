@@ -26,7 +26,7 @@
 #include <time.h>
 #include <stdarg.h>
 #include <unistd.h>
-//#include <syscall.h>
+#include <sys/syscall.h>
 #include <fcntl.h>
 #include <sys/stat.h>
 #include <errno.h>
@@ -50,6 +50,7 @@
 #define OSS_MAX_PATHSIZE  PATH_MAX
 #define OSS_FILE_SEP_STR  "/"
 #define OSS_FILE_SEP_CHAR *((const char*)OSS_FILE_SEP_STR)[0]
+#define OSS_NEWLINE       "\n"
 
 // error code list
 #define EDB_OK                                           0

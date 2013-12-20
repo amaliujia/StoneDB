@@ -33,7 +33,7 @@ int pmdTcpListenerEntryPoint ()
          continue ;
       }
       char buffer[1024] ;
-      int size;
+      //int size;
       ossSocket sock1 ( &s ) ;
       sock1.disableNagle () ;
       // do
