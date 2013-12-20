@@ -52,4 +52,10 @@ enum PDLEVEL
 	PDDEBUG
 };
 extern PDLEVEL _curPDLevel;
-const char * getPDLevel
+const char * getPDLevel(PDLEVEL level);
+
+#define PD_DFT_DIAGLEVEL PDWARNING
+void pdLog(PDLEVEL level, const char *func, const char *file, unsigned int line, const chart *fromat, ...);
+void pdLog(PDLEVEL level, const char *func, const char *file, unsigned int line, std::string message);
+
+#endif
