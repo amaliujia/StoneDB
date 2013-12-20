@@ -61,6 +61,7 @@ protected:
 	void setFileHandle(handleType handle);
 public:
 	ossPrimitiveFileOp();
+	~ossPrimitiveFileOp();
 	int Open(
 			const char *pFilePath,
 			unsigned int options = OSS_PRIMITIVE_FILE_OP_OPEN_ALWAYS

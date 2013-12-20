@@ -62,17 +62,16 @@ _ossSocket::_ossSocket(int *sock, int atimeout)
    rc = getsockname(_fd, (sockaddr*)&_sockAddress, &_addressLen);
    if (rc)
    {
-      PD_LOG(PDERROR,"Failed to get sock name, error = %d\n", SOCKET_GETLASTERROR);
+      printf("Failed to get sock name, error = %d\n", SOCKET_GETLASTERROR);
       _init = false;  
    }else{
       rc = getpeername(_fd, (sockaddr*)&_peerAddress, &_peerAddressLen);
-      PD_RC_CHECK(rc, PDERROR, "Failed to get peer name,error = %d\n", SOCKET_GETLASTERROR);
-
+      if (rc)
+      {
+         printf("Failed to get peer name,error = %d\n", SOCKET_GETLASTERROR);
+      }
    }
-done:
-   return;
-error:
-   goto done;
+
 }
 
 int _ossSocket::initSocket()
@@ -87,7 +86,9 @@ int _ossSocket::initSocket()
    _fd = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
    if (-1 == _fd)
    {
-      PD_RC_CHECK(EDB_NETWORK, PDERROR, "Failed to initialize socket,error = %d\n", SOCKET_GETLASTERROR);     
+      printf("Failed to initialize socket,error = %d\n", SOCKET_GETLASTERROR);
+      rc = EDB_NETWORK;
+      goto error;     
    }
    _init = true;
    //set timeout
@@ -130,29 +131,28 @@ int _ossSocket::bind_listen()
    int rc = EDB_OK;
    int temp = 1;
    rc = setsockopt(_fd, SOL_SOCKET, SO_REUSEADDR,(char*)&temp,sizeof(int));
-   
    if (rc)
    {
-      PD_LOG(PDWARNING, "Failed to set sockopt SO_REUSEADDR,rc = %d\n",SOCKET_GETLASTERROR);
+      printf("Failed to set sockopt SO_REUSEADDR,rc = %d\n",SOCKET_GETLASTERROR);
    }
    rc = setSocketLi(1,30);
-
    if (rc)
    {
-      PD_LOG(PDWARNING, "Failed to setsockopt SO_LINGER,rc = %d\n",SOCKET_GETLASTERROR);
+      printf("Failed to set socket SO_LINGER, rc = %d\n", SOCKET_GETLASTERROR);
    }
-
    rc = ::bind(_fd,(struct sockaddr*)&_sockAddress,_addressLen);
-
    if (rc)
    {
-      PD_RC_CHECK(EDB_NETWORK, PDERROR, "Failed to bind socket, rc = %d\n", SOCKET_GETLASTERROR);
- 
+      printf("Failed to bind socket, rc = %d\n", SOCKET_GETLASTERROR);
+      rc = EDB_NETWORK;
+      goto error;
    }
    rc = listen(_fd, SOMAXCONN);
    if (rc )
    {
-      PD_RC_CHECK(EDB_NETWORK, PDERROR, "Failed to listen socket, rc = %d\n",SOCKET_GETLASTERROR);
+      printf("Failed to listen socket, rc = %d\n",SOCKET_GETLASTERROR );
+      rc = EDB_NETWORK;
+      goto error;
    }
 done:
    return rc;
@@ -195,7 +195,9 @@ int _ossSocket::send(const char *pMsg, int len,int atimeout, int flags)
          {
             continue;
          }
-         PD_RC_CHECK(EDB_NETWORK, PDWARNING,"Failed to select from socket, rc = %d\n",rc);
+         printf("Failed to select from socket, rc = %d\n",rc);
+         rc = EDB_NETWORK;
+         goto error;
       }
       if (FD_ISSET(_fd,&fds))
       {
@@ -209,7 +211,8 @@ int _ossSocket::send(const char *pMsg, int len,int atimeout, int flags)
       rc = ::send(_fd, pMsg, len, SO_NOSIGPIPE | flags);
       if (-1 == rc)
        {
-         PD_RC_CHECK(EDB_NETWORK, PDERROR, "Failed to send, rc = %d", SOCKET_GETLASTERROR);
+          printf("Failed to send, rc = %d", SOCKET_GETLASTERROR);
+          rc = EDB_NETWORK;
        }
        len -= rc;
        pMsg += rc; 
@@ -267,7 +270,9 @@ int _ossSocket::recv(char *pMsg, int len, int atimeout, int flags)
          {
             continue;
          }
-         PD_RC_CHECK(EDB_NETWORK, PDERROR, "Failed to select from socket, rc = %d", rc);
+         printf("Failed to select from socket, rc = %d", rc);
+         rc = EDB_NETWORK;
+         goto error;
       }
       if (FD_ISSET(_fd, &fds))
         {
@@ -286,21 +291,25 @@ int _ossSocket::recv(char *pMsg, int len, int atimeout, int flags)
          len -= rc;
          pMsg += rc;
       }else if(rc == 0){
-        
-         PD_RC_CHECK(EDB_NETWORK_CLOSE, PDWARNING,"Peer unexpected shutdown\n");
-
+         printf("Peer unexpected shutdown\n");
+         rc = EDB_NETWORK_CLOSE;
+         goto error;
       }else{
          rc = SOCKET_GETLASTERROR;
          if ((EAGAIN == rc || EWOULDBLOCK == rc) && (_timeout > 0))
          {
-            PD_RC_CHECK(EDB_NETWORK, PDERROR, "Recv() timeout: rc = %d\n",rc);
+            printf("Recv() timeout: rc = %d\n",rc);
+            rc = EDB_NETWORK;
+            goto error;
          }
          if ((EINTR == rc) && (retries < MAX_RECV_RETRIES))
          {
             retries ++;
             continue;
          }
-         PD_RC_CHECK(EDB_NETWORK, PDERROR,"Recv() Failed: rc = %d\n", rc);
+         printf("Recv() Failed: rc = %d\n", rc);
+         rc = EDB_NETWORK;
+         goto error;
       }
    }
    rc = EDB_OK;
@@ -347,7 +356,10 @@ int _ossSocket::recvNF(char *pMsg, int len,int atimeout)
          {
             continue ;
          }
-         PD_RC_CHECK(EDB_NETWORK, PDERROR, "Failed to select from socket, rc = %d",rc);
+         printf ( "Failed to select from socket, rc = %d",
+                 rc);
+         rc = EDB_NETWORK ;
+         goto error ;
       }
 
       // if the socket we interested is not receiving anything, let's continue
@@ -368,7 +380,9 @@ int _ossSocket::recvNF(char *pMsg, int len,int atimeout)
    }
    else if ( rc == 0 )
    {
-      PD_RC_CHECK(EDB_NETWORK_CLOSE, PDWARNING, "Peer unexpected shutdown\n");
+      printf ( "Peer unexpected shutdown" ) ;
+      rc = EDB_NETWORK_CLOSE ;
+      goto error ;
    }
    else
    {
@@ -378,7 +392,9 @@ int _ossSocket::recvNF(char *pMsg, int len,int atimeout)
            _timeout > 0 )
       {
          // if we timeout, it's partial message and we should restart
-         PD_RC_CHECK(EDB_NETWORK, PDERROR,"Recv() timeout: rc = %d", rc );
+         printf ( "Recv() timeout: rc = %d", rc ) ;
+         rc = EDB_NETWORK ;
+         goto error ;
       }
       if ( ( EINTR == rc ) && ( retries < MAX_RECV_RETRIES ) )
       {
@@ -386,7 +402,9 @@ int _ossSocket::recvNF(char *pMsg, int len,int atimeout)
          retries ++ ;
       }
       // something bad when get here
-      PD_RC_CHECK(EDB_NETWORK, PDERROR, "Recv() Failed: rc = %d", rc);
+      printf ( "Recv() Failed: rc = %d", rc ) ;
+      rc = EDB_NETWORK ;
+      goto error ;
    }
    // Everything is fine when get here
    rc = EDB_OK ;
@@ -402,17 +420,23 @@ int _ossSocket::connect()
    rc = :: connect(_fd, (struct sockaddr *)&_sockAddress,_addressLen);
    if (rc)
    {
-      PD_RC_CHECK(EDB_NETWORK, PDERROR,"Failed to connect, rc = %d\n", SOCKET_GETLASTERROR );
+      printf("Failed to connect, rc = %d\n", SOCKET_GETLASTERROR);
+      rc = EDB_NETWORK;
+      goto error;
    }
    rc = getsockname(_fd, (sockaddr*)&_sockAddress, &_addressLen);
    if (rc)
    {
-      PD_RC_CHECK(EDB_NETWORK, PDERROR, "Failed to get local address, rc = %d\n",rc);
+      printf("Failed to get local address, rc = %d\n",rc );
+      rc = EDB_NETWORK;
+      goto error;
    }
    rc = getpeername(_fd, (sockaddr*)&_peerAddress, &_peerAddressLen);
    if (rc)
    {
-      PD_RC_CHECK(EDB_NETWORK, PDERROR, "Failed to get peer address, rc = %d\n",rc);
+      printf("Failed to get peer address, rc = %d\n",rc);
+      rc = EDB_NETWORK;
+      goto error;
    }
    done:
       return rc;
@@ -466,7 +490,7 @@ int _ossSocket::accept(int *sock, struct sockaddr *addr, socklen_t *addrlen, int
          {
             continue ;
          }
-         PD_RC_CHECK(EDB_NETWORK, PDERROR, "Failed to select from socket, rc = %d", SOCKET_GETLASTERROR);
+         printf ( "Failed to select from socket, rc = %d", SOCKET_GETLASTERROR);
          rc = EDB_NETWORK ;
          goto error ;
       }
@@ -482,7 +506,9 @@ int _ossSocket::accept(int *sock, struct sockaddr *addr, socklen_t *addrlen, int
    *sock = ::accept ( _fd, addr, addrlen ) ;
    if ( -1 == *sock )
    {
-      PD_RC_CHECK(EDB_NETWORK, PDERROR, "Failed to accept socket, rc = %d", SOCKET_GETLASTERROR);
+      printf ( "Failed to accept socket, rc = %d", SOCKET_GETLASTERROR ) ;
+      rc = EDB_NETWORK ;
+      goto error ;
    }
 done :
    return rc ;
@@ -499,14 +525,14 @@ int _ossSocket::disableNagle ()
                      sizeof ( int ) ) ;
    if ( rc )
    {
-      PD_LOG(PDWARNING, "Failed to setsockopt, rc = %d", SOCKET_GETLASTERROR);
+      printf ( "Failed to setsockopt, rc = %d", SOCKET_GETLASTERROR ) ;
    }
 
    rc = setsockopt ( _fd, SOL_SOCKET, SO_KEEPALIVE, (char *) &temp,
                      sizeof ( int ) ) ;
    if ( rc )
    {
-      PD_LOG(PDWARNING, "Failed to setsockopt, rc = %d", SOCKET_GETLASTERROR);
+      printf ( "Failed to setsockopt, rc = %d", SOCKET_GETLASTERROR ) ;
    }
    return rc ;
 }
@@ -526,7 +552,9 @@ length,
                        NULL, 0, NI_NUMERICHOST ) ;
    if ( rc )
    {
-      PD_RC_CHECK(EDB_NETWORK, PDERROR, "Failed to getnameinfo, rc = %d", SOCKET_GETLASTERROR);
+      printf ( "Failed to getnameinfo, rc = %d", SOCKET_GETLASTERROR ) ;
+      rc = EDB_NETWORK ;
+      goto error ;
    }
 done :
    return rc ;
@@ -566,14 +594,14 @@ int _ossSocket::setTimeout ( int seconds )
                      sizeof ( tv ) ) ;
    if ( rc )
    {
-      PD_LOG(PDWARNING, "Failed to setsockopt, rc = %d", SOCKET_GETLASTERROR);
+      printf ( "Failed to setsockopt, rc = %d", SOCKET_GETLASTERROR ) ;
    }
 
    rc = setsockopt ( _fd, SOL_SOCKET, SO_SNDTIMEO, ( char* ) &tv,
                      sizeof ( tv ) ) ;
    if ( rc )
    {
-      PD_LOG(PDWARNING, "Failed to setsockopt, rc = %d", SOCKET_GETLASTERROR);
+      printf ( "Failed to setsockopt, rc = %d", SOCKET_GETLASTERROR ) ;
    }
 
    return rc ;
