@@ -74,7 +74,9 @@ emeralddb-pmdTcpListener.o: pmd/pmdTcpListener.cpp include/core.hpp \
   /usr/include/sys/_types/_iovec_t.h /usr/include/netinet/in.h \
   /usr/include/netinet6/in6.h /usr/include/arpa/inet.h \
   /usr/include/netdb.h /usr/include/netinet/tcp.h \
-  /usr/include/sys/mman.h \
+  /usr/include/sys/mman.h /usr/include/pthread.h \
+  /usr/include/pthread_impl.h /usr/include/sched.h \
+  /usr/include/sys/_types/_mach_port_t.h /usr/include/sys/syscall.h \
   /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/c++/v1/string \
   /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/c++/v1/__config \
   /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/c++/v1/iosfwd \
@@ -131,8 +133,6 @@ emeralddb-pmdTcpListener.o: pmd/pmdTcpListener.cpp include/core.hpp \
   /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/c++/v1/ratio \
   /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/c++/v1/system_error \
   /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/c++/v1/cerrno \
-  /usr/include/pthread.h /usr/include/pthread_impl.h \
-  /usr/include/sched.h /usr/include/sys/_types/_mach_port_t.h \
   /usr/include/locale.h /usr/include/_locale.h /usr/include/xlocale.h \
   /usr/include/_xlocale.h /usr/include/xlocale/_ctype.h \
   /usr/include/xlocale/__wctype.h /usr/include/xlocale/_stdio.h \
@@ -416,6 +416,16 @@ include/core.hpp:
 
 /usr/include/sys/mman.h:
 
+/usr/include/pthread.h:
+
+/usr/include/pthread_impl.h:
+
+/usr/include/sched.h:
+
+/usr/include/sys/_types/_mach_port_t.h:
+
+/usr/include/sys/syscall.h:
+
 /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/c++/v1/string:
 
 /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/c++/v1/__config:
@@ -539,14 +549,6 @@ include/core.hpp:
 /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/c++/v1/system_error:
 
 /Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/../lib/c++/v1/cerrno:
-
-/usr/include/pthread.h:
-
-/usr/include/pthread_impl.h:
-
-/usr/include/sched.h:
-
-/usr/include/sys/_types/_mach_port_t.h:
 
 /usr/include/locale.h:
 

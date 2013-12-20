@@ -38,7 +38,8 @@
 #include <netdb.h>
 #include <netinet/tcp.h>
 #include <sys/mman.h>
-
+#include <pthread.h>
+#include <sys/syscall.h>
 //C++
 #include <string>
 #include <map>
@@ -50,6 +51,9 @@
 #define OSS_MAX_PATHSIZE  PATH_MAX
 #define OSS_FILE_SEP_STR  "/"
 #define OSS_FILE_SEP_CHAR *((const char*)OSS_FILE_SEP_STR)[0]
+#define OSS_NEWLINE       "\n"
+
+
 
 // error code list
 #define EDB_OK                                           0

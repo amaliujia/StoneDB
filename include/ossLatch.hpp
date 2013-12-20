@@ -14,11 +14,13 @@
 #define oss_rwlock_init			pthread_rwlock_init
 #define oss_rwlock_destroy		pthread_rwlock_destroy
 #define	oss_rwlock_rdlock		pthread_rwlock_rdlock
-#define oss_rwlock_rdunlock		pthread_rwlock_rdunlock
+//#define oss_rwlock_rdunlock		pthread_rwlock_rdunlock
 #define oss_rwlock_wrlock		pthread_rwlock_wrlock
-#define oss_rwlock_wrunlock		pthread_rwlock_wrunlock
-#define oss_rwlock_rdtrylock(__lock)	(pthread_rwlock_rdtrylock(__lock) == 0)
-#define oss_rwlock_wrtrylock(__lock)	(pthread_rwlock_wrunlock(__lock) == 0)
+//#define oss_rwlock_wrunlock		pthread_rwlock_wrunlock
+#define oss_rwlock_unlock  		pthread_rwlock_unlock
+ 
+#define oss_rwlock_rdtrylock(__lock)	(pthread_rwlock_tryrdlock(__lock) == 0)
+#define oss_rwlock_wrtrylock(__lock)	(pthread_rwlock_trywrlock(__lock) == 0)
 
 
 
@@ -74,7 +76,7 @@ public:
 	}
 	void release()
 	{
-		oss_rwlock_wrunlock(&_lock);
+		oss_rwlock_unlock(&_lock);
 	}
 	bool try_get()
 	{
@@ -82,15 +84,15 @@ public:
 	}
 	void get_shared()
 	{
-		oss_rwlock_rdlock();
+		oss_rwlock_rdlock(&_lock);
 	}
 	void release_shared()
 	{
-		oss_rwlock_rdunlock();
+		oss_rwlock_unlock(&_lock);
 	}
 	bool try_get_shared()
 	{
-		return (oss_rwlock_rdtrylock);
+		return (oss_rwlock_rdtrylock(&_lock));
 	}
 };
 

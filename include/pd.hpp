@@ -5,11 +5,13 @@
 
 #define PD_LOG_STRINGMAX 4096
 
-#define PD_LOG(level,fmt,...)										\
-	do {															\
-			if(_curPDLevel > level)									\
-				pdLog(level,__func__,__FILE__,__LINE__,fmt,##__VA_ARGS__);\
-		}while(0)													\														\
+#define PD_LOG(level,fmt,...)                                         \
+   do {                                                               \
+      if ( _curPDLevel >= level )                                     \
+      {                                                               \
+         pdLog ( level, __func__, __FILE__, __LINE__, fmt, ##__VA_ARGS__); \
+      }                                                               \
+   } while ( 0 )  														\
 
 #define PD_CHECK(cond,retCode,gotoLabel,level,fmt,...)				\
 		do{															\
@@ -55,7 +57,7 @@ extern PDLEVEL _curPDLevel;
 const char * getPDLevel(PDLEVEL level);
 
 #define PD_DFT_DIAGLEVEL PDWARNING
-void pdLog(PDLEVEL level, const char *func, const char *file, unsigned int line, const chart *fromat, ...);
+void pdLog(PDLEVEL level, const char *func, const char *file, unsigned int line, const char *format, ...);
 void pdLog(PDLEVEL level, const char *func, const char *file, unsigned int line, std::string message);
 
 #endif
