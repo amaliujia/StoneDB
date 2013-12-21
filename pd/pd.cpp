@@ -80,50 +80,74 @@ error:
 
 void pdLog(PDLEVEL level, const char *func, const char *file, unsigned int line, const char *format, ...)
 {
-    int rc = EDB_OK;
-    if (_curPDLevel < level) {
-        return ;
-    }
-    va_list ap;
-    char userInfo[PD_LOG_STRINGMAX];
-    char sysInfo[PD_LOG_STRINGMAX];
-    
-    //create use information
-    va_start(ap, format);
-    vsnprintf(userInfo, PD_LOG_STRINGMAX, format, ap);
-    va_end(ap);
-    
-    struct tm otm;
-    struct timeval tv;
-    struct timezone tz;
-    time_t tt;
-    
-    gettimeofday(&tv, &tz);
-    tt = tv.tv_sec;
-    localtime_r(&tt, &otm);
-    snprintf(sysInfo, PD_LOG_STRINGMAX, PD_LOG_HEADER_FORMAT,
-             otm.tm_year+1900,
-             otm.tm_mon+1,
-             otm.tm_mday,
-             otm.tm_hour,
-             otm.tm_min,
-             otm.tm_sec,
-             tv.tv_usec,
-             PDLEVELSTRING[level],
-             getpid(),
-             syscall(SYS_gettid),
-             func,
-             file,
-             line,
-             userInfo);
-    
-    printf("%s"OSS_NEWLINE,sysInfo);
-    if (_pdDiagLogPath[0] != '\0') {
-        rc = _pdLogFileWrite(sysInfo);
-        if (rc) {
-            printf("Failed to write into log file, errno = %d"OSS_NEWLINE, rc);
-            printf("%s"OSS_NEWLINE,sysInfo);
-        }
-    }
-    return;
+int rc = EDB_OK ;
+   if ( _curPDLevel < level )
+      return  ;
+   va_list ap ;
+   char userInfo[PD_LOG_STRINGMAX] ; // for user defined message
+   char sysInfo[PD_LOG_STRINGMAX] ;  // for log header
+
+   // create user information
+   va_start ( ap, format ) ;
+   vsnprintf ( userInfo, PD_LOG_STRINGMAX, format, ap ) ;
+   va_end ( ap ) ;
+
+#ifdef _WINDOWS
+   SYSTEMTIME systime;
+   GetLocalTime(&systime);
+
+   snprintf ( sysInfo, PD_LOG_STRINGMAX, PD_LOG_HEADER_FORMAT,  //%04d-%02d-%02d-%02d.%02d.%02d.%06d
+       systime.wYear,
+       systime.wMonth,
+       systime.wDay ,
+       systime.wHour ,
+       systime.wMinute ,
+       systime.wSecond ,
+       systime.wMilliseconds*1000 ,
+       PDLEVELSTRING[level],
+       getpid(),
+       pthread_self(),
+       func,
+       line,
+       file,
+       userInfo
+       ) ;
+
+#else
+   struct tm otm ;
+   struct timeval tv ;
+   struct timezone tz ;
+   time_t tt ;
+
+   gettimeofday ( &tv, &tz ) ;
+   tt = tv.tv_sec ;
+   localtime_r ( &tt, &otm ) ;
+   snprintf ( sysInfo, PD_LOG_STRINGMAX, PD_LOG_HEADER_FORMAT,
+              otm.tm_year+1900,
+              otm.tm_mon+1,
+              otm.tm_mday,
+              otm.tm_hour,
+              otm.tm_min,
+              otm.tm_sec,
+              tv.tv_usec,
+              PDLEVELSTRING[level],
+              getpid(),
+              syscall(SYS_gettid),
+              func,
+              line,
+              file,
+              userInfo
+   ) ;
+#endif // _WINDOWS
+   printf ( "%s"OSS_NEWLINE, sysInfo ) ;
+   if ( _pdDiagLogPath[0] != '\0' )
+   {
+      rc = _pdLogFileWrite ( sysInfo ) ;
+      if ( rc )
+      {
+         printf ( "Failed to write into log file, errno = %d"OSS_NEWLINE, rc ) ;
+         printf ( "%s"OSS_NEWLINE, sysInfo ) ;
+      }
+   }
+   return ;
 }

@@ -109,6 +109,7 @@ static void pmdSignalHandler(int sigNum)
 	{
 		if (signalHandleMap[sigNum].handle)
 		{
+         //PD_LOG(PDEVENT,"signal %d", sigNum);
 			EDB_SHUTDOWN_DB;
 		}
 	}
