@@ -6,7 +6,7 @@ It is conducted by my own.
 
 Code expected: 10,000 ~ 30,000 lines.
 
-The step 1,2 have been done.
+The step 1 to 3 have been done.
 
 Milestone
 =======
@@ -31,7 +31,7 @@ d. send requests from client to server.
 
 ---relating files: core.hpp, ossSocket.hpp, ossSocket.cpp, command.cpp, command.hpp, commandFactory.cpp, commandFactory.hpp, edb.cpp, edb.hpp, pmdTcpListener.cpp.
 
-step 3 (In progress):
+step 3 (Done):
 
 a. build lock component to keep multi-threading safety.
 
@@ -39,9 +39,15 @@ b. coding queue structure with mutex and conditional variable.
 
 c. build fundamental file operations component.
 
----relating files: ossLatch.hpp, ossPrimitiveFileOp.hpp, ossPrimitiveFileOp.cpp.
+d. maintain one central controller.
 
-step 4:
+f. initialize configuration file.
+
+e. establish Log component.
+
+---relating files: ossLatch.hpp, ossPrimitiveFileOp.hpp, ossPrimitiveFileOp.cpp, pmd.hpp, pmd.cpp, pd.cpp, pd.hpp, pmdMain.cpp, pmdOptions.hpp, pmdOptions.cpp.
+
+step 4 (In progress):
 
 a. implement thread data structure.
 
