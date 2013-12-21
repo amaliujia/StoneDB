@@ -39,7 +39,7 @@ b. coding queue structure with mutex and conditional variable.
 
 c. build fundamental file operations component.
 
-d. maintain one central controller.
+d. maintain a kernal controller.
 
 f. initialize configuration file.
 
