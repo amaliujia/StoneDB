@@ -1,5 +1,5 @@
-#ifndef PMDOPTIONS_HPP__
-#define PMDOPTIONS_HPP__
+#ifndef __PMDOPTIONS_HPP__
+#define __PMDOPTIONS_HPP__
 
 #include "core.hpp"
 #include <boost/program_options.hpp>
