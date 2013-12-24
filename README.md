@@ -35,7 +35,7 @@ step 3 (Done):
 
 a. build lock component to keep multi-threading safety.
 
-b. coding queue structure with mutex and conditional variable.
+b. coding queue structure for threads with mutex and conditional variable.
 
 c. build fundamental file operations component.
 
@@ -49,9 +49,11 @@ e. establish Log component.
 
 step 4 (In progress):
 
-a. implement thread data structure.
+a. implement Engine Dispatchable Unit.
 
 b. implement thread scheduling mechanism.
+
+c. implement thread pool.
 
 
 step 5:
