@@ -55,6 +55,9 @@ b. implement thread scheduling mechanism.
 
 c. implement thread pool.
 
+d. implement lock mechanism on thread queues.
+
+---relating files: ossUtil.hpp, pmdEDU.hpp, pmdEDU.cpp, pmdEDUMgr.hpp, pmdEDUMgr.cpp.
 
 step 5:
 
