@@ -132,6 +132,7 @@ int rc = EDB_OK ;
               tv.tv_usec,
               PDLEVELSTRING[level],
               getpid(),
+              // linux  syscall(SYS_gettid) SYS_thread_selfid 
               syscall(SYS_gettid),
               func,
               line,

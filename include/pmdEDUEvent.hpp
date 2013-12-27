@@ -1,4 +1,4 @@
-#include _PMDEDUEVENT_HPP_
+#ifndef _PMDEDUEVENT_HPP_
 #define _PMDEDUEVENT_HPP_
 
 
@@ -52,4 +52,4 @@ public:
 	void *_Data;
 };
 
-#define
+#endif

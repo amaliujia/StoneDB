@@ -11,7 +11,7 @@ template<typename Data>
 class ossQueue
 {
 private:
-	std::queue<data> _queue;
+	std::queue<Data> _queue;
 	boost::mutex _mutex;
 	boost::condition_variable _cond;
 public:
@@ -59,7 +59,7 @@ public:
 
 	bool timed_wait_and_pop(Data &value, long long millsec)
 	{
-		boost::system_time const timeout = boost:get_system_time() + boost::posix_time::millseconds(millsec);
+		boost::system_time const timeout = boost::get_system_time() + boost::posix_time::milliseconds(millsec);
 		boost::mutex::scoped_lock lock(_mutex);
 	while(_queue.empty())
 	{

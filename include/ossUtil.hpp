@@ -15,7 +15,8 @@ inline void ossSleepmillis(unsigned int s)
 }
 
 typedef pid_t OSSPID;
-typedef pthread_t OSSTID;
+//typedef pthread_t OSSTID;
+typedef int OSSTID;
 
 inline OSSPID ossGetParentProcessID()
 {
@@ -29,6 +30,7 @@ inline OSSPID ossGetCurrentProcessID()
 
 inline OSSTID ossGetCurrentThreadID()
 {
+	//return syscall(SYS_gettid); on linux SYS_thread_selfid
 	return syscall(SYS_gettid);
 }
 

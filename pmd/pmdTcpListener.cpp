@@ -1,10 +1,18 @@
 #include "core.hpp"
 #include "ossSocket.hpp"
+#include "pmdEDU.hpp"
+#include "pmd.hpp"
+#include "pmdEDUMgr.hpp"
+#include "pd.hpp"
+
+
 #define PMD_TCPLISTENER_RETRY 5
 #define OSS_MAX_SERVICENAME NI_MAXSERV
 
 #define RECV_BUFFER_POOL 1024
-int pmdTcpListenerEntryPoint ()
+
+
+int pmdTcpListenerEntryPoint(pmdEDUCB *cb, void *arg)
 {
    int rc = EDB_OK ;
    int port = 48127 ;
