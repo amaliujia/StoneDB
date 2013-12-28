@@ -14,7 +14,7 @@ int gQuit = 0;
 
 void Edb::start(void)
 {
-   std::cout << "Welcome to EmeraldDB Shell!" << std::endl;
+   std::cout << "Welcome to StoneDB Shell!" << std::endl;
    std::cout << "edb help for help, Ctrl+c or quit to exit" << std::endl;
    while(0==gQuit)
    {
