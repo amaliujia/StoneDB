@@ -6,7 +6,7 @@ It is conducted by my own.
 
 Code expected: 10,000 ~ 30,000 lines.
 
-The step 1 to 3 have been done.
+The step 1 to 4 have been done.
 
 Milestone
 =======
@@ -47,7 +47,7 @@ e. establish Log component.
 
 ---relating files: ossLatch.hpp, ossPrimitiveFileOp.hpp, ossPrimitiveFileOp.cpp, pmd.hpp, pmd.cpp, pd.cpp, pd.hpp, pmdMain.cpp, pmdOptions.hpp, pmdOptions.cpp.
 
-step 4 (In progress):
+step 4 (Done):
 
 a. implement Engine Dispatchable Unit.
 
@@ -57,9 +57,9 @@ c. implement thread pool.
 
 d. implement lock mechanism on thread queues.
 
----relating files: ossUtil.hpp, pmdEDU.hpp, pmdEDU.cpp, pmdEDUMgr.hpp, pmdEDUMgr.cpp, pmdOptions.hpp, pmdOptions.cpp.
+---relating files: ossUtil.hpp, pmdEDU.hpp, pmdEDU.cpp, pmdEDUMgr.hpp, pmdEDUMgr.cpp, pmdOptions.hpp, pmdOptions.cpp, edb.cpp, edb.hpp, command.cpp, command.hpp, pmdTCPListener.cpp.
 
-step 5:
+step 5 (In progress):
 
 complete message encapsulation on server and client.
 
