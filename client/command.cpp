@@ -1,8 +1,10 @@
 #include "core.hpp"
 #include "command.hpp"
 #include "commandFactory.hpp"
+#include "pd.hpp"
 
 COMMAND_BEGIN
+COMMAND_ADD(COMMAND_INSERT,InsertCommand)
 COMMAND_ADD(COMMAND_CONNECT,ConnectCommand)
 COMMAND_ADD(COMMAND_QUIT, QuitCommand)
 COMMAND_ADD(COMMAND_HELP, HelpCommand)
@@ -14,6 +16,7 @@ int ICommand::execute(  ossSocket & sock, std::vector<std::string> & argVec )
 {
    return EDB_OK;
 }
+
 int ICommand::getError(int code)
 {
   switch(code)
@@ -88,6 +91,8 @@ int ICommand::getError(int code)
    }
    return code;
 }
+
+
 int ICommand::recvReply( ossSocket & sock )
 {
    // define message data length.
@@ -146,7 +151,7 @@ int ICommand::recvReply( ossSocket & sock )
 
 int ICommand::sendOrder( ossSocket & sock, OnMsgBuild onMsgBuild  )
 {
-    int ret = EDB_OK;
+   int ret = EDB_OK;
    bson::BSONObj bsonData;
    try {
       bsonData = bson::fromjson(_jsonString);
@@ -166,74 +171,87 @@ int ICommand::sendOrder( ossSocket & sock, OnMsgBuild onMsgBuild  )
    {
       return getError(EDB_SOCK_SEND_FAILD);
    }
-    return ret;
+   return ret;
 
 }
 
 int ICommand::sendOrder( ossSocket & sock, int opCode )
 {
    int ret = EDB_OK;
-   //printf("Coming in sendOrder\n");
    memset(_sendBuf, 0, SEND_BUF_SIZE);
    char * pSendBuf = _sendBuf;
-   const char *pStr = "Hello world" ;
-   *(int*) pSendBuf=strlen(pStr)+1 + sizeof(int) ;
-   memcpy ( &pSendBuf[4], pStr, strlen(pStr)+1 ) ;
+   const char *pStr = "hello world" ;
+   *(int*)pSendBuf=strlen(pStr)+1 + sizeof(int);
+   memcpy ( &pSendBuf[4], pStr, strlen(pStr)+1 );
    /*MsgHeader *header = (MsgHeader*)pSendBuf;
    header->messageLen = sizeof(MsgHeader);
    header->opCode = opCode;*/
-   //std::cout<<pSendBuf<<std::endl;
-   ret = sock.send(&pSendBuf[4], *(int*)pSendBuf - 4);
+   ret = sock.send(pSendBuf, *(int*)pSendBuf);
    return ret;
 }
 
-// int ICommand::sendOrder( ossSocket & sock, int opCode )
-// {
-//    int ret = EDB_OK;
-//    memset(_sendBuf, 0, SEND_BUF_SIZE);
-//    char * pSendBuf = _sendBuf;
-//    //const char *pStr = "hello world" ;
-//    const char *pStr = "N";
-//    *(int*)pSendBuf=strlen(pStr)+1 + sizeof(int) ;
-//    memcpy ( &pSendBuf[4], pStr, strlen(pStr)+1 ) ;
-//    /*MsgHeader *header = (MsgHeader*)pSendBuf;
-//    header->messageLen = sizeof(MsgHeader);
-//    header->opCode = opCode;*/
-//    ret = sock.send(pSendBuf, *(int*)pSendBuf);
-//    return ret;
-// }
-/******************************ConnectCommand****************************************/
-int ConnectCommand::execute( ossSocket & sock, std::vector<std::string> & argVec )
+/******************************InsertCommand**********************************************/
+int InsertCommand::handleReply()
+{
+/*   MsgReply * msg = (MsgReply*)_recvBuf;
+   int returnCode = msg->returnCode;
+   int ret = getError(returnCode);
+   return ret;*/
+   return EDB_OK ;
+}
+
+int InsertCommand::execute( ossSocket & sock, std::vector<std::string> & argVec )
 {
    int rc = EDB_OK;
-   _address = argVec[0];
-   _port = atoi(argVec[1].c_str());
-   sock.close();
-   sock.setAddress(_address.c_str(), _port);
-   rc = sock.initSocket();
-   if ( rc )
+   if( argVec.size() <1 )
    {
-      printf ( "Failed to init socket, rc = %d", rc ) ;
-      goto error ;
+      return getError(EDB_INSERT_INVALID_ARGUMENT);
    }
-   rc = sock.connect();
-   if ( rc )
+   _jsonString = argVec[0];
+     if( !sock.isConnected() )
    {
-      printf ( "Failed to connect, rc = %d", rc ) ;
-      goto error ;
+      return getError(EDB_SOCK_NOT_CONNECT);
    }
-   sock.disableNagle();
+
+   rc = sendOrder( sock, 0 );
+   PD_RC_CHECK ( rc, PDERROR, "Failed to send order, rc = %d", rc ) ;
+
+   rc = recvReply( sock );
+   PD_RC_CHECK ( rc, PDERROR, "Failed to receive reply, rc = %d", rc ) ;
+   rc = handleReply();
+   PD_RC_CHECK ( rc, PDERROR, "Failed to receive reply, rc = %d", rc ) ;
 done :
-   return rc ;
+   return rc;
 error :
    goto done ;
 }
 
+/******************************ConnectCommand****************************************/
+int ConnectCommand::execute( ossSocket & sock, std::vector<std::string> & argVec )
+{
+   int ret = EDB_OK;
+   _address = argVec[0];
+   _port = atoi(argVec[1].c_str());
+   sock.close();
+   sock.setAddress(_address.c_str(), _port);
+   ret = sock.initSocket();
+   if(ret)
+   {
+      return getError(EDB_SOCK_INIT_FAILED);
+   }
+   ret = sock.connect();
+   if(ret)
+   {
+      return getError(EDB_SOCK_CONNECT_FAILED);
+   }
+   sock.disableNagle();
+   return ret;
+}
 /******************************QuitCommand**********************************************/
 int QuitCommand::handleReply()
 {
    int ret = EDB_OK;
-   //gQuit = 1;
+   gQuit = 1;
    return ret;
 }
 
@@ -245,7 +263,7 @@ int QuitCommand::execute( ossSocket & sock, std::vector<std::string> & argVec )
       return getError(EDB_SOCK_NOT_CONNECT);
    }
    ret = sendOrder( sock, 0 );
-   //sock.close();
+   sock.close();
    ret = handleReply();
    return ret;
 }
@@ -264,5 +282,4 @@ int HelpCommand::execute( ossSocket & sock, std::vector<std::string> & argVec )
    printf("Type \"help\" command for help\n");
    return ret;
 }
-
 

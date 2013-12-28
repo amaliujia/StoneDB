@@ -59,6 +59,15 @@ class ConnectCommand : public ICommand
       int         _port;
 };
 
+class InsertCommand : public ICommand
+{
+   public:
+      int   execute( ossSocket & sock, std::vector<std::string> & argVec );
+   protected:
+      int   handleReply();
+};
+
+
 class QuitCommand : public ICommand
 {
    public:

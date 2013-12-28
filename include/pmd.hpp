@@ -2,6 +2,8 @@
 #define _PMD_HPP_
 
 #include "core.hpp"
+#include "pmdEDUMgr.hpp"
+
 
 enum EDB_DB_STATUS
 {
@@ -27,8 +29,8 @@ private:
 	char _svcName[NI_MAXSERV + 1];
 	EDB_DB_STATUS _dbStatus;
 private:
-	//pmdEDUMgr	_eduMgr;
-	//rtn			_rtnMgr;
+	pmdEDUMgr _eduMgr;
+	//rtn	_rtnMgr;
 public:
 	EDB_KRCB()
 	{
@@ -39,10 +41,10 @@ public:
 		memset(_svcName, 0, sizeof(_svcName));
 	}
 	~EDB_KRCB(){}
-	// pmdEDUMgr *getEDUMgr()
-	// {
-	// 	return &_eduMgr;
-	// }
+	pmdEDUMgr *getEDUMgr()
+	{
+		return &_eduMgr;
+	}
 
 	// get db status
 	inline EDB_DB_STATUS getDBStatus()

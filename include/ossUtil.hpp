@@ -30,8 +30,8 @@ inline OSSPID ossGetCurrentProcessID()
 
 inline OSSTID ossGetCurrentThreadID()
 {
-	//return syscall(SYS_gettid); on linux SYS_thread_selfid
-	return syscall(SYS_gettid);
+	//return syscall(SYS_gettid); on linux 
+	return syscall(SYS_thread_selfid);
 }
 
 #endif
