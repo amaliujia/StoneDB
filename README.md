@@ -29,7 +29,7 @@ c. define several basic commands of client, like help, connect and etc.
 
 d. send requests from client to server.
 
----relating files: core.hpp, ossSocket.hpp, ossSocket.cpp, command.cpp, command.hpp, commandFactory.cpp, commandFactory.hpp, edb.cpp, edb.hpp, pmdTcpListener.cpp.
+---relating files: core.hpp, ossSocket.hpp, ossSocket.cpp, command.cpp, command.hpp, commandFactory.cpp, commandFactory.hpp, edb.cpp, edb.hpp, pmdTcpListener.cpp, pmdAgent.cpp.
 
 step 3 (Done):
 
