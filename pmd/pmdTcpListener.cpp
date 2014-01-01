@@ -18,9 +18,6 @@ int pmdTcpListenerEntryPoint ( pmdEDUCB *cb, void *arg )
    EDUID        agentEDU  = PMD_INVALID_EDUID ;
    char         svcName[OSS_MAX_SERVICENAME+1] ;
 
-   // week 4 test 
-   int flag = 1;
-
    while ( retry <= PMD_TCPLISTENER_RETRY && !EDB_IS_DB_DOWN )
    {
       retry ++ ;
@@ -83,9 +80,7 @@ int pmdTcpListenerEntryPoint ( pmdEDUCB *cb, void *arg )
          // assign the socket to the arg
          void *pData = NULL ;
          *((int *) &pData) = s ;
-         // week4 test
-         rc = eduMgr->startEDU ( EDU_TYPE_AGENT, pData, &agentEDU,flag) ;
-         --flag;
+         rc = eduMgr->startEDU ( EDU_TYPE_AGENT, pData, &agentEDU) ;
          if ( rc )
          {
             if ( rc == EDB_QUIESCED )

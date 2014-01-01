@@ -19,10 +19,6 @@ private :
 
    ossSLatch _mutex ;
 
-   // week 4 test latch
-   ossSLatch _testtex_1;
-   ossSLatch _testtex_2;
-   int flag;
    // increamental-only EDU id
    // 64 bit is big enough for most
    EDUID _EDUID ;
@@ -130,28 +126,8 @@ public :
    {
       return ( EDU_TYPE_AGENT == type ) ;
    }
-
-   // week4 test
-   void getAMutex()
-   {
-      _testtex_1.get();
-   }
-
-   void getBMutex()
-   {
-      _testtex_2.get();
-   }
-   void setFlag(int f)
-   {
-      flag = f;
-   }
-   int getFlag()
-   {
-      return flag;
-   }
 private :
-   // week4 test
-   int _createNewEDU ( EDU_TYPES type, void* arg, EDUID *eduid,int flag );
+
    int _createNewEDU ( EDU_TYPES type, void *arg, EDUID *eduid) ;
    int _destroyAll () ;
    int _forceEDUs ( int property = EDU_ALL ) ;
@@ -276,8 +252,6 @@ public :
     *   EDB_INVALIDARG (the type is not valid )
     */
 
-    //week4 test
-    int startEDU ( EDU_TYPES type, void* arg, EDUID *eduid ,int flag);
    int startEDU ( EDU_TYPES type, void* arg, EDUID *eduid) ;
 
    /*

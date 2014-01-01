@@ -73,20 +73,7 @@ int pmdAgentEntryPoint ( pmdEDUCB *cb, void *arg )
       probe = 20 ;
       goto error ;
    }
-
-   // week4 test
-   if ((eduMgr->getFlag() == 1))
-   {
-   eduMgr->getAMutex();
-   sleep(30);
-   eduMgr->getBMutex();
-   }else{
-       eduMgr->getBMutex();
-       sleep(30);
-       eduMgr->getAMutex();
-   }
-
-   
+      
    while ( !disconnect )
    {
       // receive next packet
