@@ -53,7 +53,7 @@ class ICommand
 class ConnectCommand : public ICommand
 {
    public:
-      int execute ( ossSocket & sock, std::vector<std::string> & argVec );
+      int execute(ossSocket & sock, std::vector<std::string> & argVec );
    private:
       std::string _address;
       int         _port;
@@ -62,11 +62,26 @@ class ConnectCommand : public ICommand
 class InsertCommand : public ICommand
 {
    public:
-      int   execute( ossSocket & sock, std::vector<std::string> & argVec );
+      int   execute(ossSocket & sock, std::vector<std::string> & argVec );
    protected:
       int   handleReply();
 };
 
+class QueryCommand : public ICommand
+{
+   public:
+      int   execute(ossSocket & sock, std::vector<std::string> & argVec );
+   protected:
+      int   handleReply();
+};
+
+class DeleteCommand : public ICommand
+{
+   public:
+      int   execute(ossSocket & sock, std::vector<std::string> & argVec );
+   protected:
+      int   handleReply();
+};
 
 class QuitCommand : public ICommand
 {
@@ -82,5 +97,12 @@ class HelpCommand : public ICommand
       int execute(ossSocket & sock, std::vector<std::string> & argVec );
 };
 
-#endif
+class SnapshotCommand : public ICommand
+{
+   public:
+      int execute(ossSocket & sock, std::vector<std::string> & argVec );
+   private:
+      int handleReply();
+};
 
+#endif
