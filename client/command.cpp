@@ -2,6 +2,7 @@
 #include "command.hpp"
 #include "commandFactory.hpp"
 #include "pd.hpp"
+#include "msg.hpp"
 
 COMMAND_BEGIN
 COMMAND_ADD(COMMAND_INSERT,InsertCommand)
@@ -337,7 +338,7 @@ int QuitCommand::execute( ossSocket & sock, std::vector<std::string> & argVec )
    {
       return getError(EDB_SOCK_NOT_CONNECT);
    }
-   ret = sendOrder( sock, 0 );
+   ret = sendOrder( sock, OP_DISCONNECT);
    sock.close();
    ret = handleReply();
    return ret;
@@ -369,11 +370,11 @@ int SnapshotCommand::handleReply()
    {
       return ret;
    }
-   bson::BSONObj bsonData = bson::BSONObj( &(msg->data[0]) );
-   printf( "insert times is %d\n", bsonData.getIntField("insertTimes") );
-   printf( "del times is %d\n", bsonData.getIntField("delTimes") );
-   printf( "query times is %d\n", bsonData.getIntField("queryTimes") );
-   printf( "server run time is %dm\n", bsonData.getIntField("serverRunTime") );
+   bson::BSONObj bsonData = bson::BSONObj( &(msg->data[0]));
+   printf( "insert times is %d\n", bsonData.getIntField("insertTimes"));
+   printf( "del times is %d\n", bsonData.getIntField("delTimes"));
+   printf( "query times is %d\n", bsonData.getIntField("queryTimes"));
+   printf( "server run time is %dm\n", bsonData.getIntField("serverRunTime"));
 
    return ret;
 }
@@ -387,11 +388,11 @@ int SnapshotCommand::execute( ossSocket & sock, std::vector<std::string> &argVec
    }
 
    rc = sendOrder( sock, OP_SNAPSHOT );
-   PD_RC_CHECK ( rc, PDERROR, "Failed to send order, rc = %d", rc ) ;
+   PD_RC_CHECK ( rc, PDERROR, "Failed to send order, rc = %d", rc);
    rc = recvReply( sock );
-   PD_RC_CHECK ( rc, PDERROR, "Failed to receive reply, rc = %d", rc ) ;
+   PD_RC_CHECK ( rc, PDERROR, "Failed to receive reply, rc = %d", rc);
    rc = handleReply();
-   PD_RC_CHECK ( rc, PDERROR, "Failed to receive reply, rc = %d", rc ) ;
+   PD_RC_CHECK ( rc, PDERROR, "Failed to receive reply, rc = %d", rc);
 done :
    return rc;
 error :
