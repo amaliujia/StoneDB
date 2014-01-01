@@ -61,7 +61,9 @@ d. implement lock mechanism on thread queues.
 
 step 5 (In progress):
 
-complete message encapsulation on server and client.
+a. complete message encapsulation.
+
+---relating files: msg.hpp, msg.cpp. 
 
 
 step 6:
