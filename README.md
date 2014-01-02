@@ -63,7 +63,11 @@ step 5 (In progress):
 
 a. complete message encapsulation.
 
----relating files: msg.hpp, msg.cpp. 
+b. cline part has been done.
+
+c. define special message protocols for StoneDB.
+
+---relating files: msg.hpp, msg.cpp, command.cpp, pmdAgent.cpp. 
 
 
 step 6:
