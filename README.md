@@ -59,7 +59,7 @@ d. implement lock mechanism on thread queues.
 
 ---relating files: ossUtil.hpp, pmdEDU.hpp, pmdEDU.cpp, pmdEDUMgr.hpp, pmdEDUMgr.cpp, pmdOptions.hpp, pmdOptions.cpp, edb.cpp, edb.hpp, command.cpp, command.hpp, pmdTCPListener.cpp.
 
-step 5 (In progress):
+step 5 (Done):
 
 a. complete message encapsulation.
 
