@@ -208,7 +208,8 @@ int _ossSocket::send(const char *pMsg, int len,int atimeout, int flags)
    {
       //MSG_NOSIGNAL; Requests not to send SIGPIPE on errors on strm oriented sockets when the other end breaks the connection. The EPIPE error is still returned.
       //SO_NOSIGPIPE. There is no MSG_NOSIGNAL under Mac (or BSD platefrom), therefore we can use SO_NOSIGPIPE instead
-      rc = ::send(_fd, pMsg, len, SO_NOSIGPIPE | flags);
+      rc = ::send(_fd, pMsg, len,  flags);
+      //rc = send(_fd, pMsg, len, SO_NOSIGPIPE | flags);
       if (-1 == rc)
        {
           printf("Failed to send, rc = %d", SOCKET_GETLASTERROR);
@@ -227,96 +228,95 @@ error:
 bool _ossSocket::isConnected()
 {
    int rc = EDB_OK;
-   rc = :: send(_fd, "", 0, SO_NOSIGPIPE);
+   rc = :: send(_fd, "", 0, 0);
    if (rc < 0)
    {
       return false;
    }
    return true;
 }
-
 #define MAX_RECV_RETRIES 5
-int _ossSocket::recv(char *pMsg, int len, int atimeout, int flags)
+int _ossSocket::recv ( char *pMsg, int len,
+                      int timeout, int flags )
 {
-   int rc = EDB_OK;
-   int retries = 0;
-   int maxFD = _fd;
-   struct timeval maxSelectTime;
-   fd_set fds;
+   int rc = EDB_OK ;
+   int retries = 0 ;
+   int maxFD = _fd ;
+   struct timeval maxSelectTime ;
+   fd_set fds ;
 
-   if (0 == len)
+   if ( 0 ==len )
+      return EDB_OK ;
+   maxSelectTime.tv_sec = timeout / 1000000 ;
+   maxSelectTime.tv_usec = timeout % 1000000 ;
+   while ( true )
    {
-      return EDB_OK;
-   }
-   maxSelectTime.tv_sec = atimeout / 1000000;
-   maxSelectTime.tv_usec = atimeout % 1000000;
-   while(true)
-   {
-      FD_ZERO(&fds);
-      FD_SET(_fd,&fds);
-      rc = select(maxFD + 1, &fds, NULL, NULL, atimeout>=0?&maxSelectTime:NULL);
-
+      FD_ZERO ( &fds ) ;
+      FD_SET ( _fd, &fds ) ;
+      rc = select ( maxFD+1, &fds, NULL, NULL,
+                    timeout>=0?&maxSelectTime:NULL ) ;
       // 0 means timeout
-      if (0 == rc)
+      if ( 0 == rc )
       {
-         rc = EDB_TIMEOUT;
-         goto done;
+         rc = EDB_TIMEOUT ;
+         goto done ;
       }
-      //if < 0 something wrong
-      if (rc < 0)
+      // if < 0 something wrong
+      if ( 0 > rc )
       {
-         rc = SOCKET_GETLASTERROR;  
-         if (EINTR == rc )
+         rc = SOCKET_GETLASTERROR ;
+         if ( EINTR==rc )
          {
-            continue;
+            continue ;
          }
-         printf("Failed to select from socket, rc = %d", rc);
-         rc = EDB_NETWORK;
-         goto error;
+         PD_RC_CHECK ( EDB_NETWORK, PDERROR,
+                       "Failed to select from socket, rc = %d", rc ) ;
       }
-      if (FD_ISSET(_fd, &fds))
-        {
-           break;
-        }  
+      if ( FD_ISSET ( _fd, &fds ) )
+      {
+          break ;
+      }
    }
-   while(len > 0)
+   while ( len > 0 )
    {
-      rc = ::recv(_fd, pMsg, len, SO_NOSIGPIPE|flags);
-      if (rc > 0)
+      rc = ::recv ( _fd, pMsg, len, flags ) ;
+      if ( rc > 0 )
       {
-         if (flags & MSG_PEEK)
+         if ( flags & MSG_PEEK )
          {
-            goto done;
+             goto done ;
          }
-         len -= rc;
-         pMsg += rc;
-      }else if(rc == 0){
-         printf("Peer unexpected shutdown\n");
-         rc = EDB_NETWORK_CLOSE;
-         goto error;
-      }else{
-         rc = SOCKET_GETLASTERROR;
-         if ((EAGAIN == rc || EWOULDBLOCK == rc) && (_timeout > 0))
+         len -= rc ;
+         pMsg += rc ;
+      }
+      else if ( rc == 0 )
+      {
+         PD_RC_CHECK ( EDB_NETWORK_CLOSE, PDWARNING,
+                       "Peer unexpected shutdown" ) ;
+      }
+      else
+      {
+         rc = SOCKET_GETLASTERROR ;
+         if ( ( EAGAIN == rc || EWOULDBLOCK == rc )  &&
+              _timeout >  0 )
          {
-            printf("Recv() timeout: rc = %d\n",rc);
-            rc = EDB_NETWORK;
-            goto error;
+            PD_RC_CHECK ( EDB_NETWORK, PDERROR,
+                          "Recv() timeout: rc = %d", rc ) ;
          }
-         if ((EINTR == rc) && (retries < MAX_RECV_RETRIES))
+         if ( ( EINTR == rc ) && (retries < MAX_RECV_RETRIES ) )
          {
-            retries ++;
-            continue;
+            retries ++ ;
+            continue ;
          }
-         printf("Recv() Failed: rc = %d\n", rc);
-         rc = EDB_NETWORK;
-         goto error;
+         PD_RC_CHECK ( EDB_NETWORK, PDERROR,
+                       "Recv() Failed: rc = %d", rc ) ;
       }
    }
-   rc = EDB_OK;
-   done:
-      return rc;
-   error:
-      goto done;
+   rc = EDB_OK ;
+done :
+   return rc ;
+error :
+   goto done ;
 }
 
 int _ossSocket::recvNF(char *pMsg, int len,int atimeout)
@@ -372,7 +372,7 @@ int _ossSocket::recvNF(char *pMsg, int len,int atimeout)
    // MSG_NOSIGNAL : Requests not to send SIGPIPE on errors on stream
    // oriented sockets when the other end breaks the connection. The EPIPE
    // error is still returned.
-   rc = ::recv ( _fd, pMsg, len, SO_NOSIGPIPE ) ;
+   rc = ::recv ( _fd, pMsg, len, 0 ) ;
 
    if ( rc > 0 )
    {

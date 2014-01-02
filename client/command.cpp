@@ -6,12 +6,12 @@
 
 COMMAND_BEGIN
 COMMAND_ADD(COMMAND_INSERT,InsertCommand)
-COMMAND_ADD(COMMAND_QUERY, QueryCommand)
+COMMAND_ADD(COMMAND_QUERY,QueryCommand)
 COMMAND_ADD(COMMAND_DELETE, DeleteCommand)
 COMMAND_ADD(COMMAND_CONNECT,ConnectCommand)
 COMMAND_ADD(COMMAND_QUIT, QuitCommand)
 COMMAND_ADD(COMMAND_HELP, HelpCommand)
-COMMAND_ADD(COMMAND_SNAPSHOT,SnapshotCommand)
+COMMAND_ADD(COMMAND_SNAPSHOT, SnapshotCommand)
 COMMAND_END
 
 extern int gQuit;
@@ -193,11 +193,10 @@ int ICommand::sendOrder( ossSocket & sock, int opCode )
 /******************************InsertCommand**********************************************/
 int InsertCommand::handleReply()
 {
-/*   MsgReply * msg = (MsgReply*)_recvBuf;
+   MsgReply * msg = (MsgReply*)_recvBuf;
    int returnCode = msg->returnCode;
    int ret = getError(returnCode);
-   return ret;*/
-   return EDB_OK ;
+   return ret;
 }
 
 int InsertCommand::execute( ossSocket & sock, std::vector<std::string> & argVec )
@@ -213,7 +212,7 @@ int InsertCommand::execute( ossSocket & sock, std::vector<std::string> & argVec 
       return getError(EDB_SOCK_NOT_CONNECT);
    }
 
-   rc = sendOrder( sock, 0 );
+   rc = sendOrder( sock, msgBuildInsert );
    PD_RC_CHECK ( rc, PDERROR, "Failed to send order, rc = %d", rc ) ;
 
    rc = recvReply( sock );
