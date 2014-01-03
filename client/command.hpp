@@ -38,6 +38,14 @@ class ICommand
    public:
       virtual int execute( ossSocket & sock, std::vector<std::string> & argVec);
       int         getError(int code);
+      // Constructor and Destructor
+      ICommand(){
+         recvBufferSize = RECV_BUF_SIZE;
+         _recvBuf = (char *)malloc(sizeof(char) * recvBufferSize);
+      }
+       ~ICommand(){
+         free(_recvBuf);
+      } 
    protected:
       int      recvReply(ossSocket & sock );
       int      sendOrder(ossSocket & sock, OnMsgBuild onMsgBuild );
@@ -45,7 +53,9 @@ class ICommand
    protected:
       virtual int handleReply() { return EDB_OK; }
    protected:
-      char _recvBuf[RECV_BUF_SIZE];
+      //char _recvBuf[RECV_BUF_SIZE];
+      char *_recvBuf;
+      int recvBufferSize;
       char _sendBuf[SEND_BUF_SIZE];
       std::string _jsonString;
 };

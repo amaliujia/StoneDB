@@ -128,9 +128,12 @@ int ICommand::recvReply( ossSocket & sock )
    // get the value of length.
    length = *(int*)_recvBuf;
    // judge the length is valid or not.
-   if(length > RECV_BUF_SIZE)
+   if(length > recvBufferSize)
    {
-      return getError(EDB_RECV_DATA_LENGTH_ERROR);
+      _recvBuf = (char*)realloc ( _recvBuf, sizeof(char) * length ) ;
+      *(int *)_recvBuf = length;
+      recvBufferSize = length;
+      //return getError(EDB_RECV_DATA_LENGTH_ERROR);
    }
 
    // receive data from the server.second receive the last data.
@@ -143,6 +146,7 @@ int ICommand::recvReply( ossSocket & sock )
       }
       else if(EDB_NETWORK_CLOSE == ret)
       {
+
          return getError(EDB_SOCK_REMOTE_CLOSED);
       }
       else
@@ -151,6 +155,7 @@ int ICommand::recvReply( ossSocket & sock )
       }
    }
    return ret;
+
 }
 
 int ICommand::sendOrder( ossSocket & sock, OnMsgBuild onMsgBuild  )
