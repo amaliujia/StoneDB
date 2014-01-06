@@ -6,7 +6,7 @@ It is conducted by my own.
 
 Code expected: 10,000 ~ 30,000 lines.
 
-The step 1 to 4 have been done.
+The step 1 to 5 have been done.
 
 Milestone
 =======
@@ -63,14 +63,14 @@ step 5 (Done):
 
 a. complete message encapsulation.
 
-b. cline part has been done.
+b. client part has been done.
 
 c. define special message protocols for StoneDB.
 
 ---relating files: msg.hpp, msg.cpp, command.cpp, pmdAgent.cpp. 
 
 
-step 6:
+step 6 (In progress):
 
 a. establish mapping betweent disk and memory via Mmap.
 
