@@ -1,5 +1,5 @@
 AUTOMAKE_OPTIONS=foreign
-bin_PROGRAMS=emeralddb edb file
+bin_PROGRAMS=emeralddb edb file map
 emeralddb_SOURCES=\
 	pmd/pmdMain.cpp pmd/pmdTcpListener.cpp pmd/pmdOptions.cpp\
 	pmd/pmd.cpp pmd/pmdEDU.cpp	pmd/pmdEDUMgr.cpp pmd/pmdAgent.cpp	\
@@ -19,6 +19,12 @@ edb_SOURCES=\
 file_SOURCES=\
 	fileOp/fileOp.cpp		oss/ossPrimitiveFileOp.cpp
 
+
+map_SOURCES=\
+	fileOp/hwmap.cpp oss/ossPrimitiveFileOp.cpp oss/ossMmapFile.cpp   \
+	pd/pd.cpp
+
+
 emeralddb_CXXFLAGS=-I../boost -I./bson/src -I./include -D_FILE_OFFSET_BITS=64 -g -Wall -O0
 emeralddb_LDADD=-lpthread -lm -lboost_system -lboost_thread -lboost_program_options 
 emeralddb_LDFLAGS=-fPIC -rdynamic -L../boost/stage/lib -pthread 
@@ -29,5 +35,9 @@ edb_LDFLAGS=-fPIC -rdynamic -L../boost/stage/lib
 
 
 file_CXXFLAGS=-I../boost -I./bson/src -I./include -D_FILE_OFFSET_BITS=64 -g -Wall -O0
+file_LDADD=-lpthread -lm -lboost_system -lboost_thread -lboost_program_options 
+file_LDFLAGS=-fPIC -rdynamic -L../boost/stage/lib -pthread 
+
+map_CXXFLAGS=-I../boost -I./bson/src -I./include -D_FILE_OFFSET_BITS=64 -g -Wall -O0
 file_LDADD=-lpthread -lm -lboost_system -lboost_thread -lboost_program_options 
 file_LDFLAGS=-fPIC -rdynamic -L../boost/stage/lib -pthread 
