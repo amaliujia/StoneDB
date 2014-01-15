@@ -74,5 +74,80 @@ struct dmsPageHeader
 	char	_data[0];
 };
 
+#define DMS_FILE_SEGMENT_SIZE 134217728
+#define DMS_FILE_HEADER_SIZE  65536
+#define DMS_PAGES_PER_SEGMENT (DMS_FILE_SEGMENT_SIZE/DMS_PAGESIZE)
+#define DMS_MAX_SEGMENTS      (DMS_MAX_PAGES/DMS_PAGES_PER_SEGMENT)
 
+class dmsFile : public ossMmapFile
+{
+private:
+	// points to memory where header is located
+	dmsHeader *_header;
+	std::vector<char *> _body;
+	// free space to page id map
+	std::multimap<unsigned int, PAGEID> _freeSpaceMap;
+	ossSLatch	_mutex;
+	ossXLatch	_entendMutex;
+	char	*_pFileName;
+
+public:
+	dmsFile();
+	~dmsFile();
+	// initialize the dms file
+	int initialize(const char *apFileName);
+	// insert into file
+	int insert(bson::BSONObj &record, bson::BSONObj &outRecord, dmsRecordID &rid);
+	int remove(dmsRecordID &rid);
+	int find(dmsRecord &rid, bson::BSONObj &result);
+
+private:
+	// create a new segment for the current file
+	int _extendSegment();
+	// init from empty file, creating header only
+	int _initNew();
+	// extend the file for given bytes
+	int _extendFile(int size);
+	// load data from beginning
+	int _loadData();
+	// search slot
+	int _searchSlot(char *page, dmsRecordID &recordID, SLOTOFF &slot);
+	// reorganization
+	void _recoverSpace(char *page);
+	// update free space
+	void _updateFreeSpace(dmsPageHeader *header, int changeSize, PAGEID pageID);
+	// find a page id to insert, return invalid_pagdID if there's no page can be found for required size bytes.
+	PAGEID _findPage(size_t requiredSize);
+
+public:
+	inline unsigned int getNumSegments()
+	{
+		return _body.size();
+	}
+	inline unsigned int getNumPages()
+	{
+		return getNumSegments() * DMS_PAGES_PER_SEGMENT;
+	}
+	inline char* pageToOffset(PAGEID pageID)
+	{
+		if (pageID >= getNumPages())
+		{
+			return NULL;
+		}
+		return _body[pageID / DMS_PAGES_PER_SEGMENT] + DMS_PAGESIZE * (pageID % DMS_PAGES_PER_SEGMENT);
+	}
+	inline bool validSize(size_t size)
+	{
+		if (size < DMS_FILE_HEADER_SIZE)
+		{
+			return false;
+		}
+		size = size - DMS_FILE_HEADER_SIZE;
+		if (size % DMS_FILE_SEGMENT_SIZE != 0)
+		{
+			return false;
+		}
+		return true;
+	}
+};
 #endif
