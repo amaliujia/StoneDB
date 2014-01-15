@@ -6,7 +6,7 @@ It is conducted by my own.
 
 Code expected: 10,000 ~ 30,000 lines.
 
-The step 1 to 5 have been done.
+The step 1 to 6 have been done.
 
 Milestone
 =======
@@ -70,14 +70,14 @@ c. define special message protocols for StoneDB.
 ---relating files: msg.hpp, msg.cpp, command.cpp, pmdAgent.cpp. 
 
 
-step 6 (In progress):
+step 6 (Done):
 
-a. establish mapping betweent disk and memory via Mmap.
+establish mapping betweent disk and memory via Mmap.
 
-b. complete allocation and deallocation data blocks.
+---relating files: ossMmapFile.cpp.
 
 
-step 7:
+step 7 (In progress):
 
 a. design of BSON and structure of data records.
 
