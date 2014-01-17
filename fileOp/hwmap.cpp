@@ -1,4 +1,4 @@
-//#include "core.hpp"
+#include "core.hpp"
 #include "ossMmapFile.hpp"
 #include "ossPrimitiveFileOp.hpp"
 

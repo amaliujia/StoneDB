@@ -1,6 +1,6 @@
 StoneDB
 =======
-This is a NoSQL Database (File Database), which is expected to be done in next two months.
+This is a NoSQL Database (Document database), which is expected to be done in next two months.
 
 It is conducted by my own.
 
@@ -79,9 +79,11 @@ establish mapping betweent disk and memory via Mmap.
 
 step 7 (In progress):
 
-a. design of BSON and structure of data records.
+a. BSON and data records structure design.
 
-b. design of data files.
+b. data files design.
+
+---relating files: dms.hpp, dms.cpp, dmsRecord.hpp.
 
 
 step 8:
