@@ -79,9 +79,9 @@ establish mapping betweent disk and memory via Mmap.
 
 step 7 (In progress):
 
-a. design BSON and data records structure.
+a. design of BSON and structure of data records.
 
-b. design data files.
+b. design of data files.
 
 
 step 8:
