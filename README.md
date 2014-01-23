@@ -8,6 +8,58 @@ Code expected: 10,000 ~ 30,000 lines.
 
 The step 1 to 6 have been done.
 
+Structure
+=======
+StoneDB
+|
+|
+|------include
+|         |------ core.hpp
+|         |------ dms.hpp
+|         |------ dmsRecord.hpp
+|         |------ msg.hpp
+|         |------ ossLatch.hpp
+|         |------ ossMmapFile.hpp
+|         |------ ossPrimitiveFileOp.hpp
+|         |------ ossQueue.hpp
+|         |------ ossSocket.hpp
+|         |------ ossUtil.hpp
+|         |------ pd.hpp
+|         |------ pmd.hpp
+|         |------ pmdEDU.hpp
+|         |------ pmdEDUEvent.hpp
+|         |------ pmdEDUMgr.hpp
+|         |------ pmdOptions.hpp
+|------oss
+|         |------ ossSocket.cpp
+|         |------ ossPrimitiveFileOp.cpp
+|         |------ ossMmapFile.cpp
+|------pd
+|         |------ pd.cpp
+|------msg
+|         |------ msg.cpp
+|------dms
+|         |------ dms.cpp
+|------pmd
+|         |------ pmd.cpp
+|         |------ pmdEDU.cpp
+|         |------ pmdEDUMgr.cpp
+|         |------ pmdAgent.cpp
+|         |------ pmdMain.cpp
+|         |------ pmdTCPListener.cpp
+|         |------ pmdOption.cpp
+|------client
+|         |------ command.hpp
+|         |------ command.cpp
+|         |------ commandFactory.hpp
+|         |------ commandFactory.cpp
+|         |------ edb.hpp
+|         |------ edb.cpp
+|------Makefile.am
+|------build.sh
+|------Configure.in
+|------Configure.in.bak
+
 Milestone
 =======
 
