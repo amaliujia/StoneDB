@@ -12,10 +12,15 @@ Structure
 =======
 StoneDB
 |
+
 |
+
 |------include
+
 |         |------ core.hpp
+
 |         |------ dms.hpp
+
 |         |------ dmsRecord.hpp
 |         |------ msg.hpp
 |         |------ ossLatch.hpp
