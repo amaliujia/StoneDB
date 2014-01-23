@@ -77,7 +77,7 @@ establish mapping betweent disk and memory via Mmap.
 ---relating files: ossMmapFile.cpp.
 
 
-step 7 (In progress):
+step 7 (Done):
 
 a. BSON and data records structure design.
 
@@ -86,7 +86,7 @@ b. data files design.
 ---relating files: dms.hpp, dms.cpp, dmsRecord.hpp.
 
 
-step 8:
+step 8 (In progress):
 
 a. to finish the operations like insert, delete, query, etc.
 
