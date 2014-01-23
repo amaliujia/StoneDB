@@ -6,7 +6,7 @@ It is conducted by my own.
 
 Code expected: 10,000 ~ 30,000 lines.
 
-The step 1 to 6 have been done.
+The step 1 to 7 have been done.
 
 Structure
 =======
