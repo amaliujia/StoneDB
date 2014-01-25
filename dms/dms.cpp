@@ -19,17 +19,228 @@ dmsFile::~dmsFile ()
 
 int dmsFile::insert ( BSONObj &record, BSONObj &outRecord, dmsRecordID &rid )
 {
-   return EDB_OK ;
+	int rc = EDB_OK;
+	PAGEID pageID = 0;
+	char *page = NULL;
+	dmsPageHeader *pageHeader = NULL;
+	int recordSize = 0;
+	SLOTOFF offsetTemp = 0;
+	const char *pGKeyFieldName = NULL;
+	dmsRecord recordHeader;
+	
+	recordSize = record.objsize();
+	//make sure record size less than 4MB
+	if((unsigned int)recordSize > DMS_MAX_RECORD)
+	{
+		rc = EDB_INVALIDARG;
+		PD_LOG(PDERROR, "record connot bigger than 4MD");
+		goto error;
+	}
+	pGKeyFieldName = gKeyFieldName;
+	//we have to verify whether record include _id field before we insert it
+	//make sure _id exists
+	if(record.getFieldNameDottedOrArray(pGKeyFieldName).eoo())
+	{
+		rc = EDB_INVALIDARG;
+		PD_LOG(PDERROR,"record must be with _id");
+		goto error;
+	}
+retry:
+	//lock the database
+	_mutex.get();
+	//and then try to get the requird record size
+	pageID = _findPage(recordSize + sizeof(dmsRecord));
+	//if there's not enough space in any existing pages,let's release DB lock
+	if(DMS_INVALID_PAGEID == pageID)
+	{
+		_mutex.release();
+		// try to allocate a new segment by calling _extendSegment
+		if(_extendMutex.try_get())
+		{
+			rc = _extendSegment();
+			if(rc)
+			{
+				PD_LOG(PDERROR,"Failed to extend segment,rc = %d",rc);
+				_extendMutex.release();
+				goto error;
+			}
+		}
+		else{
+		// we have to wait until get extendSegment mutex
+		_extendMutex.get();
+		}
+		_extendMutex.release();
+		goto retry;
+	}
+	//find the in-memory offset for the page
+	page = pageToOffset(pageID);
+	//if get wrong thing, return error
+	if(!page)
+	{
+		rc = EDB_SYS;
+		PD_LOG(PDERROR,"Failed to find the page");
+		goto error_releasemutex;
+	}
+	//set page header
+	pageHeader = (dmsPageHeader *)page;
+	if(memcmp(pageHeader->_eyeCatcher,DMS_PAGE_EYECATCHER,DMS_PAGE_EYECATCHER_LEN) != 0)
+	{
+		rc = EDB_SYS;
+		PD_LOG(PDERROR,"Invalid page header");
+		goto error_releasemutex;
+	}
+	//slot offset is the last byte of slots
+	//free offset is the first byte of data
+	//so freeOffset - slotOffset = actual free space excluding holse
+	   if (
+      // make sure there's still holes to recover
+      ( pageHeader->_freeSpace >
+        pageHeader->_freeOffset - pageHeader->_slotOffset ) &&
+      // if there's no free space excluding holes
+      ( pageHeader->_slotOffset + recordSize + sizeof(dmsRecord) + sizeof(SLOTID) >
+        pageHeader->_freeOffset )
+   )
+   {
+      // recover empty hole from page
+      _recoverSpace ( page ) ;
+   }
+   if (
+      // make sure there is enough free space
+      ( pageHeader->_freeSpace < recordSize + sizeof(dmsRecord) + sizeof(SLOTID) ) ||
+       ( pageHeader->_freeOffset - pageHeader->_slotOffset <
+         recordSize + sizeof(dmsRecord) + sizeof(SLOTID) )
+   )
+   {
+      PD_LOG ( PDERROR, "Something big wrong!!" ) ;
+      rc = EDB_SYS ;
+      goto error_releasemutex ;
+   }
+   offsetTemp = pageHeader->_freeOffset - recordSize - sizeof(dmsRecord);
+   recordHeader._size = recordSize + sizeof(dmsRecord);
+   recordHeader._flag = DMS_RECORD_FLAG_NORMAL;
+  //copy the slot
+  *(SLOTOFF*)(page + sizeof(dmsPageHeader) + pageHeader->_numSlot * sizeof(SLOTOFF)) = offsetTemp;
+  //copy the record header
+  memcpy(page + offsetTemp, (char *)&recordHeader,sizeof(dmsRecord));
+  // copy the record body
+   memcpy ( page + offsetTemp + sizeof(dmsRecord),
+            record.objdata(),
+            recordSize ) ;
+   outRecord = BSONObj ( page + offsetTemp + sizeof(dmsRecord) ) ;
+   rid._pageID = pageID ;
+   rid._slotID = pageHeader->_numSlots ;
+   // modify metadata in page
+   pageHeader->_numSlots ++ ;
+   pageHeader->_slotOffset += sizeof(SLOTID) ;
+   pageHeader->_freeOffset = offsetTemp ;
+   // modify database metadata
+   _updateFreeSpace ( pageHeader,
+                      -(recordSize+sizeof(SLOTID)+sizeof(dmsRecord)),
+                      pageID ) ;
+   // release lock for database
+   _mutex.release () ;
+done :
+   return rc ;
+error_releasemutex :
+   _mutex.release() ;
+error :
+   goto done ; 			
 }
 
 int dmsFile::remove ( dmsRecordID &rid )
 {
-   return EDB_OK ;
+   int rc                    = EDB_OK ;
+   SLOTOFF slot              = 0 ;
+   char *page                = NULL ;
+   dmsRecord *recordHeader   = NULL ;
+   dmsPageHeader *pageHeader = NULL ;
+   std::pair<std::multimap<unsigned int, PAGEID>::iterator,
+             std::multimap<unsigned int, PAGEID>::iterator> ret ;
+   _mutex.get () ;
+   // find the page in memory
+   page = pageToOffset ( rid._pageID ) ;
+   if ( !page )
+   {
+      rc = EDB_SYS ;
+      PD_LOG ( PDERROR, "Failed to find the apge for %u;%u",
+               rid._pageID, rid._slotID ) ;
+      goto error ;
+   }
+   // search the given slot
+   rc = _searchSlot ( page, rid, slot ) ;
+   if ( rc )
+   {
+      PD_LOG ( PDERROR, "Failed to search slot, rc = %d", rc ) ;
+      goto error ;
+   }
+   if ( DMS_SLOT_EMPTY == slot )
+   {
+      rc = EDB_SYS ;
+      PD_LOG ( PDERROR, "The record is dropped" ) ;
+      goto error ;
+   }
+   // set page header
+   pageHeader = (dmsPageHeader *)page ;
+   // set slot to empty
+   *(SLOTID*)(page + sizeof( dmsPageHeader ) +
+              rid._slotID * sizeof(SLOTID)) = DMS_SLOT_EMPTY ;
+   // set record header
+   recordHeader = (dmsRecord *)(page+slot) ;
+   recordHeader->_flag = DMS_RECORD_FLAG_DROPPED ;
+   // update database metadata
+   _updateFreeSpace ( pageHeader, recordHeader->_size, rid._pageID ) ;
+done :
+   _mutex.release () ;
+   return rc ;
+error :
+   goto done ;
 }
 
 int dmsFile::find ( dmsRecord &rid, BSONObj &result )
 {
-   return EDB_OK ;
+   int rc                  = EDB_OK ;
+   SLOTOFF slot            = 0 ;
+   char *page              = NULL ;
+   dmsRecord *recordHeader = NULL ;
+   // S lock the database
+   _mutex.get_shared () ;
+   // goto the page and verify the slot is valid
+   page = pageToOffset ( rid._pageID ) ;
+   if ( !page )
+   {
+      rc = EDB_SYS ;
+      PD_LOG ( PDERROR, "Failed to find the page" ) ;
+      goto error ;
+   }
+   rc = _searchSlot ( page, rid, slot ) ;
+   if ( rc )
+   {
+      PD_LOG ( PDERROR, "Failed to search slot, rc = %d", rc ) ;
+      goto error ;
+   }
+   // if slot is empty, something big wrong
+   if ( DMS_SLOT_EMPTY == slot )
+   {
+      rc = EDB_SYS ;
+      PD_LOG ( PDERROR, "The record is dropped" ) ;
+      goto error ;
+   }
+
+   // get the record header
+   recordHeader = (dmsRecord *)( page + slot ) ;
+   // if recordheader->_flag is dropped, this record is dropped already
+   if ( DMS_RECORD_FLAG_DROPPED == recordHeader->_flag )
+   {
+      rc = EDB_SYS ;
+      PD_LOG ( PDERROR, "This data is dropped" ) ;
+      goto error ;
+   }
+   result = BSONObj ( page + slot + sizeof(dmsRecord) ).copy () ;
+done :
+   _mutex.release_shared () ;
+   return rc ;
+error :
+   goto done ;
 }
 
 void dmsFile::_updateFreeSpace ( dmsPageHeader *header, int changeSize,
