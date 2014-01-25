@@ -3,7 +3,7 @@
 
 #include "core.hpp"
 #include "pmdEDUMgr.hpp"
-
+#include "rtn.hpp"
 
 enum EDB_DB_STATUS
 {
@@ -30,7 +30,7 @@ private:
 	EDB_DB_STATUS _dbStatus;
 private:
 	pmdEDUMgr _eduMgr;
-	//rtn	_rtnMgr;
+	rtn	_rtnMgr;
 public:
 	EDB_KRCB()
 	{
@@ -45,7 +45,10 @@ public:
 	{
 		return &_eduMgr;
 	}
-
+	rtn *getRtnMgr()
+	{
+		return &_rtnMgr;
+	}
 	// get db status
 	inline EDB_DB_STATUS getDBStatus()
 	{
