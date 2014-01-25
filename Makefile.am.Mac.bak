@@ -1,6 +1,6 @@
 AUTOMAKE_OPTIONS=foreign
-bin_PROGRAMS=emeralddb edb file 
-emeralddb_SOURCES=\
+bin_PROGRAMS=stonedb edb file 
+stonedb_SOURCES=\
 	pmd/pmdMain.cpp pmd/pmdTcpListener.cpp pmd/pmdOptions.cpp\
 	pmd/pmd.cpp pmd/pmdEDU.cpp	pmd/pmdEDUMgr.cpp pmd/pmdAgent.cpp	\
 	bson/src/bsonobj.cpp bson/src/util/json.cpp bson/src/oid.cpp \
@@ -23,9 +23,9 @@ file_SOURCES=\
 
 
 
-emeralddb_CXXFLAGS=-I../boost -I./bson/src -I./include -D_FILE_OFFSET_BITS=64 -g -Wall -O0
-emeralddb_LDADD=-lpthread -lm -lboost_system -lboost_thread -lboost_program_options 
-emeralddb_LDFLAGS=-fPIC -rdynamic -L../boost/stage/lib -pthread 
+stonedb_CXXFLAGS=-I../boost -I./bson/src -I./include -D_FILE_OFFSET_BITS=64 -g -Wall -O0
+stonedb_LDADD=-lpthread -lm -lboost_system -lboost_thread -lboost_program_options 
+stonedb_LDFLAGS=-fPIC -rdynamic -L../boost/stage/lib -pthread 
 
 edb_CXXFLAGS=-I../boost -I./bson/src -I./include -D_FILE_OFFSET_BITS=64 -g -Wall -O0
 edb_LDADD=-lm -lboost_system -lboost_thread  
