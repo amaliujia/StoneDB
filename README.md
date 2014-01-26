@@ -1,12 +1,12 @@
 StoneDB
 =======
-This is a NoSQL Database (Document database), which is expected to be done in next two months.
+This is a NoSQL Database (Document database), which is expected to be done in next one and half months.
 
 It is conducted by my own.
 
 Code expected: 10,000 ~ 30,000 lines.
 
-The step 1 to 7 have been done.
+The step 1 to 8 have been done.
 
 Structure
 =======
@@ -21,7 +21,7 @@ a. install Boost C++ library.
 
 b. use autotools to set up compiling environment.
 
----relating files: Makefile.am, build.sh, configure.in, configure.in.bak.
+---files related: Makefile.am, build.sh, configure.in, configure.in.bak.
 
 step 2 (Done):
 
@@ -33,7 +33,7 @@ c. define several basic commands of client, like help, connect and etc.
 
 d. send requests from client to server.
 
----relating files: core.hpp, ossSocket.hpp, ossSocket.cpp, command.cpp, command.hpp, commandFactory.cpp, commandFactory.hpp, edb.cpp, edb.hpp, pmdTcpListener.cpp, pmdAgent.cpp.
+---files related: core.hpp, ossSocket.hpp, ossSocket.cpp, command.cpp, command.hpp, commandFactory.cpp, commandFactory.hpp, edb.cpp, edb.hpp, pmdTcpListener.cpp, pmdAgent.cpp.
 
 step 3 (Done):
 
@@ -49,7 +49,7 @@ f. initialize configuration file.
 
 e. establish Log component.
 
----relating files: ossLatch.hpp, ossPrimitiveFileOp.hpp, ossPrimitiveFileOp.cpp, pmd.hpp, pmd.cpp, pd.cpp, pd.hpp, pmdMain.cpp, pmdOptions.hpp, pmdOptions.cpp.
+---files related: ossLatch.hpp, ossPrimitiveFileOp.hpp, ossPrimitiveFileOp.cpp, pmd.hpp, pmd.cpp, pd.cpp, pd.hpp, pmdMain.cpp, pmdOptions.hpp, pmdOptions.cpp.
 
 step 4 (Done):
 
@@ -61,7 +61,7 @@ c. implement thread pool.
 
 d. implement lock mechanism on thread queues.
 
----relating files: ossUtil.hpp, pmdEDU.hpp, pmdEDU.cpp, pmdEDUMgr.hpp, pmdEDUMgr.cpp, pmdOptions.hpp, pmdOptions.cpp, edb.cpp, edb.hpp, command.cpp, command.hpp, pmdTCPListener.cpp.
+---files related: ossUtil.hpp, pmdEDU.hpp, pmdEDU.cpp, pmdEDUMgr.hpp, pmdEDUMgr.cpp, pmdOptions.hpp, pmdOptions.cpp, edb.cpp, edb.hpp, command.cpp, command.hpp, pmdTCPListener.cpp.
 
 step 5 (Done):
 
@@ -71,14 +71,14 @@ b. client part has been done.
 
 c. define special message protocols for StoneDB.
 
----relating files: msg.hpp, msg.cpp, command.cpp, pmdAgent.cpp. 
+---files related: msg.hpp, msg.cpp, command.cpp, pmdAgent.cpp. 
 
 
 step 6 (Done):
 
 establish mapping betweent disk and memory via Mmap.
 
----relating files: ossMmapFile.cpp.
+---files related: ossMmapFile.cpp.
 
 
 step 7 (Done):
@@ -87,17 +87,18 @@ a. BSON and data records structure design.
 
 b. data files design.
 
----relating files: dms.hpp, dms.cpp, dmsRecord.hpp.
+---files related: dms.hpp, dms.cpp, dmsRecord.hpp.
 
 
-step 8 (In progress):
+step 8 (Done):
 
-a. to finish the operations like insert, delete, query, etc.
+a. to finish the file and data operations like insert, delete, query in dms module, etc.
 
-b. to finish relating functions on client.
+b. to code runtime system connecting database manager and process manager.
 
+---files related: rtn.hpp, rtn.cpp, dms.hpp, dms.cpp, pmd.cpp.
 
-step 9:
+step 9 (In progress):
 
 a. implement hash function on keys.
 
