@@ -33,7 +33,7 @@ static int pmdProcessAgentRequest ( char *pReceiveBuffer,
    int opCode                       = header->opCode ;
    EDB_KRCB *krcb                   = pmdGetKRCB () ;
    // get rtn
-
+   rtn *rtnMgr						= krcb->getRtnMgr();
    *disconnect                      = false ;
 
    // check if the package length is valid

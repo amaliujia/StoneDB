@@ -39,7 +39,7 @@ int dmsFile::insert ( BSONObj &record, BSONObj &outRecord, dmsRecordID &rid )
 	pGKeyFieldName = gKeyFieldName;
 	//we have to verify whether record include _id field before we insert it
 	//make sure _id exists
-	if(record.getFieldNameDottedOrArray(pGKeyFieldName).eoo())
+	if(record.getFieldDottedOrArray(pGKeyFieldName).eoo())
 	{
 		rc = EDB_INVALIDARG;
 		PD_LOG(PDERROR,"record must be with _id");
@@ -119,7 +119,7 @@ retry:
    recordHeader._size = recordSize + sizeof(dmsRecord);
    recordHeader._flag = DMS_RECORD_FLAG_NORMAL;
   //copy the slot
-  *(SLOTOFF*)(page + sizeof(dmsPageHeader) + pageHeader->_numSlot * sizeof(SLOTOFF)) = offsetTemp;
+  *(SLOTOFF*)(page + sizeof(dmsPageHeader) + pageHeader->_numSlots * sizeof(SLOTOFF)) = offsetTemp;
   //copy the record header
   memcpy(page + offsetTemp, (char *)&recordHeader,sizeof(dmsRecord));
   // copy the record body
@@ -196,7 +196,7 @@ error :
    goto done ;
 }
 
-int dmsFile::find ( dmsRecord &rid, BSONObj &result )
+int dmsFile::find ( dmsRecordID &rid, BSONObj &result )
 {
    int rc                  = EDB_OK ;
    SLOTOFF slot            = 0 ;

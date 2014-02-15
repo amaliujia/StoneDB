@@ -5,7 +5,7 @@
 
 using namespace bson;
 
-rtn:rtn():_dmsFile(NULL)
+rtn::rtn():_dmsFile(NULL)
 {
 
 }
@@ -18,7 +18,7 @@ rtn::~rtn()
 	}
 }
 
-int rtn:rtnInitialize()
+int rtn::rtnInitialize()
 {
 	int rc = EDB_OK;
 	_dmsFile = new(std::nothrow)dmsFile();
@@ -46,7 +46,7 @@ int rtn::rtnInsert(BSONObj &record)
 	int rc = EDB_OK;
 	dmsRecordID recordID;
 	BSONObj outRecord;
-	rc = dmsFile->insert(record, outRecord,recordID);
+	rc = _dmsFile->insert(record, outRecord,recordID);
 	if(rc)
 	{
 		PD_LOG(PDERROR,"Failed to call dms insert function,rc = %d",rc);
