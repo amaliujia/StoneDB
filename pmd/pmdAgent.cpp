@@ -66,6 +66,21 @@ static int pmdProcessAgentRequest ( char *pReceiveBuffer,
             PD_LOG ( PDEVENT,
                      "Insert: insertor: %s",
                      insertor.toString().c_str() ) ;
+	   // make sure _id is included
+            BSONObjIterator it ( insertor ) ;
+            BSONElement ele = *it ;
+            const char *tmp = ele.fieldName () ;
+            rc = strcmp ( tmp, gKeyFieldName ) ;
+            if ( rc )
+            {
+               PD_LOG ( PDERROR,
+                        "First element in inserted record is not _id" ) ;
+               probe = 25 ;
+               rc = EDB_NO_ID ;
+               goto error ;
+            }
+            // insert record
+            rc = rtnMgr->rtnInsert ( insertor ) ; 
          }
          catch ( std::exception &e )
          {

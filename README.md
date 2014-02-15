@@ -1,12 +1,16 @@
 StoneDB
 =======
-This is a NoSQL Database, which is expected to be done in next two months.
+This is a NoSQL Database (Document database), which is expected to be done in next one and half months.
 
 It is conducted by my own.
 
 Code expected: 10,000 ~ 30,000 lines.
 
-The step 1 to 5 have been done.
+The step 1 to 8 have been done.
+
+Structure
+=======
+StoneDB<br>|<br>|------include<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ core.hpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ dms.hpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ dmsRecord.hpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ msg.hpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ ossLatch.hpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ ossMmapFile.hpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ ossPrimitiveFileOp.hpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ ossQueue.hpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ ossSocket.hpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ ossUtil.hpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ pd.hpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ pmd.hpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ pmdEDU.hpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ pmdEDUEvent.hpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ pmdEDUMgr.hpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ pmdOptions.hpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ rtn.hpp<br>|------oss<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ ossSocket.cpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ ossPrimitiveFileOp.cpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ ossMmapFile.cpp<br>|------pd<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ pd.cpp<br>|------rtn<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ rtn.cpp<br>|------msg<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ msg.cpp<br>|------dms<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ dms.cpp<br>|------pmd<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ pmd.cpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ pmdEDU.cpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ pmdEDUMgr.cpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ pmdAgent.cpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ pmdMain.cpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ pmdTCPListener.cpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ pmdOption.cpp<br>|------client<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ command.hpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ command.cpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ commandFactory.hpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ commandFactory.cpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ edb.hpp<br>|&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |------ edb.cpp<br>|------Makefile.am<br>|------Makefile.am.Mac.am<br>|------build.sh<br>|------Configure.in<br>|------Configure.in.bak
 
 Milestone
 =======
@@ -17,7 +21,7 @@ a. install Boost C++ library.
 
 b. use autotools to set up compiling environment.
 
----relating files: Makefile.am, build.sh, configure.in, configure.in.bak.
+---files related: Makefile.am, build.sh, configure.in, configure.in.bak.
 
 step 2 (Done):
 
@@ -29,7 +33,7 @@ c. define several basic commands of client, like help, connect and etc.
 
 d. send requests from client to server.
 
----relating files: core.hpp, ossSocket.hpp, ossSocket.cpp, command.cpp, command.hpp, commandFactory.cpp, commandFactory.hpp, edb.cpp, edb.hpp, pmdTcpListener.cpp, pmdAgent.cpp.
+---files related: core.hpp, ossSocket.hpp, ossSocket.cpp, command.cpp, command.hpp, commandFactory.cpp, commandFactory.hpp, edb.cpp, edb.hpp, pmdTcpListener.cpp, pmdAgent.cpp.
 
 step 3 (Done):
 
@@ -45,7 +49,7 @@ f. initialize configuration file.
 
 e. establish Log component.
 
----relating files: ossLatch.hpp, ossPrimitiveFileOp.hpp, ossPrimitiveFileOp.cpp, pmd.hpp, pmd.cpp, pd.cpp, pd.hpp, pmdMain.cpp, pmdOptions.hpp, pmdOptions.cpp.
+---files related: ossLatch.hpp, ossPrimitiveFileOp.hpp, ossPrimitiveFileOp.cpp, pmd.hpp, pmd.cpp, pd.cpp, pd.hpp, pmdMain.cpp, pmdOptions.hpp, pmdOptions.cpp.
 
 step 4 (Done):
 
@@ -57,7 +61,7 @@ c. implement thread pool.
 
 d. implement lock mechanism on thread queues.
 
----relating files: ossUtil.hpp, pmdEDU.hpp, pmdEDU.cpp, pmdEDUMgr.hpp, pmdEDUMgr.cpp, pmdOptions.hpp, pmdOptions.cpp, edb.cpp, edb.hpp, command.cpp, command.hpp, pmdTCPListener.cpp.
+---files related: ossUtil.hpp, pmdEDU.hpp, pmdEDU.cpp, pmdEDUMgr.hpp, pmdEDUMgr.cpp, pmdOptions.hpp, pmdOptions.cpp, edb.cpp, edb.hpp, command.cpp, command.hpp, pmdTCPListener.cpp.
 
 step 5 (Done):
 
@@ -67,31 +71,34 @@ b. client part has been done.
 
 c. define special message protocols for StoneDB.
 
----relating files: msg.hpp, msg.cpp, command.cpp, pmdAgent.cpp. 
+---files related: msg.hpp, msg.cpp, command.cpp, pmdAgent.cpp. 
 
 
-step 6 (In progress):
+step 6 (Done):
 
-a. establish mapping betweent disk and memory via Mmap.
+establish mapping betweent disk and memory via Mmap.
 
-b. complete allocation and deallocation data blocks.
-
-
-step 7:
-
-a. design of BSON and structure of data records.
-
-b. design of data files.
+---files related: ossMmapFile.cpp.
 
 
-step 8:
+step 7 (Done):
 
-a. to finish the operations like insert, delete, query, etc.
+a. BSON and data records structure design.
 
-b. to finish relating functions on client.
+b. data files design.
+
+---files related: dms.hpp, dms.cpp, dmsRecord.hpp.
 
 
-step 9:
+step 8 (Done):
+
+a. to finish the file and data operations like insert, delete, query in dms module, etc.
+
+b. to code runtime system connecting database manager and process manager.
+
+---files related: rtn.hpp, rtn.cpp, dms.hpp, dms.cpp, pmd.cpp.
+
+step 9 (In progress):
 
 a. implement hash function on keys.
 
@@ -127,7 +134,7 @@ Copyright
 =======
 
 
-   Copyright (C) 2013 Rui WANG.
+   Copyright (C) 2013-2014 Rui WANG.
 
    This program is free software: you can redistribute it and/or modify
    it under the terms of the GNU Affero General Public License, version 3,
