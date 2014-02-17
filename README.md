@@ -6,7 +6,7 @@ It is conducted by my own.
 
 Code expected: 10,000 ~ 30,000 lines.
 
-The step 1 to 9 have been done.
+The step 1 to 11 have been done.
 
 Structure
 =======
@@ -106,7 +106,7 @@ b. achieve automatically establishing index as soon as StoneDB launchs.
 
 ---files related: rtn.hpp, rtn.cpp, ixmBucket.cpp, ixmBucket.hpp, dms.hpp, dms.cpp, ossHash.hpp.
 
-step 10 (In progress):
+step 10 (Done):
 
 a. understand basic concepts of DB, including transaction, log, ect.
 
@@ -118,7 +118,7 @@ d. write a SQL Resolver.
 
 ---files related: yacc.y, Tree.h, lexer.l, AST.h
 
-step 11:
+step 11 (Done):
 
 finish java driver.
 
