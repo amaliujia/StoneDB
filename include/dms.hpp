@@ -6,6 +6,8 @@
 #include "bson.h"
 #include "dmsRecord.hpp"
 #include <vector>
+#include "ixmBucket.hpp"
+
 
 #define DMS_EXTEND_SIZE 65536
 // 4MB for page size
@@ -92,8 +94,9 @@ private :
    ossSLatch             _mutex ;
    ossXLatch             _extendMutex ;
    char                 *_pFileName ;
+   ixmBucketManager		*_ixmBucketMgr;
 public :
-   dmsFile () ;
+   dmsFile (ixmBucketManager *ixmBucketMgr) ;
    ~dmsFile () ;
    // initialize the dms file
    int initialize ( const char *pFileName ) ;

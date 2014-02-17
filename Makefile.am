@@ -6,7 +6,8 @@ stonedb_SOURCES=\
 	bson/src/bsonobj.cpp bson/src/util/json.cpp bson/src/oid.cpp \
 	bson/src/lib/base64.cpp bson/src/lib/md5.cpp bson/src/lib/nonce.cpp \
 	oss/ossSocket.cpp oss/ossPrimitiveFileOp.cpp  					\
-	pd/pd.cpp msg/msg.cpp	dms/dms.cpp rtn/rtn.cpp								\
+	oss/ossHash.cpp													\
+	pd/pd.cpp msg/msg.cpp	dms/dms.cpp rtn/rtn.cpp	ixm/ixmBucket.cpp							\
 	oss/ossMmapFile.cpp 
 
 edb_SOURCES=\
