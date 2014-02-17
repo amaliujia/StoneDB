@@ -5,6 +5,8 @@
 #include "../bson/src/bson.h"
 #include "pmd.hpp"
 #include "msg.hpp"
+#include "monCB.hpp"
+
 using namespace bson;
 using namespace std;
 
@@ -33,7 +35,7 @@ static int pmdProcessAgentRequest ( char *pReceiveBuffer,
    int opCode                       = header->opCode ;
    EDB_KRCB *krcb                   = pmdGetKRCB () ;
    // get rtn
-   rtn *rtnMgr						= krcb->getRtnMgr();
+   rtn *rtnMgr                      = krcb->getRtnMgr() ;
    *disconnect                      = false ;
 
    // check if the package length is valid
@@ -66,7 +68,7 @@ static int pmdProcessAgentRequest ( char *pReceiveBuffer,
             PD_LOG ( PDEVENT,
                      "Insert: insertor: %s",
                      insertor.toString().c_str() ) ;
-	   // make sure _id is included
+            // make sure _id is included
             BSONObjIterator it ( insertor ) ;
             BSONElement ele = *it ;
             const char *tmp = ele.fieldName () ;
@@ -80,7 +82,12 @@ static int pmdProcessAgentRequest ( char *pReceiveBuffer,
                goto error ;
             }
             // insert record
-            rc = rtnMgr->rtnInsert ( insertor ) ; 
+            rc = rtnMgr->rtnInsert ( insertor ) ;
+
+            if ( !rc )
+            {
+               krcb->getMonAppCB().increaseInsertTimes() ;
+            }
          }
          catch ( std::exception &e )
          {
@@ -108,21 +115,10 @@ static int pmdProcessAgentRequest ( char *pReceiveBuffer,
          PD_LOG ( PDEVENT,
                   "Query condition: %s",
                   recordID.toString().c_str() ) ;
-         try
+         rc = rtnMgr->rtnFind ( recordID, retObj ) ;
+         if ( !rc )
          {
-            BSONObjBuilder b ;
-            b.append ( "query", "test" ) ;
-            b.append ( "result", 10 ) ;
-            retObj = b.obj () ;
-         }
-         catch ( std::exception &e )
-         {
-            PD_LOG ( PDERROR,
-                     "Failed to create return BSONObj: %s",
-                     e.what() ) ;
-            probe = 55 ;
-            rc = EDB_INVALIDARG ;
-            goto error ;
+            krcb->getMonAppCB().increaseQueryTimes() ;
          }
       }
       else if ( OP_DELETE == opCode )
@@ -141,18 +137,24 @@ static int pmdProcessAgentRequest ( char *pReceiveBuffer,
          PD_LOG ( PDEVENT,
                   "Delete condition: %s",
                   recordID.toString().c_str() ) ;
+         rc = rtnMgr->rtnRemove ( recordID ) ;
+         if ( !rc )
+         {
+            krcb->getMonAppCB().increaseDelTimes() ;
+         }
       }
       else if ( OP_SNAPSHOT == opCode )
       {
          PD_LOG ( PDDEBUG,
                   "Snapshot request received" ) ;
+         MonAppCB monAppCB = krcb->getMonAppCB () ;
          try
          {
             BSONObjBuilder b ;
-            b.append ( "insertTimes", 100 ) ;
-            b.append ( "delTimes", 1000 ) ;
-            b.append ( "queryTimes", 2000 ) ;
-            b.append ( "serverRunTime", 100 ) ;
+            b.append ( "insertTimes", monAppCB.getInsertTimes () ) ;
+            b.append ( "delTimes", monAppCB.getDelTimes () ) ;
+            b.append ( "queryTimes", monAppCB.getQueryTimes() ) ;
+            b.append ( "serverRunTime", monAppCB.getServerRunTime() ) ;
             retObj = b.obj () ;
          }
          catch ( std::exception &e )
