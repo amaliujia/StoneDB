@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 62
+/emeralddb/!svn/ver/375/src/driver/java/src/com/emeralddb/util
+END
+HashAlgorithm.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/emeralddb/!svn/ver/221/src/driver/java/src/com/emeralddb/util/HashAlgorithm.java
+END
+KetamaNodeLocator.java
+K 25
+svn:wc:ra_dav:version-url
+V 85
+/emeralddb/!svn/ver/375/src/driver/java/src/com/emeralddb/util/KetamaNodeLocator.java
+END
+KetamaNodeLocatorTest.java
+K 25
+svn:wc:ra_dav:version-url
+V 89
+/emeralddb/!svn/ver/221/src/driver/java/src/com/emeralddb/util/KetamaNodeLocatorTest.java
+END
+EDBMessageHelper.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/emeralddb/!svn/ver/360/src/driver/java/src/com/emeralddb/util/EDBMessageHelper.java
+END
+Helper.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/emeralddb/!svn/ver/275/src/driver/java/src/com/emeralddb/util/Helper.java
+END

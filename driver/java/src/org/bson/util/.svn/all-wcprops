@@ -1,0 +1,113 @@
+K 25
+svn:wc:ra_dav:version-url
+V 57
+/emeralddb/!svn/ver/259/src/driver/java/src/org/bson/util
+END
+StringRangeSet.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/emeralddb/!svn/ver/85/src/driver/java/src/org/bson/util/StringRangeSet.java
+END
+ObjectSerializer.java
+K 25
+svn:wc:ra_dav:version-url
+V 78
+/emeralddb/!svn/ver/85/src/driver/java/src/org/bson/util/ObjectSerializer.java
+END
+ComputingMap.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/emeralddb/!svn/ver/85/src/driver/java/src/org/bson/util/ComputingMap.java
+END
+ClassMap.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/emeralddb/!svn/ver/85/src/driver/java/src/org/bson/util/ClassMap.java
+END
+AbstractCopyOnWriteMap.java
+K 25
+svn:wc:ra_dav:version-url
+V 84
+/emeralddb/!svn/ver/85/src/driver/java/src/org/bson/util/AbstractCopyOnWriteMap.java
+END
+JSON.java
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/emeralddb/!svn/ver/85/src/driver/java/src/org/bson/util/JSON.java
+END
+ClassAncestry.java
+K 25
+svn:wc:ra_dav:version-url
+V 75
+/emeralddb/!svn/ver/85/src/driver/java/src/org/bson/util/ClassAncestry.java
+END
+package.html
+K 25
+svn:wc:ra_dav:version-url
+V 69
+/emeralddb/!svn/ver/85/src/driver/java/src/org/bson/util/package.html
+END
+CopyOnWriteMap.java
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/emeralddb/!svn/ver/85/src/driver/java/src/org/bson/util/CopyOnWriteMap.java
+END
+Base64Codec.java
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/emeralddb/!svn/ver/85/src/driver/java/src/org/bson/util/Base64Codec.java
+END
+SimplePool.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/emeralddb/!svn/ver/85/src/driver/java/src/org/bson/util/SimplePool.java
+END
+JSONParseException.java
+K 25
+svn:wc:ra_dav:version-url
+V 80
+/emeralddb/!svn/ver/85/src/driver/java/src/org/bson/util/JSONParseException.java
+END
+ClassMapBasedObjectSerializer.java
+K 25
+svn:wc:ra_dav:version-url
+V 91
+/emeralddb/!svn/ver/85/src/driver/java/src/org/bson/util/ClassMapBasedObjectSerializer.java
+END
+AbstractObjectSerializer.java
+K 25
+svn:wc:ra_dav:version-url
+V 86
+/emeralddb/!svn/ver/85/src/driver/java/src/org/bson/util/AbstractObjectSerializer.java
+END
+Function.java
+K 25
+svn:wc:ra_dav:version-url
+V 70
+/emeralddb/!svn/ver/85/src/driver/java/src/org/bson/util/Function.java
+END
+JSONSerializers.java
+K 25
+svn:wc:ra_dav:version-url
+V 77
+/emeralddb/!svn/ver/85/src/driver/java/src/org/bson/util/JSONSerializers.java
+END
+JSONCallback.java
+K 25
+svn:wc:ra_dav:version-url
+V 74
+/emeralddb/!svn/ver/85/src/driver/java/src/org/bson/util/JSONCallback.java
+END
+Assertions.java
+K 25
+svn:wc:ra_dav:version-url
+V 72
+/emeralddb/!svn/ver/85/src/driver/java/src/org/bson/util/Assertions.java
+END

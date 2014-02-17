@@ -1,0 +1,77 @@
+K 25
+svn:wc:ra_dav:version-url
+V 73
+/emeralddb/!svn/ver/259/src/driver/java/src/com/google/gson/internal/bind
+END
+JsonTreeReader.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/emeralddb/!svn/ver/85/src/driver/java/src/com/google/gson/internal/bind/JsonTreeReader.java
+END
+DateTypeAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/emeralddb/!svn/ver/85/src/driver/java/src/com/google/gson/internal/bind/DateTypeAdapter.java
+END
+SqlDateTypeAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 96
+/emeralddb/!svn/ver/85/src/driver/java/src/com/google/gson/internal/bind/SqlDateTypeAdapter.java
+END
+ArrayTypeAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 94
+/emeralddb/!svn/ver/85/src/driver/java/src/com/google/gson/internal/bind/ArrayTypeAdapter.java
+END
+TimeTypeAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 93
+/emeralddb/!svn/ver/85/src/driver/java/src/com/google/gson/internal/bind/TimeTypeAdapter.java
+END
+ReflectiveTypeAdapterFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/emeralddb/!svn/ver/85/src/driver/java/src/com/google/gson/internal/bind/ReflectiveTypeAdapterFactory.java
+END
+TypeAdapters.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/emeralddb/!svn/ver/85/src/driver/java/src/com/google/gson/internal/bind/TypeAdapters.java
+END
+CollectionTypeAdapterFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 106
+/emeralddb/!svn/ver/85/src/driver/java/src/com/google/gson/internal/bind/CollectionTypeAdapterFactory.java
+END
+JsonTreeWriter.java
+K 25
+svn:wc:ra_dav:version-url
+V 92
+/emeralddb/!svn/ver/85/src/driver/java/src/com/google/gson/internal/bind/JsonTreeWriter.java
+END
+MapTypeAdapterFactory.java
+K 25
+svn:wc:ra_dav:version-url
+V 99
+/emeralddb/!svn/ver/85/src/driver/java/src/com/google/gson/internal/bind/MapTypeAdapterFactory.java
+END
+ObjectTypeAdapter.java
+K 25
+svn:wc:ra_dav:version-url
+V 95
+/emeralddb/!svn/ver/85/src/driver/java/src/com/google/gson/internal/bind/ObjectTypeAdapter.java
+END
+TypeAdapterRuntimeTypeWrapper.java
+K 25
+svn:wc:ra_dav:version-url
+V 107
+/emeralddb/!svn/ver/85/src/driver/java/src/com/google/gson/internal/bind/TypeAdapterRuntimeTypeWrapper.java
+END

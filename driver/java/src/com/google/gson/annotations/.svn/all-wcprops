@@ -1,0 +1,35 @@
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/emeralddb/!svn/ver/259/src/driver/java/src/com/google/gson/annotations
+END
+Until.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/emeralddb/!svn/ver/85/src/driver/java/src/com/google/gson/annotations/Until.java
+END
+SerializedName.java
+K 25
+svn:wc:ra_dav:version-url
+V 90
+/emeralddb/!svn/ver/85/src/driver/java/src/com/google/gson/annotations/SerializedName.java
+END
+Since.java
+K 25
+svn:wc:ra_dav:version-url
+V 81
+/emeralddb/!svn/ver/85/src/driver/java/src/com/google/gson/annotations/Since.java
+END
+Expose.java
+K 25
+svn:wc:ra_dav:version-url
+V 82
+/emeralddb/!svn/ver/85/src/driver/java/src/com/google/gson/annotations/Expose.java
+END
+package-info.java
+K 25
+svn:wc:ra_dav:version-url
+V 88
+/emeralddb/!svn/ver/85/src/driver/java/src/com/google/gson/annotations/package-info.java
+END
