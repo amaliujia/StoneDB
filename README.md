@@ -1,12 +1,12 @@
 StoneDB
 =======
-This is a NoSQL Database (Document database), which is expected to be done in next one month.
+This is a NoSQL Database (Document database), which is expected to be done in next three weeks month.
 
 It is conducted by my own.
 
 Code expected: 10,000 ~ 30,000 lines.
 
-The step 1 to 11 have been done.
+The step 1 to 12 have been done.
 
 Structure
 =======
