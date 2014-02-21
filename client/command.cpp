@@ -378,8 +378,8 @@ int SnapshotCommand::handleReply()
    printf( "insert times is %d\n", bsonData.getIntField("insertTimes"));
    printf( "del times is %d\n", bsonData.getIntField("delTimes"));
    printf( "query times is %d\n", bsonData.getIntField("queryTimes"));
-   printf( "server run time is %dm\n", bsonData.getIntField("serverRunTime"));
-
+   printf( "connection times is %d\n", bsonData.getIntField("connectionTimes"));
+   printf( "server run time is %d\n", bsonData.getIntField("serverRunTime"));
    return ret;
 }
 

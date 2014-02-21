@@ -154,6 +154,7 @@ static int pmdProcessAgentRequest ( char *pReceiveBuffer,
             b.append ( "insertTimes", monAppCB.getInsertTimes () ) ;
             b.append ( "delTimes", monAppCB.getDelTimes () ) ;
             b.append ( "queryTimes", monAppCB.getQueryTimes() ) ;
+            b.append ( "connectionTimes", monAppCB.getConnectionTimes());
             b.append ( "serverRunTime", monAppCB.getServerRunTime() ) ;
             retObj = b.obj () ;
          }
@@ -251,10 +252,12 @@ int pmdAgentEntryPoint ( pmdEDUCB *cb, void *arg )
    int packetLength      = 0 ;
    EDUID myEDUID         = cb->getID () ;
    pmdEDUMgr *eduMgr     = cb->getEDUMgr() ;
-
+   EDB_KRCB *krcb         = pmdGetKRCB () ;
+ 
    // receive socket from argument
    int s                 = *(( int *) &arg ) ;
    ossSocket sock ( &s ) ;
+   krcb->getMonAppCB().increaseConnectionTimes();
    sock.disableNagle () ;
 
    // allocate memory for receive buffer
@@ -391,6 +394,7 @@ done :
    if ( pResultBuffer )
       free ( pResultBuffer )  ;
    sock.close () ;
+   krcb->getMonAppCB().decreaseConnectionTimes();
    return rc;
 error :
    switch ( rc )

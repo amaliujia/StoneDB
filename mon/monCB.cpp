@@ -5,7 +5,8 @@
 MonAppCB::MonAppCB() :
    _insertTimes(0),
    _delTimes(0),
-   _queryTimes(0)
+   _queryTimes(0),
+   _connectionTimes(0)
 {
    gettimeofday ( &_start, NULL ) ;
 }
@@ -56,6 +57,31 @@ void MonAppCB::increaseQueryTimes ()
    _queryTimes++ ;
    _mutex.release () ;
 }
+
+long long MonAppCB::getConnectionTimes() const
+{
+   return _connectionTimes;
+}
+
+void MonAppCB::setConnectionTimes(long long connectionTimes)
+{
+   _connectionTimes = connectionTimes;
+}
+
+void MonAppCB::increaseConnectionTimes()
+{
+   _mutex.get();
+   _connectionTimes++;
+   _mutex.release();
+}
+
+void MonAppCB::decreaseConnectionTimes()
+{
+   _mutex.get();
+   _connectionTimes--;
+   _mutex.release();
+}
+
 long long MonAppCB::getServerRunTime ()
 {
    struct timeval end ;

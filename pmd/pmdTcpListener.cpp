@@ -18,6 +18,7 @@ int pmdTcpListenerEntryPoint ( pmdEDUCB *cb, void *arg )
    EDUID        agentEDU  = PMD_INVALID_EDUID ;
    char         svcName[OSS_MAX_SERVICENAME+1] ;
 
+
    while ( retry <= PMD_TCPLISTENER_RETRY && !EDB_IS_DB_DOWN )
    {
       retry ++ ;
@@ -92,6 +93,10 @@ int pmdTcpListenerEntryPoint ( pmdEDUCB *cb, void *arg )
             {
                PD_LOG ( PDERROR, "Failed to start EDU agent" ) ;
             }
+
+            // // recode this connection
+            // krcb->getMonAppCB().increaseConnectionTimes();
+
             // close remote connection if we can't create new thread
             ossSocket newsock ( &s ) ;
             newsock.close () ;
