@@ -122,6 +122,7 @@ step 11 (Done):
 
 finish java driver.
 
+---directory related: driver.
 
 step 12 (Done):
 
