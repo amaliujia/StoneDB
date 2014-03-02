@@ -1,12 +1,12 @@
 StoneDB
 =======
-This is a NoSQL Database (Document database), which is expected to be done in next three weeks month.
+This is a NoSQL Database (Document database), which is expected to be done in next two weeks.
 
 It is conducted by my own.
 
 Code expected: 10,000 ~ 30,000 lines.
 
-The step 1 to 12 have been done.
+The step 1 to 13 have been done.
 
 Structure
 =======
@@ -129,10 +129,11 @@ build a snapshot monitor for StoneDB.
 
 ---files related: monCB.hpp, monCB.cpp, pmdAgent.cpp, pmd.hpp
 
-step 13:
+step 13 (Done):
 
-understand software testing.
+a. understand software testing.
 
+b. deploy jenkins.
 
 step 14:
 
