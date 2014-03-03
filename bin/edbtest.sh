@@ -94,7 +94,7 @@ do
       ;;
       --test )
          if [[ $2 =~ [0-9]+ ]]; then
-            ../java/jdk_linux64/jre/bin/java -jar $BASE_DIR/$EDB_JAR $BASE_DIR/$CONFIG_FILE $2
+            /System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/bin/java -jar $BASE_DIR/$EDB_JAR $BASE_DIR/$CONFIG_FILE $2
          else
             echo "please test record number"
          fi
