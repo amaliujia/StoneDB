@@ -1,9 +1,9 @@
 #!/bin/bash
 
 # define compile
-JAVA_HOME=../../../java/jdk_linux64
-JAVAC=$JAVA_HOME/bin/javac
-JAR=$JAVA_HOME/bin/jar
+JAVA_HOME=/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home
+JAVAC=/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/bin/javac
+JAR=/System/Library/Java/JavaVirtualMachines/1.6.0.jdk/Contents/Home/bin/jar
 
 #define source directory
 SOURCE_DIR=./src
@@ -30,7 +30,7 @@ $JAVAC `find $SOURCE_DIR -name "*.java" -print` -d $BIN_DIR
 cd $BIN_DIR
 
 l=`find ./ -name "*.class" -print | sed 's/^..//'`
-../$JAR -cf ../$TARGET_DIR/emeralddb.jar $l
+$JAR -cf ../$TARGET_DIR/emeralddb.jar $l
 cd ..
 
 # clean
