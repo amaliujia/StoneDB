@@ -1,12 +1,12 @@
 StoneDB
 =======
-This is a NoSQL Database (Document database), which is expected to be done in next two weeks.
+This is a NoSQL Database (Document database).
 
 It is conducted by my own.
 
 Code expected: 10,000 ~ 30,000 lines.
 
-The step 1 to 13 have been done.
+All steps have been done.
 
 Structure
 =======
@@ -136,10 +136,13 @@ a. understand software testing.
 
 b. deploy jenkins.
 
-step 14:
+step 14 (Done):
 
-build a java app, which can communicate with StoneDB via java driver.
+a. java test app.
 
+b. java monitor app.
+
+------directory related: java, bin.
 
 Copyright
 =======
