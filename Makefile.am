@@ -25,7 +25,7 @@ edb_SOURCES=\
 stonedb_CXXFLAGS=-I../boost -I./bson/src -I./include -D_FILE_OFFSET_BITS=64 -g -Wall -O0
 stonedb_LDADD=-lpthread -lm -lboost_system -lboost_thread -lboost_program_options 
 stonedb_LDFLAGS=-fPIC -rdynamic -L../boost/stage/lib -pthread 
-
+##-lboost_thread
 edb_CXXFLAGS=-I../boost -I./bson/src -I./include -D_FILE_OFFSET_BITS=64 -g -Wall -O0
 edb_LDADD=-lm -lboost_system -lboost_thread  
 edb_LDFLAGS=-fPIC -rdynamic -L../boost/stage/lib 
