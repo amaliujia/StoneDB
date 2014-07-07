@@ -18,6 +18,7 @@ public:
 	unsigned int size()
 	{
 		boost::mutex::scoped_lock lock(_mutex);
+		return (unsigned int)_queue.size();
 	}
 
 	void push(Data const &data)
