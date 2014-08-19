@@ -2,60 +2,60 @@
 #include <sys/time.h>
 #include <unistd.h>
 
-MonAppCB::MonAppCB() :
-   _insertTimes(0),
-   _delTimes(0),
-   _queryTimes(0),
-   _connectionTimes(0)
+MonAppCB::MonAppCB():
+_insertTimes(0),
+_delTimes(0),
+_queryTimes(0),
+_connectionTimes(0)
 {
-   gettimeofday ( &_start, NULL ) ;
+   gettimeofday(&_start, NULL);
 }
 
 MonAppCB::~MonAppCB()
 {
 }
 
-void MonAppCB::setInsertTimes ( long long insertTimes )
+void MonAppCB::setInsertTimes(long long insertTimes)
 {
-   _insertTimes = insertTimes ;
+   _insertTimes = insertTimes;
 }
-long long MonAppCB::getInsertTimes () const
+long long MonAppCB::getInsertTimes() const
 {
-   return _insertTimes ;
+   return _insertTimes;
 }
 void MonAppCB::increaseInsertTimes()
 {
-   _mutex.get() ;
-   _insertTimes++ ;
-   _mutex.release() ;
+   _mutex.get();
+   _insertTimes++;
+   _mutex.release();
 }
-void MonAppCB::setDelTimes ( long long delTimes )
+void MonAppCB::setDelTimes(long long delTimes)
 {
-   _delTimes=delTimes ;
+   _delTimes=delTimes;
 }
-long long MonAppCB::getDelTimes () const
+long long MonAppCB::getDelTimes() const
 {
-   return _delTimes ;
+   return _delTimes;
 }
-void MonAppCB::increaseDelTimes ()
+void MonAppCB::increaseDelTimes()
 {
-   _mutex.get() ;
-   _delTimes++ ;
-   _mutex.release () ;
+   _mutex.get();
+   _delTimes++;
+   _mutex.release();
 }
-void MonAppCB::setQueryTimes ( long long queryTimes )
+void MonAppCB::setQueryTimes(long long queryTimes)
 {
-   _queryTimes = queryTimes ;
+   _queryTimes = queryTimes;
 }
-long long MonAppCB::getQueryTimes () const
+long long MonAppCB::getQueryTimes() const
 {
-   return _queryTimes ;
+   return _queryTimes;
 }
-void MonAppCB::increaseQueryTimes ()
+void MonAppCB::increaseQueryTimes()
 {
-   _mutex.get() ;
-   _queryTimes++ ;
-   _mutex.release () ;
+   _mutex.get();
+   _queryTimes++;
+   _mutex.release();
 }
 
 long long MonAppCB::getConnectionTimes() const
@@ -82,11 +82,11 @@ void MonAppCB::decreaseConnectionTimes()
    _mutex.release();
 }
 
-long long MonAppCB::getServerRunTime ()
+long long MonAppCB::getServerRunTime()
 {
-   struct timeval end ;
-   gettimeofday ( &end, NULL ) ;
-   long long timeuse = (end.tv_sec - _start.tv_sec ) ;
-   return timeuse ;
+   struct timeval end;
+   gettimeofday(&end, NULL);
+   long long timeuse = (end.tv_sec - _start.tv_sec);
+   return timeuse;
 }
 
