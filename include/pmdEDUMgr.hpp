@@ -12,142 +12,142 @@
 
 class pmdEDUMgr
 {
-private :
-   std::map<EDUID, pmdEDUCB*> _runQueue ;
-   std::map<EDUID, pmdEDUCB*> _idleQueue ;
-   std::map<unsigned int, EDUID> _tid_eduid_map ;
+private:
+   std::map<EDUID, pmdEDUCB*> _runQueue;
+   std::map<EDUID, pmdEDUCB*> _idleQueue;
+   std::map<unsigned int, EDUID> _tid_eduid_map;
 
-   ossSLatch _mutex ;
+   ossSLatch _mutex;
 
    // increamental-only EDU id
    // 64 bit is big enough for most
-   EDUID _EDUID ;
+   EDUID _EDUID;
    // list of system EDUs
-   std::map<unsigned int, EDUID> _mapSystemEDUS ;
+   std::map<unsigned int, EDUID> _mapSystemEDUS;
    // no new requests are allowed
-   bool _isQuiesced ;
-   bool _isDestroyed ;
-public :
-   pmdEDUMgr () :
+   bool _isQuiesced;
+   bool _isDestroyed;
+public:
+   pmdEDUMgr():
    _EDUID(1),
    _isQuiesced(false),
    _isDestroyed(false)
    {
    }
 
-   ~pmdEDUMgr ()
+   ~pmdEDUMgr()
    {
-      reset () ;
+      reset();
    }
-   void reset ()
+   void reset()
    {
-      _destroyAll () ;
-   }
-
-   unsigned int size ()
-   {
-      unsigned int num = 0 ;
-      _mutex.get_shared () ;
-      num = ( unsigned int ) _runQueue.size() +
-            ( unsigned int ) _idleQueue.size () ;
-      _mutex.release_shared () ;
-      return num ;
+      _destroyAll();
    }
 
-   unsigned int sizeRun ()
+   unsigned int size()
    {
-      unsigned int num = 0 ;
-      _mutex.get_shared () ;
-      num = ( unsigned int ) _runQueue.size () ;
-      _mutex.release_shared () ;
-      return num ;
+      unsigned int num = 0;
+      _mutex.get_shared();
+      num = (unsigned int)_runQueue.size() +
+            (unsigned int)_idleQueue.size();
+      _mutex.release_shared();
+      return num;
    }
 
-   unsigned int sizeIdle ()
+   unsigned int sizeRun()
    {
-      unsigned int num = 0 ;
-      _mutex.get_shared () ;
-      num = ( unsigned int ) _idleQueue.size () ;
-      _mutex.release_shared () ;
-      return num ;
+      unsigned int num = 0;
+      _mutex.get_shared();
+      num = (unsigned int)_runQueue.size();
+      _mutex.release_shared();
+      return num;
    }
 
-   unsigned int sizeSystem ()
+   unsigned int sizeIdle()
    {
-      unsigned int num = 0 ;
-      _mutex.get_shared () ;
-      num = _mapSystemEDUS.size() ;
-      _mutex.release_shared () ;
-      return num ;
+      unsigned int num = 0;
+      _mutex.get_shared();
+      num = (unsigned int)_idleQueue.size();
+      _mutex.release_shared();
+      return num;
    }
 
-   EDUID getSystemEDU ( EDU_TYPES edu )
+   unsigned int sizeSystem()
+   {
+      unsigned int num = 0;
+      _mutex.get_shared();
+      num = _mapSystemEDUS.size();
+      _mutex.release_shared();
+      return num;
+   }
+
+   EDUID getSystemEDU(EDU_TYPES edu)
    {
       EDUID eduID = PMD_INVALID_EDUID;
-      _mutex.get_shared () ;
-      std::map<unsigned int, EDUID>::iterator it = _mapSystemEDUS.find( edu ) ;
-      if ( it != _mapSystemEDUS.end() )
+      _mutex.get_shared();
+      std::map<unsigned int, EDUID>::iterator it = _mapSystemEDUS.find(edu);
+      if(it != _mapSystemEDUS.end())
       {
-         eduID = it->second  ;
+         eduID = it->second;
       }
-      _mutex.release_shared () ;
-      return eduID ;
+      _mutex.release_shared();
+      return eduID;
    }
 
-   bool isSystemEDU ( EDUID eduID )
+   bool isSystemEDU(EDUID eduID)
    {
-      bool isSys = false ;
-      _mutex.get_shared () ;
-      isSys = _isSystemEDU ( eduID ) ;
-      _mutex.release_shared () ;
-      return isSys ;
+      bool isSys = false;
+      _mutex.get_shared();
+      isSys = _isSystemEDU(eduID);
+      _mutex.release_shared();
+      return isSys;
    }
 
-   void regSystemEDU ( EDU_TYPES edu, EDUID eduid )
+   void regSystemEDU(EDU_TYPES edu, EDUID eduid)
    {
-      _mutex.get() ;
-      _mapSystemEDUS[ edu ] = eduid ;
-      _mutex.release () ;
+      _mutex.get();
+      _mapSystemEDUS[edu] = eduid;
+      _mutex.release();
    }
 
-   bool isQuiesced ()
+   bool isQuiesced()
    {
-      return _isQuiesced ;
+      return _isQuiesced;
    }
-   void setQuiesced ( bool b )
+   void setQuiesced(bool b)
    {
-      _isQuiesced = b ;
+      _isQuiesced = b;
    }
-   bool isDestroyed ()
+   bool isDestroyed()
    {
-      return _isDestroyed ;
+      return _isDestroyed;
    }
-   static bool isPoolable ( EDU_TYPES type )
+   static bool isPoolable(EDU_TYPES type)
    {
-      return ( EDU_TYPE_AGENT == type ) ;
+      return(EDU_TYPE_AGENT == type);
    }
-private :
+private:
 
-   int _createNewEDU ( EDU_TYPES type, void *arg, EDUID *eduid) ;
-   int _destroyAll () ;
-   int _forceEDUs ( int property = EDU_ALL ) ;
-   unsigned int _getEDUCount ( int property = EDU_ALL ) ;
-   void _setDestroyed ( bool b )
+   int _createNewEDU(EDU_TYPES type, void *arg, EDUID *eduid);
+   int _destroyAll();
+   int _forceEDUs(int property = EDU_ALL);
+   unsigned int _getEDUCount(int property = EDU_ALL);
+   void _setDestroyed(bool b)
    {
-      _isDestroyed = b ;
+      _isDestroyed = b;
    }
-   bool _isSystemEDU ( EDUID eduID )
+   bool _isSystemEDU(EDUID eduID)
    {
-      std::map<unsigned int, EDUID>::iterator it = _mapSystemEDUS.begin() ;
-      while ( it != _mapSystemEDUS.end() )
+      std::map<unsigned int, EDUID>::iterator it = _mapSystemEDUS.begin();
+      while(it != _mapSystemEDUS.end())
       {
-         if ( eduID == it->second )
+         if(eduID == it->second)
          {
-            return true ;
+            return true;
          }
-         ++it ;
+         it++;
       }
-      return false ;
+      return false;
    }
 
    /*
@@ -162,7 +162,7 @@ private :
     *   EDB_SYS (the given eduid can't be found)
     *   EDB_EDU_INVAL_STATUS (EDU is found but not with expected status)
     */
-   int _destroyEDU ( EDUID eduID ) ;
+   int _destroyEDU(EDUID eduID);
 
    /*
     * This function must be called against a thread that either in creating
@@ -183,8 +183,8 @@ private :
     *            destroyed and EDB_SYS return)
     *   EDB_EDU_INVAL_STATUS (EDU is found but not with expected status)
     */
-   int _deactivateEDU ( EDUID eduID ) ;
-public :
+   int _deactivateEDU(EDUID eduID);
+public:
    /*
     * EDU Status Transition Table
     * C: CREATING
@@ -219,7 +219,7 @@ public :
     *   EDB_SYS (the given eduid can't be found)
     *   EDB_EDU_INVAL_STATUS (EDU is found but not with expected status)
     */
-   int activateEDU ( EDUID eduID ) ;
+   int activateEDU(EDUID eduID);
 
    /*
     * This function must be called against a thread that in running
@@ -233,7 +233,7 @@ public :
     *   EDB_SYS (the given eduid can't be found)
     *   EDB_EDU_INVAL_STATUS (EDU is found but not with expected status)
     */
-   int waitEDU ( EDUID eduID ) ;
+   int waitEDU(EDUID eduID);
 
    /*
     * This function is called to get an EDU run the given function
@@ -252,7 +252,7 @@ public :
     *   EDB_INVALIDARG (the type is not valid )
     */
 
-   int startEDU ( EDU_TYPES type, void* arg, EDUID *eduid) ;
+   int startEDU(EDU_TYPES type, void* arg, EDUID *eduid);
 
    /*
     * This function should post a message to EDU
@@ -270,8 +270,8 @@ public :
     *   EDB_OK ( success )
     *   EDB_SYS ( given EDU ID can't be found )
     */
-   int postEDUPost ( EDUID eduID, pmdEDUEventTypes type,
-                     bool release = false, void *pData = NULL ) ;
+   int postEDUPost(EDUID eduID, pmdEDUEventTypes type,
+                     bool release = false, void *pData = NULL);
 
    /*
     * This function should wait an event for EDU
@@ -288,8 +288,8 @@ public :
     *   EDB_SYS ( given EDU ID can't be found )
     *   EDB_TIMEOUT ( timeout )
     */
-   int waitEDUPost ( EDUID eduID, pmdEDUEvent& event,
-                     long long millsecond ) ;
+   int waitEDUPost(EDUID eduID, pmdEDUEvent& event,
+                     long long millsecond);
 
    /*
     * This function should return an waiting/creating EDU to pool
@@ -306,15 +306,14 @@ public :
     *   EDB_SYS ( given EDU ID can't be found )
     *   EDB_EDU_INVAL_STATUS (EDU is found but not with expected status)
     */
-   int returnEDU ( EDUID eduID, bool force, bool* destroyed ) ;
+   int returnEDU(EDUID eduID, bool force, bool* destroyed);
 
-   int forceUserEDU ( EDUID eduID ) ;
+   int forceUserEDU(EDUID eduID);
 
-   pmdEDUCB *getEDU ( unsigned int tid ) ;
-   pmdEDUCB *getEDU () ;
-   pmdEDUCB *getEDUByID ( EDUID eduID ) ;
-   void setEDU ( unsigned int tid, EDUID eduid ) ;
-
-} ;
+   pmdEDUCB *getEDU(unsigned int tid);
+   pmdEDUCB *getEDU();
+   pmdEDUCB *getEDUByID(EDUID eduID);
+   void setEDU(unsigned int tid, EDUID eduid);
+};
 
 #endif

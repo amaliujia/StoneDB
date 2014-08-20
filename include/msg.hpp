@@ -16,68 +16,68 @@
 
 struct MsgHeader
 {
-   int messageLen ;
-   int opCode ;
-} ;
+   int messageLen;
+   int opCode;
+};
 
 struct MsgReply
 {
-   MsgHeader header ;
-   int       returnCode ;
-   int       numReturn ;
-   char      data[0] ;
-} ;
+   MsgHeader header;
+   int returnCode;
+   int numReturn;
+   char data[0];
+};
 
 struct MsgInsert
 {
-   MsgHeader header ;
-   int       numInsert ;
-   char      data[0] ;
-} ;
+   MsgHeader header;
+   int numInsert;
+   char data[0];
+};
 
 struct MsgDelete
 {
-   MsgHeader header ;
-   char      key[0] ;
-} ;
+   MsgHeader header;
+   char key[0];
+};
 
 struct MsgQuery
 {
-   MsgHeader header ;
-   char      key[0] ;
-} ;
+   MsgHeader header;
+   char key[0];
+};
 
 struct MsgCommand
 {
-   MsgHeader header ;
-   int       numArgs ;
-   char      data[0] ;
-} ;
+   MsgHeader header;
+   int numArgs;
+   char data[0];
+};
 
-int msgBuildReply ( char **ppBuffer, int *pBufferSize,
-                    int returnCode, bson::BSONObj *objReturn ) ;
+int msgBuildReply(char **ppBuffer, int *pBufferSize,
+                    int returnCode, bson::BSONObj *objReturn);
 
-int msgExtractReply ( char *pBuffer, int &returnCode, int &numReturn,
-                      const char **ppObjStart ) ;
+int msgExtractReply(char *pBuffer, int &returnCode, int &numReturn,
+                      const char **ppObjStart);
 
-int msgBuildInsert ( char **ppBuffer, int *pBufferSize, bson::BSONObj &obj ) ;
+int msgBuildInsert(char **ppBuffer, int *pBufferSize, bson::BSONObj &obj);
 
-int msgBuildInsert ( char **ppBuffer, int *pBufferSize, vector<bson::BSONObj*> &obj ) ;
+int msgBuildInsert(char **ppBuffer, int *pBufferSize, vector<bson::BSONObj*> &obj);
 
-int msgExtractInsert ( char *pBuffer, int &numInsert, const char **ppObjStart ) ;
+int msgExtractInsert(char *pBuffer, int &numInsert, const char **ppObjStart);
 
-int msgBuildDelete ( char **ppBuffer, int *pBufferSize, bson::BSONObj &key ) ;
+int msgBuildDelete(char **ppBuffer, int *pBufferSize, bson::BSONObj &key);
 
-int msgExtractDelete  ( char *pBuffer, bson::BSONObj &key ) ;
+int msgExtractDelete(char *pBuffer, bson::BSONObj &key);
 
-int msgBuildQuery ( char **ppBuffer, int *pBufferSize, bson::BSONObj &key ) ;
+int msgBuildQuery(char **ppBuffer, int *pBufferSize, bson::BSONObj &key);
 
-int msgExtractQuery ( char *pBuffer, bson::BSONObj &key ) ;
+int msgExtractQuery(char *pBuffer, bson::BSONObj &key);
 
-int msgBuildCommand ( char **ppBuffer, int *pBufferSize, bson::BSONObj &obj ) ;
+int msgBuildCommand(char **ppBuffer, int *pBufferSize, bson::BSONObj &obj);
 
-int msgBuildCommand ( char **ppBuffer, int *pBufferSize, vector<bson::BSONObj*>&obj ) ;
+int msgBuildCommand(char **ppBuffer, int *pBufferSize, vector<bson::BSONObj*>&obj);
 
-int msgExtractCommand ( char *pBuffer, int &numArgs, const char **ppObjStart ) ;
+int msgExtractCommand(char *pBuffer, int &numArgs, const char **ppObjStart);
 
 #endif

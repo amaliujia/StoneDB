@@ -41,102 +41,99 @@ class pmdEDUMgr;
 
 class pmdEDUCB
 {
-public :
-   pmdEDUCB ( pmdEDUMgr *mgr, EDU_TYPES type ) ;
+public:
+   pmdEDUCB(pmdEDUMgr *mgr, EDU_TYPES type);
    inline EDUID getID()
    {
-      return _id ;
+      return _id;
    }
-   inline void postEvent ( pmdEDUEvent const &data )
+   inline void postEvent(pmdEDUEvent const &data)
    {
-      _queue.push ( data ) ;
+      _queue.push(data);
    }
-   bool waitEvent ( pmdEDUEvent &data, long long millsec )
+   bool waitEvent(pmdEDUEvent &data, long long millsec)
    {
       // if millsec is not 0, that means we want timeout
-      bool waitMsg = false ;
-      if ( PMD_EDU_IDLE != _status )
+      bool waitMsg = false;
+      if(PMD_EDU_IDLE != _status)
       {
-         _status = PMD_EDU_WAITING ;
+         _status = PMD_EDU_WAITING;
       }
-      if ( 0 > millsec )
+      if(0 > millsec)
       {
-         _queue.wait_and_pop ( data ) ;
-         waitMsg = true ;
-      }
-      else
+         _queue.wait_and_pop(data);
+         waitMsg = true;
+      }else
       {
-         waitMsg = _queue.timed_wait_and_pop ( data, millsec ) ;
+         waitMsg = _queue.timed_wait_and_pop(data, millsec);
       }
 
-      if ( waitMsg )
+      if(waitMsg)
       {
-         if ( data._eventType == PMD_EDU_EVENT_TERM )
+         if(data._eventType == PMD_EDU_EVENT_TERM)
          {
-            _isDisconnected = true ;
-         }
-         else
-         {
-            _status = PMD_EDU_RUNNING ;
+            _isDisconnected = true;
+         }else{
+            _status = PMD_EDU_RUNNING;
          }
       }
-      return waitMsg ;
+      return waitMsg;
    }
-   inline void force ()
+   inline void force()
    {
-      _isForced = true ;
+      _isForced = true;
    }
-   inline void disconnect ()
+   inline void disconnect()
    {
-      _isDisconnected = true ;
+      _isDisconnected = true;
    }
-   inline EDU_TYPES getType ()
+   inline EDU_TYPES getType()
    {
-      return _type ;
+      return _type;
    }
-   inline EDU_STATUS getStatus ()
+   inline EDU_STATUS getStatus()
    {
-      return _status ;
+      return _status;
    }
-   inline void setType ( EDU_TYPES type )
+   inline void setType(EDU_TYPES type)
    {
-      _type = type ;
+      _type = type;
    }
-   inline void setID ( EDUID id )
+   inline void setID(EDUID id)
    {
-      _id = id ;
+      _id = id;
    }
-   inline void setStatus ( EDU_STATUS status )
+   inline void setStatus(EDU_STATUS status)
    {
-      _status = status ;
+      _status = status;
    }
-   inline bool isForced ()
+   inline bool isForced()
    {
-      return _isForced ;
+      return _isForced;
    }
-   inline pmdEDUMgr *getEDUMgr ()
+   inline pmdEDUMgr *getEDUMgr()
    {
-      return _mgr ;
+      return _mgr;
    }
-private :
-   EDU_TYPES  _type ;
-   pmdEDUMgr *_mgr ;
-   EDU_STATUS _status ;
-   EDUID      _id ;
-   bool       _isForced ;
-   bool       _isDisconnected ;
-   ossQueue<pmdEDUEvent> _queue ;
-} ;
+private:
+   EDU_TYPES  _type;
+   pmdEDUMgr *_mgr;
+   EDU_STATUS _status;
+   EDUID _id;
+   bool _isForced;
+   bool _isDisconnected;
+   ossQueue<pmdEDUEvent> _queue;
+};
 
-typedef int (*pmdEntryPoint) ( pmdEDUCB *, void * ) ;
-pmdEntryPoint getEntryFuncByType ( EDU_TYPES type ) ;
+typedef int (*pmdEntryPoint)(pmdEDUCB *, void *);
+pmdEntryPoint getEntryFuncByType(EDU_TYPES type);
 
-int pmdAgentEntryPoint ( pmdEDUCB *cb, void *arg ) ;
-int pmdTcpListenerEntryPoint ( pmdEDUCB *cb, void *arg ) ;
-int pmdEDUEntryPoint ( EDU_TYPES type, pmdEDUCB *cb, void *arg ) ;
+int pmdAgentEntryPoint(pmdEDUCB *cb, void *arg);
+int pmdTcpListenerEntryPoint(pmdEDUCB *cb, void *arg);
+int pmdEDUEntryPoint(EDU_TYPES type, pmdEDUCB *cb, void *arg);
 
-int pmdRecv ( char *pBuffer, int recvSize,
-              ossSocket *sock, pmdEDUCB *cb ) ;
-int pmdSend ( const char *pBuffer, int sendSize,
-              ossSocket *sock, pmdEDUCB *cb ) ;
+int pmdRecv(char *pBuffer, int recvSize,
+              ossSocket *sock, pmdEDUCB *cb);
+int pmdSend(const char *pBuffer, int sendSize,
+              ossSocket *sock, pmdEDUCB *cb);
 #endif

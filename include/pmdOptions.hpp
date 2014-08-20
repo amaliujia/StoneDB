@@ -38,45 +38,45 @@ desc.add_options()
 
 class pmdOptions
 {
-    public :
-    pmdOptions () ;
-    ~pmdOptions () ;
-    public :
-    int readCmd ( int argc, char **argv,
+    public:
+    pmdOptions();
+    ~pmdOptions();
+    public:
+    int readCmd(int argc, char **argv,
                  po::options_description &desc,
-                 po::variables_map &vm ) ;
-    int importVM ( const po::variables_map &vm, bool isDefault = true ) ;
-    int readConfigureFile ( const char *path,
+                 po::variables_map &vm);
+    int importVM(const po::variables_map &vm, bool isDefault = true);
+    int readConfigureFile(const char *path,
                            po::options_description &desc,
-                           po::variables_map &vm ) ;
-    int init ( int argc, char **argv ) ;
-    public :
+                           po::variables_map &vm);
+    int init(int argc, char **argv);
+    public:
     // inline functions
-    inline char *getDBPath ()
+    inline char *getDBPath()
     {
-        return _dbPath ;
+        return _dbPath;
     }
-    inline char *getLogPath ()
+    inline char *getLogPath()
     {
-        return _logPath ;
+        return _logPath;
     }
-    inline char *getConfPath ()
+    inline char *getConfPath()
     {
-        return _confPath ;
+        return _confPath;
     }
     inline char *getServiceName()
     {
-        return _svcName ;
+        return _svcName;
     }
-    inline int getMaxPool ()
+    inline int getMaxPool()
     {
-        return _maxPool ;
+        return _maxPool;
     }
-    private :
-    char _dbPath [ OSS_MAX_PATHSIZE+1 ] ;
-    char _logPath [ OSS_MAX_PATHSIZE+1 ] ;
-    char _confPath [ OSS_MAX_PATHSIZE+1 ] ;
-    char _svcName [ NI_MAXSERV+1 ] ;
-    int  _maxPool ;
-} ;
+    private:
+    char _dbPath[OSS_MAX_PATHSIZE + 1];
+    char _logPath[OSS_MAX_PATHSIZE + 1];
+    char _confPath[OSS_MAX_PATHSIZE + 1];
+    char _svcName[NI_MAXSERV + 1];
+    int _maxPool;
+};
 #endif

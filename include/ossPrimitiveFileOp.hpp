@@ -55,7 +55,7 @@ public:
 private:
 	handleType _fileHandle;
 	ossPrimitiveFileOp(const ossPrimitiveFileOp &){}
-	const ossPrimitiveFileOp &operator= (const ossPrimitiveFileOp &);
+	const ossPrimitiveFileOp &operator=(const ossPrimitiveFileOp &);
 	bool _bIsStdout;
 protected:
 	void setFileHandle(handleType handle);
