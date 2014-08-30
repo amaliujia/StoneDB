@@ -1,0 +1,9 @@
+# OSS stands for Operating System Services
+# MSG stands for Messenger
+# RTN stands for Runtime
+# IXM stands for Index Management System
+# PMD stands for Process Model
+# DMS stands for Data Management System
+# MON stands for Monitor 
+# PD stands for Problem Determination
+
