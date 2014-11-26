@@ -178,7 +178,7 @@ int main(int argc, char **argv)
 {
    // char Buffer[12] = "Hello World";
    // ossPrimitiveFileOp f;
-   // f.Open("/Users/amaliujia/Documents/Public_Course/Database Engine/Engine/emeralddb/src/filegank/file.txt",OSS_PRIMITIVE_FILE_OP_OPEN_ALWAYS);
+   // f.Open("../src/filegank/file.txt",OSS_PRIMITIVE_FILE_OP_OPEN_ALWAYS);
    // if (f.isValid())
    // {
    //    f.Write(Buffer,sizeof(Buffer));
