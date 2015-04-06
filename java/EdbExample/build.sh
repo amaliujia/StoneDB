@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # define compile
-JAVA_HOME=../../../java/jdk_linux64
+JAVA_HOME=/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home
 JAVAC=$JAVA_HOME/bin/javac
 JAR=$JAVA_HOME/bin/jar
 

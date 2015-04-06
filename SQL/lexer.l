@@ -50,7 +50,7 @@ int yyerror(char *error)
 }
 
 
-int  main()
+int main()
 {
   while(!feof(yyin))
   {
