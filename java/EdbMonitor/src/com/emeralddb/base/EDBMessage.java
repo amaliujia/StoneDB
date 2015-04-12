@@ -39,18 +39,18 @@ public class EDBMessage {
 	private BSONObject query;
 	private BSONObject delete;
 	
-	private short w;
-	private short padding;
-	private int flags;
-	private BSONObject matcher;
-	private BSONObject selector;
-	private BSONObject orderBy;
+	private short 				w;
+	private short 				padding;
+	private int 				flags;
+	private BSONObject 			matcher;
+	private BSONObject 			selector;
+	private BSONObject 			orderBy;
 	private BSONObject hint;
 	private int version;
 	private int returnRowsCount2;
 	private long returnRowsCount;
 	private List<Long> contextIDList;
-        private List<BSONObject> objList ;
+	private List<BSONObject> objList ;
 
 	private byte[] nodeID = new byte[12];
 	public EDBMessage() {
@@ -240,11 +240,11 @@ public class EDBMessage {
 		return contextIDList;
 	}
 
-        public void setObjList ( List<BSONObject> objList) {
+	public void setObjList ( List<BSONObject> objList) {
            this.objList = objList ;
         }
 
-        public List<BSONObject> getObjList () {
+	public List<BSONObject> getObjList () {
            return this.objList ;
         }
 

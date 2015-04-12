@@ -21,7 +21,7 @@ BIN_DIR=./bin
 TARGET_BIN_DIR=../../../bin
 
 # define JDK_LIB
-JDK_LIB=../../../java/jdk_linux64/lib
+JDK_LIB=/Library/Java/JavaVirtualMachines/jdk1.7.0_51.jdk/Contents/Home/lib
 
 if [ ! -d $BIN_DIR ]; then
    mkdir $BIN_DIR
