@@ -1,3 +1,8 @@
+import LoadBalancer.LoadBalancer;
+import LoadBalancer.NaiveShardingLB;
+import Simulator.ConstantSimulator;
+import Simulator.Simulator;
+
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.Scanner;
@@ -8,7 +13,7 @@ import java.util.Scanner;
 public class LDMain {
     public static void main(String[] args){
         String config = args[0];
-        LoadBalancer  LB = new LoadBalancer();
+        LoadBalancer LB = new NaiveShardingLB();
         Scanner scanner = null;
 
         try {

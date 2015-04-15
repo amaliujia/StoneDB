@@ -1,9 +1,8 @@
+package LoadBalancer;
+
+import Util.Operations;
 import com.emeralddb.base.Emeralddb;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -12,13 +11,14 @@ import java.util.ArrayList;
 public abstract class LoadBalancer {
     protected ArrayList<DBInstance> instances;
 
-    protected ArrayList<Emeralddb> dbs;
+    public ArrayList<Emeralddb> dbs;
 
     protected static final String tempFile = "c.txt";
 
 
     public LoadBalancer(){
         instances = new ArrayList<DBInstance>();
+        dbs = new ArrayList<Emeralddb>();
     }
 
     public void addInstance(DBInstance instance){
@@ -30,5 +30,9 @@ public abstract class LoadBalancer {
     }
 
     public abstract void init();
+
+    public abstract void sumbit(Operations e, String Key, String record);
+
+    public abstract void sumbit(Operations e, String Key);
 
 }

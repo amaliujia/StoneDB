@@ -1,9 +1,13 @@
+package Simulator;
+
+import LoadBalancer.LoadBalancer;
+
 /**
  * Created by amaliujia on 15-4-13.
  */
 public abstract class Simulator {
-    private LoadBalancer LB;
-    private String tracefile;
+    protected LoadBalancer LB;
+    protected String tracefile;
 
     public Simulator(LoadBalancer l){
         LB = l;

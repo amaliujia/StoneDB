@@ -37,9 +37,9 @@ public class ConstantStrategy implements RequestStrategy {
             }
 
             for(int i = 0; i < recordNum; i++){
-                writer.write("Insert:" + String.format( "{_id:'%s'}", uuidArray[i]) + "\n");
-                writer.write("Query:" + String.format( "{_id:'%s'}", uuidArray[i]) + "\n");
-                writer.write("Delete:" + String.format("{_id:'%s'}", uuidArray[i]) + "\n");
+                writer.write("Insert " + uuidArray[i] + " " + String.format( "{_id:'%s'}", uuidArray[i]) + "\n");
+                writer.write("Query " + String.format( "{_id:'%s'}", uuidArray[i]) + "\n");
+                writer.write("Delete " + String.format("{_id:'%s'}", uuidArray[i]) + "\n");
             }
 
             writer.flush();
