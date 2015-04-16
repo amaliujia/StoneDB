@@ -1,6 +1,7 @@
 package LoadBalancer;
 
 import Util.Operations;
+import Util.TimeLogger;
 import com.emeralddb.base.Emeralddb;
 
 import java.util.ArrayList;
@@ -11,14 +12,16 @@ import java.util.ArrayList;
 public abstract class LoadBalancer {
     protected ArrayList<DBInstance> instances;
 
-    public ArrayList<Emeralddb> dbs;
+    public ArrayList<LBEmeralddb> dbs;
 
     protected static final String tempFile = "c.txt";
 
+    public TimeLogger logger;
 
     public LoadBalancer(){
         instances = new ArrayList<DBInstance>();
-        dbs = new ArrayList<Emeralddb>();
+        dbs = new ArrayList<LBEmeralddb>();
+        logger = new TimeLogger();
     }
 
     public void addInstance(DBInstance instance){
@@ -30,6 +33,8 @@ public abstract class LoadBalancer {
     }
 
     public abstract void init();
+
+    public abstract void destroy();
 
     public abstract void sumbit(Operations e, String Key, String record);
 

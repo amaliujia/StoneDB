@@ -49,5 +49,7 @@ public class ConstantSimulator extends Simulator {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        LB.destroy();
     }
 }

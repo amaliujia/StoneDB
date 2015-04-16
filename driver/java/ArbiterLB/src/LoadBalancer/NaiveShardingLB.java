@@ -15,7 +15,15 @@ public class NaiveShardingLB extends LoadBalancer {
 
     private static final int numEDBperDB = 1;
 
+    private long insert;
+    private long query;
+    private long delete;
+
     public void init(){
+
+        insert = 0;
+        query = 0;
+        delete = 0;
 
         for(int i = 0; i < instances.size(); i++) {
             BufferedWriter w = null;
@@ -26,22 +34,35 @@ public class NaiveShardingLB extends LoadBalancer {
                 w.write(dbInstance.getIp() + ":" + dbInstance.getPort() + "\n");
                 w.flush();
                 w.close();
-                Emeralddb edb = new Emeralddb();
+                LBEmeralddb edb = new LBEmeralddb();
                 edb.startStat();
                 edb.init(tempFile);
                 dbs.add(edb);
+                //new Thread(edb).start();
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
         //threadPoolExecutor = new ThreadPoolExecutor();
+        logger.start();
+    }
+
+    @Override
+    public void destroy() {
+        try {
+            logger.stat();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override
     public void sumbit(Operations e, String Key, String record) {
         if(e.equals(Operations.INSERT)){
             dbs.get(0).insert(Key, record);
+            insert++;
+            logger.record(insert, query, delete);
         }else{
             throw new IllegalArgumentException();
         }
@@ -51,8 +72,10 @@ public class NaiveShardingLB extends LoadBalancer {
     public void sumbit(Operations e, String Key) {
        if(e.equals(Operations.DELETE)){
            dbs.get(0).delete(Key);
+           delete++;
        }else if(e.equals(Operations.QUERY)){
            dbs.get(0).query(Key);
+           query++;
        }else{
            throw new IllegalArgumentException();
        }
