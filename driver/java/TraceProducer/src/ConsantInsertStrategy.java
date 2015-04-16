@@ -6,13 +6,12 @@ import java.io.FileWriter;
 import java.io.IOException;
 
 /**
- * Created by amaliujia on 15-4-12.
+ * Created by amaliujia on 15-4-16.
  */
-public class ConstantStrategy implements RequestStrategy {
-
+public class ConsantInsertStrategy implements RequestStrategy {
     private int recordNum;
 
-    public ConstantStrategy(int n){
+    public ConsantInsertStrategy(int n){
         this.recordNum = n;
     }
 
@@ -38,8 +37,6 @@ public class ConstantStrategy implements RequestStrategy {
 
             for(int i = 0; i < recordNum; i++){
                 writer.write("Insert " + uuidArray[i] + " " + String.format( "{_id:'%s'}", uuidArray[i]) + "\n");
-                writer.write("Query " + String.format( "{_id:'%s'}", uuidArray[i]) + "\n");
-                writer.write("Delete " + String.format("{_id:'%s'}", uuidArray[i]) + "\n");
             }
 
             writer.flush();
