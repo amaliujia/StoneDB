@@ -30,7 +30,7 @@ public class TimeLogger {
 
     public ArrayList<Long> deleteval;
 
-    public  static final String statfile = "stat.txt";
+    public String statfile = ;
 
     private BufferedWriter writer;
 
@@ -39,7 +39,16 @@ public class TimeLogger {
         intervals = new ArrayList<Long>();
         queryval = new ArrayList<Long>();
         deleteval = new ArrayList<Long>();
+        setLogFile("stat.txt");
+    }
 
+    public TimeLogger(String path){
+        insertval = new ArrayList<Long>();
+        intervals = new ArrayList<Long>();
+        queryval = new ArrayList<Long>();
+        deleteval = new ArrayList<Long>();
+
+        setLogFile(path);
         try {
             writer = new BufferedWriter(new FileWriter(new File(statfile)));
         } catch (IOException e) {
@@ -47,6 +56,15 @@ public class TimeLogger {
         }
     }
 
+    public void setLogFile(String path){
+        this.statfile = path;
+
+        try {
+            writer = new BufferedWriter(new FileWriter(new File(statfile)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void start(){
         start_time = System.currentTimeMillis();

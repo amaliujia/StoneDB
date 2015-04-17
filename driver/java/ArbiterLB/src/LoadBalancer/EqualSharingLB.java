@@ -32,6 +32,7 @@ public class EqualSharingLB extends LoadBalancer {
     private ArrayList<Long> count;
     public void init(){
 
+        logger.setLogFile("Equal_sharing_stat.txt");
         insert = 0;
         query = 0;
         delete = 0;
@@ -66,6 +67,7 @@ public class EqualSharingLB extends LoadBalancer {
             //count[i] = 0;
             count.add((long) 0);
         }
+
         logger.start();
     }
 
