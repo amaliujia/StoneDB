@@ -1,7 +1,6 @@
 package LoadBalancer;
 
 import Util.Operations;
-import com.emeralddb.base.Emeralddb;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -44,13 +43,13 @@ public class NaiveShardingLB extends LoadBalancer {
                 e.printStackTrace();
             }
         }
-        //threadPoolExecutor = new ThreadPoolExecutor();
         logger.start();
     }
 
     @Override
     public void destroy() {
         try {
+            logger.end();
             logger.stat();
         } catch (IOException e) {
             e.printStackTrace();

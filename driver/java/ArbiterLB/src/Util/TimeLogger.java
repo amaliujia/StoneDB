@@ -32,11 +32,19 @@ public class TimeLogger {
 
     public  static final String statfile = "stat.txt";
 
+    private BufferedWriter writer;
+
     public TimeLogger(){
         insertval = new ArrayList<Long>();
         intervals = new ArrayList<Long>();
         queryval = new ArrayList<Long>();
         deleteval = new ArrayList<Long>();
+
+        try {
+            writer = new BufferedWriter(new FileWriter(new File(statfile)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
 
@@ -59,12 +67,13 @@ public class TimeLogger {
             insert = i;
             query = q;
             delete = d;
+            //TODO:what should I write?
         }
     }
 
 
     public void stat() throws IOException{
-        BufferedWriter writer = new BufferedWriter(new FileWriter(new File(statfile)));;
+
 
         System.out.println("Statistics---------------------------");
         System.out.println("Totoal insert " + insert);

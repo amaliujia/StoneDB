@@ -16,6 +16,17 @@ public abstract class Message {
 
     protected String Record;
 
+    public Message(Operations e, String Key, String Record){
+        o = e;
+        this.Key = Key;
+        this.Record = Record;
+    }
+
+    public Message(Operations e, String Key){
+        o = e;
+        this.Key = Key;
+    }
+
     public String getKey(){
         return Key;
     }
