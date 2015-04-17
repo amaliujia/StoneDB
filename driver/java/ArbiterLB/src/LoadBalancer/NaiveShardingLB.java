@@ -19,7 +19,7 @@ public class NaiveShardingLB extends LoadBalancer {
     private long delete;
 
     public void init(){
-
+        logger.setLogFile("Constant_stat.txt");
         insert = 0;
         query = 0;
         delete = 0;
@@ -48,6 +48,7 @@ public class NaiveShardingLB extends LoadBalancer {
 
     @Override
     public void destroy() {
+        super.destroy();
         try {
             logger.end();
             logger.stat();

@@ -73,6 +73,7 @@ public class EqualSharingLB extends LoadBalancer {
 
     @Override
     public void destroy() {
+        super.destroy();
         try {
             logger.stat();
         } catch (IOException e) {

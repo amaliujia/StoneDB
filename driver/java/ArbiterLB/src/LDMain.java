@@ -1,5 +1,6 @@
 import LoadBalancer.LoadBalancer;
 import LoadBalancer.NaiveShardingLB;
+import LoadBalancer.EqualSharingLB;
 import Simulator.ConstantSimulator;
 import Simulator.Simulator;
 
@@ -13,7 +14,14 @@ import java.util.Scanner;
 public class LDMain {
     public static void main(String[] args){
         String config = args[0];
-        LoadBalancer LB = new NaiveShardingLB();
+        String LBPolicy = args[1];
+        LoadBalancer LB = null;
+        if(LBPolicy.equals("NaiveSharing")){
+           LB = new NaiveShardingLB();
+        } else if(LBPolicy.equals("EqualSharing")){
+           LB = new EqualSharingLB();
+        }
+
         Scanner scanner = null;
 
         try {
