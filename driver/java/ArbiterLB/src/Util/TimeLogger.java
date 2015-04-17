@@ -73,6 +73,9 @@ public class TimeLogger {
     public void start(){
         start_time = System.currentTimeMillis();
         last_time = System.currentTimeMillis();
+        query = 0;
+        insert = 0;
+        delete = 0;
         try {
             writer.write("Start-------------------------\n");
             curDate();
@@ -88,16 +91,19 @@ public class TimeLogger {
     }
 
     public void record(long i, long q, long d){
-        if((System.currentTimeMillis() - last_time) > 1000){
+        long offset = System.currentTimeMillis() - last_time;
+        if(offset > 1000){
             last_time = System.currentTimeMillis();
 
-            curDate();
+            //curDate();
             long qq = q - query;
             long ii = i - insert;
             long dd = d - delete;
             long tt = i + q + d  - query - insert - delete;
             try {
+                writer.write(offset + "\t");
                 writer.write(qq + "\t" + ii + "\t" + dd + "\t" + tt + "\n");
+                writer.flush();
             } catch (IOException e) {
                 e.printStackTrace();
             }

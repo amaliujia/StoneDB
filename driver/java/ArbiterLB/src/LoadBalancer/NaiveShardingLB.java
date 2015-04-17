@@ -73,9 +73,11 @@ public class NaiveShardingLB extends LoadBalancer {
        if(e.equals(Operations.DELETE)){
            dbs.get(0).delete(Key);
            delete++;
+           logger.record(insert, query, delete);
        }else if(e.equals(Operations.QUERY)){
            dbs.get(0).query(Key);
            query++;
+           logger.record(insert, query, delete);
        }else{
            throw new IllegalArgumentException();
        }
