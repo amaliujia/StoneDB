@@ -25,7 +25,7 @@ public class ConsantInsertStrategy implements RequestStrategy {
         }
 
         try {
-            writer.write("Constant\n");
+            writer.write("ConstantInsert\n");
             String[] uuidArray = null;
             uuidArray = new String[ recordNum ];
             for( int i = 0; i < recordNum; i++ )

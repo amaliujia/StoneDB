@@ -1,19 +1,17 @@
 package LoadBalancer;
 
+import Message.Message;
 import Message.Delete;
 import Message.Insert;
 import Message.Query;
 import Util.Operations;
-import com.google.gson.internal.StringMap;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * Created by amaliujia on 15-4-16.
@@ -28,6 +26,7 @@ public class EqualSharingLB extends LoadBalancer {
 //    private long[] count;
 
     private ArrayList<HashSet<String>> keys;
+    private ArrayList<Queue<Message>> ques;
     //private long[] count;
     private ArrayList<Long> count;
     public void init(){
@@ -37,6 +36,7 @@ public class EqualSharingLB extends LoadBalancer {
         query = 0;
         delete = 0;
         keys = new ArrayList<HashSet<String>>();
+        ques = new ArrayList<Queue<Message>>();
 
         for(int i = 0; i < instances.size(); i++) {
             BufferedWriter w = null;
@@ -49,9 +49,13 @@ public class EqualSharingLB extends LoadBalancer {
                 w.close();
                 LBEmeralddb edb = new LBEmeralddb();
                 edb.startStat();
+                Queue<Message> que = new LinkedBlockingQueue<Message>();
                 edb.init(tempFile);
+                edb.setQueue(que);
                 dbs.add(edb);
-                //new Thread(edb).start();
+                ques.add(que);
+
+                new Thread(edb).start();
 
             } catch (IOException e) {
                 e.printStackTrace();
@@ -89,14 +93,15 @@ public class EqualSharingLB extends LoadBalancer {
         }
         aKey.add(record);
         //dbs.get(minIndex).insert(Key, record);
-        dbs.get(minIndex).put(new Insert(Operations.INSERT, Key, record));
+        //dbs.get(minIndex).put(new Insert(Operations.INSERT, Key, record));
+        ques.get((minIndex)).offer(new Insert(Operations.INSERT, Key, record));
     }
 
     private void assignDelete(String Key){
        for(int i = 0; i < keys.size(); i++){
           if(keys.get(i).contains(Key)){
               //dbs.get(i).delete(Key);
-              dbs.get(i).put(new Delete(Operations.DELETE, Key));
+              //dbs.get(i).put(new Delete(Operations.DELETE, Key));
           }
         }
     }
@@ -105,7 +110,7 @@ public class EqualSharingLB extends LoadBalancer {
         for(int i = 0; i < keys.size(); i++){
             if(keys.get(i).contains(Key)) {
                 //dbs.get(i).query(Key);
-                dbs.get(i).put(new Query(Operations.QUERY, Key));
+                //dbs.get(i).put(new Query(Operations.QUERY, Key));
             }
         }
     }

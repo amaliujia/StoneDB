@@ -28,6 +28,39 @@ public class ConstantSimulator extends Simulator {
         try {
             //Simulator.Simulator Pattern. Ignore
             line = reader.readLine();
+            if(line.equals("Constant")){
+                Const(reader);
+            }else if(line.equals("ConstantInsert")){
+              ConstInsert(reader);
+            }
+        } catch (IllegalArgumentException e){
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        LB.destroy();
+    }
+
+    private void ConstInsert(BufferedReader reader) throws IOException, IllegalArgumentException{
+        String line = null;
+
+        while ((line = reader.readLine()) != null){
+            String[] cuts = line.split(" ");
+            if(cuts.length < 2){
+                throw new IllegalArgumentException();
+            }
+            if(cuts[0].equals("Insert")){
+                LB.sumbit(Operations.INSERT, cuts[1], cuts[2]);
+            }else{
+                throw new IllegalArgumentException();
+            }
+        }
+    }
+
+
+    private void Const(BufferedReader reader) throws IOException, IllegalArgumentException{
+        String line = null;
 
             while ((line = reader.readLine()) != null){
                 String[] cuts = line.split(" ");
@@ -44,12 +77,6 @@ public class ConstantSimulator extends Simulator {
                     throw new IllegalArgumentException();
                 }
             }
-        } catch (IllegalArgumentException e){
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        LB.destroy();
     }
+
 }

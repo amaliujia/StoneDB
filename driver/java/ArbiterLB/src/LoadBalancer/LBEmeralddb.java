@@ -5,7 +5,9 @@ import Protocol.DBService;
 import Util.Operations;
 import com.emeralddb.base.Emeralddb;
 
+import java.util.LinkedList;
 import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -19,20 +21,28 @@ public class LBEmeralddb extends Emeralddb implements Runnable{
 
     private final Lock lock = new ReentrantLock();
 
-    private final Condition notFull = lock.newCondition();
-    private final Condition notEmpty = lock.newCondition();
+//    private final Condition notFull = lock.newCondition();
+//    private final Condition notEmpty = lock.newCondition();
 
     public LBEmeralddb(){
         super();
-
+        //jobQueue = new LinkedList<Message>();
+        //jobQueue = new LinkedBlockingQueue<Message>();
     }
 
-    public void put(Message e){
-        lock.lock();
-        jobQueue.add(e);
-        lock.unlock();
-        notEmpty.signal();
+    public void setQueue(Queue<Message> q){
+        jobQueue = q;
     }
+
+//    public void put(Message e){
+//        System.out.println("I can really put!!!!");
+////        lock.lock();
+////        //jobQueue.add(e);
+////        jobQueue.offer(e);
+////        lock.unlock();
+////        notEmpty.signal();
+//        jobQueue.offer(e);
+//    }
 
     @Override
     public void run() {
@@ -40,17 +50,22 @@ public class LBEmeralddb extends Emeralddb implements Runnable{
         Message m = null;
 
         while (true) {
-            try {
-                System.out.println("Iteration");
-                lock.lock();
-                while (jobQueue.size() == 0) {
-                    notEmpty.await();
-                }
-                m = jobQueue.remove();
-            }catch(InterruptedException e){
-                e.printStackTrace();
-            }finally{
-                lock.unlock();
+//            try {
+//                System.out.println("Iteration");
+//                lock.lock();
+//                while (jobQueue.size() == 0) {
+//                    notEmpty.await();
+//                }
+//               // m = jobQueue.remove();
+//                m = jobQueue.poll();
+//            }catch(InterruptedException e){
+//                e.printStackTrace();
+//            }finally{
+//                lock.unlock();
+//            }
+            m = jobQueue.poll();
+            if(m == null){
+                continue;
             }
             handleMessgae(m);
         }

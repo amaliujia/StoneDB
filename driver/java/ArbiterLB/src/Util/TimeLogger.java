@@ -79,7 +79,7 @@ public class TimeLogger {
         try {
             writer.write("Start-------------------------\n");
             curDate();
-            writer.write("----------------------------\n");
+            writer.write("\n----------------------------\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
