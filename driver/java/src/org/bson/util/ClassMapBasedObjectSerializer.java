@@ -16,9 +16,9 @@
 
 package org.bson.util;
 
-import java.util.List;
-
 import org.bson.BSON;
+
+import java.util.List;
 
 /**
  * Objects of type ClassMapBasedObjectSerializer are constructed to perform

@@ -15,6 +15,16 @@
  */
 package com.emeralddb.util;
 
+import com.emeralddb.base.EDBMessage;
+import com.emeralddb.base.EmeralddbConstants;
+import com.emeralddb.base.EmeralddbConstants.Operation;
+import com.emeralddb.exception.BaseException;
+import com.google.gson.Gson;
+import com.google.gson.internal.Primitives;
+import org.bson.*;
+import org.bson.io.BasicOutputBuffer;
+import org.bson.io.OutputBuffer;
+
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.lang.reflect.Type;
@@ -25,24 +35,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashMap;
 import java.util.List;
-
-import org.bson.BSONCallback;
-import org.bson.BSONDecoder;
-import org.bson.BSONEncoder;
-import org.bson.BSONObject;
-import org.bson.BasicBSONCallback;
-import org.bson.BasicBSONDecoder;
-import org.bson.BasicBSONEncoder;
-import org.bson.BasicBSONObject;
-import org.bson.io.BasicOutputBuffer;
-import org.bson.io.OutputBuffer;
-
-import com.emeralddb.base.EDBMessage;
-import com.emeralddb.base.EmeralddbConstants;
-import com.emeralddb.base.EmeralddbConstants.Operation;
-import com.emeralddb.exception.BaseException;
-import com.google.gson.Gson;
-import com.google.gson.internal.Primitives;
 
 /**
  * @author zhengle zhou

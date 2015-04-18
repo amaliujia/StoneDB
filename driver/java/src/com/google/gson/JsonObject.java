@@ -18,6 +18,7 @@ package com.google.gson;
 
 import com.google.gson.internal.$Gson$Preconditions;
 import com.google.gson.internal.StringMap;
+
 import java.util.Map;
 import java.util.Set;
 

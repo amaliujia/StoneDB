@@ -1,12 +1,12 @@
 package org.bson.util;
 
-import static java.util.Collections.unmodifiableList;
-import static org.bson.util.CopyOnWriteMap.newHashMap;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ConcurrentMap;
+
+import static java.util.Collections.unmodifiableList;
+import static org.bson.util.CopyOnWriteMap.newHashMap;
 
 class ClassAncestry {
 	private static final ConcurrentMap<Class<?>, List<Class<?>>> _ancestryCache = newHashMap();

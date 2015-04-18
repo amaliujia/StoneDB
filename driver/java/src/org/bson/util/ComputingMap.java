@@ -1,11 +1,11 @@
 package org.bson.util;
 
-import static org.bson.util.Assertions.notNull;
-
 import java.util.Collection;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentMap;
+
+import static org.bson.util.Assertions.notNull;
 
 final class ComputingMap<K, V> implements Map<K, V>, Function<K, V> {
 

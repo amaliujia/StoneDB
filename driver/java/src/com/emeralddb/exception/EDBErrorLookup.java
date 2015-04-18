@@ -15,12 +15,12 @@
  */
 package com.emeralddb.exception;
 
+import com.emeralddb.base.EmeralddbConstants;
+
 import java.io.InputStream;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Properties;
-
-import com.emeralddb.base.EmeralddbConstants;
 
 /**
  * @author Jacky Zhang

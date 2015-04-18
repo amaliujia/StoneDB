@@ -18,7 +18,7 @@
 
 package org.bson.types;
 
-import org.bson.*;
+import org.bson.BSONObject;
 
 /** 
  * for using the CodeWScope type

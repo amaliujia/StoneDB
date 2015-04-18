@@ -15,18 +15,6 @@
  */
 package com.emeralddb.base;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.net.UnknownHostException;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Vector;
-
 import com.emeralddb.exception.BaseException;
 import com.emeralddb.net.ConfigOptions;
 import com.emeralddb.net.ConnectionTCPImpl;
@@ -34,6 +22,10 @@ import com.emeralddb.net.IConnection;
 import com.emeralddb.net.ServerAddress;
 import com.emeralddb.util.HashAlgorithm;
 import com.emeralddb.util.KetamaNodeLocator;
+
+import java.io.*;
+import java.net.UnknownHostException;
+import java.util.*;
 
 public class EmeralddbCommon {
    public  KetamaNodeLocator _locator = null;

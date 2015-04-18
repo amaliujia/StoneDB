@@ -18,7 +18,7 @@
 
 package org.bson.types;
 
-import org.bson.*;
+import org.bson.BSONObject;
 import org.bson.util.StringRangeSet;
 
 import java.util.*;

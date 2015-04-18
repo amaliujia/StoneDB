@@ -18,6 +18,8 @@
 
 package org.bson;
 
+import org.bson.util.ClassMap;
+
 import java.nio.charset.Charset;
 import java.util.HashMap;
 import java.util.List;
@@ -25,8 +27,6 @@ import java.util.Map;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Logger;
 import java.util.regex.Pattern;
-
-import org.bson.util.ClassMap;
 
 public class BSON {
 

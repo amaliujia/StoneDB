@@ -15,14 +15,10 @@
  */
 package com.emeralddb.util;
 
-import java.net.UnknownHostException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
 import com.emeralddb.net.ServerAddress;
+
+import java.net.UnknownHostException;
+import java.util.*;
 
 public class KetamaNodeLocatorTest {
 	static Random ran = new Random();

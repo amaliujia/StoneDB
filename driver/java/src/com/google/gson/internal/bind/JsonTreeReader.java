@@ -16,13 +16,10 @@
 
 package com.google.gson.internal.bind;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonNull;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
+import com.google.gson.*;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonToken;
+
 import java.io.IOException;
 import java.io.Reader;
 import java.util.ArrayList;

@@ -15,11 +15,11 @@
  */
 package com.emeralddb.net;
 
+import com.emeralddb.exception.BaseException;
+
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.net.UnknownHostException;
-
-import com.emeralddb.exception.BaseException;
 
 /**
  * @author Jacky Zhang

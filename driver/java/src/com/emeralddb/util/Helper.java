@@ -15,15 +15,15 @@
  */
 package com.emeralddb.util;
 
+import com.emeralddb.base.EmeralddbConstants;
+import com.emeralddb.exception.BaseException;
+
 import java.io.ByteArrayOutputStream;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-
-import com.emeralddb.base.EmeralddbConstants;
-import com.emeralddb.exception.BaseException;
 
 /**
  * @author Jacky Zhang

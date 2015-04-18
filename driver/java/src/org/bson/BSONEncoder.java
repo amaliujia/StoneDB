@@ -13,7 +13,7 @@
 
 package org.bson;
 
-import org.bson.io.*;
+import org.bson.io.OutputBuffer;
 
 
 public interface BSONEncoder {

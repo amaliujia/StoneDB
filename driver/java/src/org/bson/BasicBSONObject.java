@@ -19,22 +19,14 @@
 package org.bson;
 
 // BSON
-import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
-import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.regex.Pattern;
 
 import org.bson.types.BasicBSONList;
 import org.bson.types.ObjectId;
 import org.bson.util.JSON;
+
+import java.lang.reflect.*;
+import java.util.*;
+import java.util.regex.Pattern;
 
 
 // Java

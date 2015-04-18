@@ -19,9 +19,6 @@
 package org.bson.types;
 
 import java.io.Serializable;
-import java.util.*;
-
-import org.bson.*;
 
 /** 
  * for using the Code type

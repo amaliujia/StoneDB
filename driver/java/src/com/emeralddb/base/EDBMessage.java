@@ -15,11 +15,10 @@
  */
 package com.emeralddb.base;
 
-import java.util.List;
-
+import com.emeralddb.base.EmeralddbConstants.Operation;
 import org.bson.BSONObject;
 
-import com.emeralddb.base.EmeralddbConstants.Operation;
+import java.util.List;
 
 /**
  * @author zhengle zhou

@@ -1,6 +1,6 @@
+import LoadBalancer.EqualSharingLB;
 import LoadBalancer.LoadBalancer;
 import LoadBalancer.NaiveShardingLB;
-import LoadBalancer.EqualSharingLB;
 import Simulator.ConstantSimulator;
 import Simulator.Simulator;
 

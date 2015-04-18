@@ -4,7 +4,7 @@
 public class Producer {
     public static void main(String[] args){
         Processor processor = new Processor();
-        processor.setStrategy(new ConsantInsertStrategy(10000));
+        processor.setStrategy(new ConsantInsertStrategy(Integer.parseInt(args[0])));
         processor.setTracefile("trace_constantInsert.txt");
         processor.run();
     }

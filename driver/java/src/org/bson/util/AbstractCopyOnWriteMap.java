@@ -16,21 +16,18 @@
 
 package org.bson.util;
 
-import static org.bson.util.Assertions.notNull;
-import static java.util.Collections.unmodifiableCollection;
-import static java.util.Collections.unmodifiableSet;
 import org.bson.util.annotations.GuardedBy;
 import org.bson.util.annotations.ThreadSafe;
 
 import java.io.Serializable;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.concurrent.ConcurrentMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+
+import static java.util.Collections.unmodifiableCollection;
+import static java.util.Collections.unmodifiableSet;
+import static org.bson.util.Assertions.notNull;
 
 /**
  * Abstract base class for COW {@link Map} implementations that delegate to an

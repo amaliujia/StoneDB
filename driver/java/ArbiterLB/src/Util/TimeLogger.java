@@ -4,7 +4,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Calendar;
 
 /**
@@ -104,14 +103,18 @@ public class TimeLogger {
                 writer.write(offset + "\t");
                 writer.write(qq + "\t" + ii + "\t" + dd + "\t" + tt + "\n");
                 writer.flush();
+
             } catch (IOException e) {
                 e.printStackTrace();
             }
+
             insert = i;
             query = q;
             delete = d;
 
         }
+
+
     }
 
 

@@ -1,7 +1,8 @@
 package LoadBalancer;
 
-import java.util.LinkedList;
 import Message.Message;
+
+import java.util.LinkedList;
 
 /**
  * Created by amaliujia on 15-4-17.

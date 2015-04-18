@@ -15,12 +15,14 @@
  */
 package org.bson;
 
-import static org.bson.BSON.*;
-
-import java.io.*;
-
 import org.bson.io.PoolOutputBuffer;
 import org.bson.types.ObjectId;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+
+import static org.bson.BSON.*;
 
 
 /**

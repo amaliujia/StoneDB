@@ -1,10 +1,8 @@
 package LoadBalancer;
 
 import Message.Message;
-import Protocol.DBService;
 import Util.Operations;
 import com.emeralddb.base.EDBMessage;
-import com.emeralddb.base.Emeralddb;
 import com.emeralddb.base.EmeralddbCommon;
 import com.emeralddb.base.EmeralddbConstants;
 import com.emeralddb.exception.BaseException;
@@ -14,11 +12,9 @@ import com.emeralddb.util.EDBMessageHelper;
 import org.bson.BSONObject;
 import org.bson.util.JSON;
 
-import java.util.*;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.locks.Condition;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
 
 /**
  * Created by amaliujia on 15-4-14.
@@ -31,8 +27,16 @@ public class LBEmeralddb extends Thread {
 
     private OperationQueue jobQueue;
 
-    public LBEmeralddb() throws BaseException {
+    public LBEmeralddb(String tempFile, OperationQueue que) throws BaseException {
         _edbCommon = new EmeralddbCommon();
+
+        startStat();
+        init(tempFile);
+        setQueue(que);
+    }
+
+    public LBEmeralddb() throws BaseException {
+        _edbCommon = new EmeralddbCommon();;
     }
     public void endStat(int total) {
         for(Map.Entry<ServerAddress, Integer> entry : _nodeRecordMap.entrySet()) {

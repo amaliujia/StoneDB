@@ -18,11 +18,14 @@
 
 package org.bson.types;
 
-import java.net.*;
-import java.nio.*;
-import java.util.*;
-import java.util.concurrent.atomic.*;
-import java.util.logging.*;
+import java.net.NetworkInterface;
+import java.nio.ByteBuffer;
+import java.util.Date;
+import java.util.Enumeration;
+import java.util.Random;
+import java.util.concurrent.atomic.AtomicInteger;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * A globally unique identifier for objects.

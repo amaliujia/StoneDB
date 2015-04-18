@@ -15,11 +15,12 @@
  */
 package org.bson.io;
 
-import org.bson.*;
+import org.bson.BSONException;
 
-import java.io.*;
-import java.nio.*;
-import java.util.logging.*;
+import java.io.UnsupportedEncodingException;
+import java.nio.Buffer;
+import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 
 /**
  * Pseudo byte buffer, delegates as it is too hard to properly override / extend the ByteBuffer API

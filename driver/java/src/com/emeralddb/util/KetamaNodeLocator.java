@@ -15,10 +15,11 @@
  */
 package com.emeralddb.util;
 
+import com.emeralddb.net.ServerAddress;
+
 import java.util.List;
 import java.util.SortedMap;
 import java.util.TreeMap;
-import com.emeralddb.net.ServerAddress;
 public final class KetamaNodeLocator {
    private TreeMap<Long, ServerAddress> _ketamaNodes;
    private HashAlgorithm       _hashAlg;

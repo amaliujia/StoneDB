@@ -16,17 +16,11 @@
 
 package org.bson.util;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.WeakHashMap;
-
+import org.bson.util.AbstractCopyOnWriteMap.View.Type;
 import org.bson.util.annotations.GuardedBy;
 import org.bson.util.annotations.ThreadSafe;
 
-import org.bson.util.AbstractCopyOnWriteMap.View.Type;
+import java.util.*;
 
 /**
  * A thread-safe variant of {@link Map} in which all mutative operations (the

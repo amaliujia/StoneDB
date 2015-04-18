@@ -15,15 +15,15 @@
  */
 package com.emeralddb.net;
 
+import com.emeralddb.exception.BaseException;
+import com.emeralddb.util.Helper;
+
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
 import java.net.Socket;
-
-import com.emeralddb.exception.BaseException;
-import com.emeralddb.util.Helper;
 /**
  * @author zhengle zhou
  * 

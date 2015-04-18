@@ -1,17 +1,15 @@
 package LoadBalancer;
 
-import Message.Message;
-import Message.Delete;
 import Message.Insert;
-import Message.Query;
 import Util.Operations;
 
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.*;
-import java.util.concurrent.LinkedBlockingQueue;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
 
 /**
  * Created by amaliujia on 15-4-16.
@@ -30,6 +28,8 @@ public class EqualSharingLB extends LoadBalancer {
     private ArrayList<OperationQueue>  ques;
     //private long[] count;
     private ArrayList<Long> count;
+
+    private ArrayList<Thread> threads;
     public void init(){
 
         logger.setLogFile("Equal_sharing_stat.txt");
@@ -39,7 +39,7 @@ public class EqualSharingLB extends LoadBalancer {
         keys = new ArrayList<HashSet<String>>();
         //ques = new ArrayList<Queue<Message>>();
         ques = new ArrayList<OperationQueue>();
-
+         threads = new ArrayList<Thread>();
         for(int i = 0; i < instances.size(); i++) {
             BufferedWriter w = null;
 
@@ -49,28 +49,33 @@ public class EqualSharingLB extends LoadBalancer {
                 w.write(dbInstance.getIp() + ":" + dbInstance.getPort() + "\n");
                 w.flush();
                 w.close();
-                LBEmeralddb edb = new LBEmeralddb();
-                edb.startStat();
-                //LinkedBlockingQueue<Message> que = new LinkedBlockingQueue<Message>();
                 OperationQueue que = new OperationQueue();
-                edb.init(tempFile);
-                edb.setQueue(que);
-                dbs.add(edb);
-                ques.add(que);
+                LBEmeralddb emeralddb = new LBEmeralddb(tempFile, que);
 
-                new Thread(edb).start();
+                //LinkedBlockingQueue<Message> que = new LinkedBlockingQueue<Message>();
+
+                //edb.startStat();
+                //edb.init(tempFile);
+                //edb.setQueue(que);
+                //dbs.add(edb);
+                ques.add(que);
+                threads.add(emeralddb);
+                emeralddb.start();
+                //edb.start();
+
+                //new Thread(edb).start();
 
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-        for(int i = 0; i < dbs.size(); i++){
+        for(int i = 0; i < ques.size(); i++){
             keys.add(new HashSet<String>());
         }
        // count = new long[keys.size()];
         count = new ArrayList<Long>();
-        for(int i = 0; i < dbs.size(); i++){
+        for(int i = 0; i < ques.size(); i++){
             //count[i] = 0;
             count.add((long) 0);
         }
@@ -80,6 +85,15 @@ public class EqualSharingLB extends LoadBalancer {
 
     @Override
     public void destroy() {
+        for (int i = 0; i < ques.size(); i++){
+            OperationQueue q = ques.get(i);
+            while (true){
+                if(q.check()){
+                    threads.get(i).stop();
+                    break;
+                }
+            }
+        }
         super.destroy();
         try {
             logger.stat();
@@ -141,10 +155,12 @@ public class EqualSharingLB extends LoadBalancer {
             //dbs.get(0).delete(Key);
             assignDelete(Key);
             delete++;
+            logger.record(insert, query, delete);
         }else if(e.equals(Operations.QUERY)){
             //dbs.get(0).query(Key);
             assignQuery(Key);
             query++;
+            logger.record(insert, query, delete);
         }else{
             throw new IllegalArgumentException();
         }

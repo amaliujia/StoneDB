@@ -18,13 +18,15 @@ package org.bson;
 
 import org.bson.io.Bits;
 import org.bson.types.ObjectId;
+
+import java.io.DataInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UnsupportedEncodingException;
+
 import static org.bson.BSON.*;
 
 // Java
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.DataInputStream;
-import java.io.UnsupportedEncodingException;
 
 /**
  * A new implementation of the bson decoder.

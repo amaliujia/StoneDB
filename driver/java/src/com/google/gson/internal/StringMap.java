@@ -19,17 +19,7 @@ package com.google.gson.internal;
 
 import java.io.ObjectStreamException;
 import java.io.Serializable;
-import java.util.AbstractCollection;
-import java.util.AbstractMap;
-import java.util.AbstractSet;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
-import java.util.NoSuchElementException;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 /**
  * A map of strings to values. Like LinkedHashMap, this map's iteration order is

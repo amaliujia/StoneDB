@@ -16,26 +16,16 @@
 
 package org.bson.util;
 
-import java.lang.reflect.Array;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.SimpleTimeZone;
-import java.util.UUID;
-import java.util.regex.Pattern;
-
 import org.bson.BSON;
 import org.bson.BSONObject;
 import org.bson.BasicBSONObject;
-import org.bson.types.BSONTimestamp;
-import org.bson.types.Binary;
-import org.bson.types.Code;
-import org.bson.types.CodeWScope;
-import org.bson.types.MaxKey;
-import org.bson.types.MinKey;
-import org.bson.types.ObjectId;
+import org.bson.types.*;
+
+import java.lang.reflect.Array;
+import java.text.SimpleDateFormat;
+import java.util.*;
+import java.util.Map.Entry;
+import java.util.regex.Pattern;
 
 /**
  * Defines static methods for getting <code>ObjectSerializer</code> instances

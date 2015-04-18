@@ -16,8 +16,9 @@
 
 package com.google.gson.reflect;
 
-import com.google.gson.internal.$Gson$Types;
 import com.google.gson.internal.$Gson$Preconditions;
+import com.google.gson.internal.$Gson$Types;
+
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;

@@ -18,8 +18,8 @@
 
 package org.bson.util;
 
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.Queue;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public abstract class SimplePool<T> {
 

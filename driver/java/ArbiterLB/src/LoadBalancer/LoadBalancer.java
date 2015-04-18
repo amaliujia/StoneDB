@@ -2,7 +2,6 @@ package LoadBalancer;
 
 import Util.Operations;
 import Util.TimeLogger;
-import com.emeralddb.base.Emeralddb;
 
 import java.util.ArrayList;
 
