@@ -26,7 +26,8 @@ public class EqualSharingLB extends LoadBalancer {
 //    private long[] count;
 
     private ArrayList<HashSet<String>> keys;
-    private ArrayList<Queue<Message>> ques;
+    //private ArrayList<Queue<Message>> ques;
+    private ArrayList<OperationQueue>  ques;
     //private long[] count;
     private ArrayList<Long> count;
     public void init(){
@@ -36,7 +37,8 @@ public class EqualSharingLB extends LoadBalancer {
         query = 0;
         delete = 0;
         keys = new ArrayList<HashSet<String>>();
-        ques = new ArrayList<Queue<Message>>();
+        //ques = new ArrayList<Queue<Message>>();
+        ques = new ArrayList<OperationQueue>();
 
         for(int i = 0; i < instances.size(); i++) {
             BufferedWriter w = null;
@@ -49,7 +51,8 @@ public class EqualSharingLB extends LoadBalancer {
                 w.close();
                 LBEmeralddb edb = new LBEmeralddb();
                 edb.startStat();
-                Queue<Message> que = new LinkedBlockingQueue<Message>();
+                //LinkedBlockingQueue<Message> que = new LinkedBlockingQueue<Message>();
+                OperationQueue que = new OperationQueue();
                 edb.init(tempFile);
                 edb.setQueue(que);
                 dbs.add(edb);
@@ -94,7 +97,11 @@ public class EqualSharingLB extends LoadBalancer {
         aKey.add(record);
         //dbs.get(minIndex).insert(Key, record);
         //dbs.get(minIndex).put(new Insert(Operations.INSERT, Key, record));
-        ques.get((minIndex)).offer(new Insert(Operations.INSERT, Key, record));
+        try {
+            ques.get((minIndex)).put(new Insert(Operations.INSERT, Key, record));
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 
     private void assignDelete(String Key){

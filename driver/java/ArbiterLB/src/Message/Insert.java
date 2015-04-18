@@ -10,7 +10,4 @@ public class Insert extends Message {
         super(e, Key, Record);
     }
 
-    public Insert(Operations e, String Key) {
-        super(e, Key);
-    }
 }
