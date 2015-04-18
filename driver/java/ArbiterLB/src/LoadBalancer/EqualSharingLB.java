@@ -113,6 +113,7 @@ public class EqualSharingLB extends LoadBalancer {
         //dbs.get(minIndex).put(new Insert(Operations.INSERT, Key, record));
         try {
             ques.get((minIndex)).put(new Insert(Operations.INSERT, Key, record));
+            count.set(minIndex, count.get(minIndex) + 1);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
