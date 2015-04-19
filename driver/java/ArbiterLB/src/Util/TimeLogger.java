@@ -91,7 +91,7 @@ public class TimeLogger {
 
     public void record(long i, long q, long d){
         long offset = System.currentTimeMillis() - last_time;
-        if(offset > 1000){
+        if(offset > 1){
             last_time = System.currentTimeMillis();
 
             //curDate();
@@ -126,41 +126,8 @@ public class TimeLogger {
         writer.write("Totoal query " + query + "\n");
         System.out.println("Total delete " + delete);
         writer.write("Totoal delete " + delete + "\n");
-//        for(int i = 0; i < intervals.size(); i++){
-//            System.out.print(intervals.get(i) + " ");
-//            writer.write(intervals.get(i) + " ");
-//            if(i % 20 == 0){
-//                System.out.println();
-//                writer.write("\n");
-//            }
-//        }
-//
-//        for(int i = 0; i < insertval.size(); i++){
-//            System.out.print(insertval.get(i) + " ");
-//            writer.write(insertval.get(i) + " ");
-//            if(i % 20 == 0){
-//                System.out.println();
-//                writer.write("\n");
-//            }
-//        }
-//
-//        for(int i = 0; i < queryval.size(); i++){
-//            System.out.print(queryval.get(i) + " ");
-//            writer.write(queryval.get(i) + " ");
-//            if(i % 20 == 0){
-//                System.out.println();
-//                writer.write("\n");
-//            }
-//        }
-//
-//        for(int i = 0; i < deleteval.size(); i++){
-//            System.out.print(deleteval.get(i) + " ");
-//            writer.write(deleteval.get(i) + " ");
-//            if(i % 20 == 0){
-//                System.out.println();
-//                writer.write("\n");
-//            }
-//        }
+        System.out.println("Total time " + (System.currentTimeMillis() - start_time));
+        writer.write("Totoal time " + (System.currentTimeMillis() - start_time) + "\n");
 
         writer.flush();
         writer.close();
