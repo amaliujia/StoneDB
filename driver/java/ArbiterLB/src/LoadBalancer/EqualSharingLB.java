@@ -1,6 +1,8 @@
 package LoadBalancer;
 
+import Message.Delete;
 import Message.Insert;
+import Message.Query;
 import Util.Operations;
 
 import java.io.BufferedWriter;
@@ -124,6 +126,14 @@ public class EqualSharingLB extends LoadBalancer {
           if(keys.get(i).contains(Key)){
               //dbs.get(i).delete(Key);
               //dbs.get(i).put(new Delete(Operations.DELETE, Key));
+
+              try {
+                  ques.get((i)).put(new Delete(Operations.DELETE, Key));
+                  count.set(i, count.get(i) - 1);
+              } catch (InterruptedException e) {
+                  e.printStackTrace();
+              }
+
           }
         }
     }
@@ -133,6 +143,11 @@ public class EqualSharingLB extends LoadBalancer {
             if(keys.get(i).contains(Key)) {
                 //dbs.get(i).query(Key);
                 //dbs.get(i).put(new Query(Operations.QUERY, Key));
+                try {
+                    ques.get((i)).put(new Query(Operations.QUERY, Key));
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
         }
     }

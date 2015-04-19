@@ -128,6 +128,8 @@ public class TimeLogger {
         writer.write("Totoal delete " + delete + "\n");
         System.out.println("Total time " + (System.currentTimeMillis() - start_time));
         writer.write("Totoal time " + (System.currentTimeMillis() - start_time) + "\n");
+        curDate();
+        writer.write("\n");
 
         writer.flush();
         writer.close();
