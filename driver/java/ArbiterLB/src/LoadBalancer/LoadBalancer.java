@@ -35,11 +35,7 @@ public abstract class LoadBalancer {
 
     public abstract void init();
 
-    public void destroy(){
-        for(int i = 0; i < dbs.size(); i++) {
-            dbs.get(i).disconnect();
-        }
-    }
+    public abstract void destroy();
 
     public abstract void sumbit(Operations e, String Key, String record);
 

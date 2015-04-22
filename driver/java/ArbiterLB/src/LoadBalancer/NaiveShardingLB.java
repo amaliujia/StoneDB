@@ -37,8 +37,6 @@ public class NaiveShardingLB extends LoadBalancer {
                 edb.startStat();
                 edb.init(tempFile);
                 dbs.add(edb);
-                //new Thread(edb).start();
-
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -48,7 +46,7 @@ public class NaiveShardingLB extends LoadBalancer {
 
     @Override
     public void destroy() {
-        super.destroy();
+        //super.destroy();
         try {
             logger.end();
             logger.stat();
@@ -62,7 +60,7 @@ public class NaiveShardingLB extends LoadBalancer {
         if(e.equals(Operations.INSERT)){
             dbs.get(0).insert(Key, record);
             insert++;
-            logger.record(insert, query, delete);
+            //logger.record(insert, query, delete);
         }else{
             throw new IllegalArgumentException();
         }
@@ -73,11 +71,11 @@ public class NaiveShardingLB extends LoadBalancer {
        if(e.equals(Operations.DELETE)){
            dbs.get(0).delete(Key);
            delete++;
-           logger.record(insert, query, delete);
+           //logger.record(insert, query, delete);
        }else if(e.equals(Operations.QUERY)){
            dbs.get(0).query(Key);
            query++;
-           logger.record(insert, query, delete);
+           //logger.record(insert, query, delete);
        }else{
            throw new IllegalArgumentException();
        }

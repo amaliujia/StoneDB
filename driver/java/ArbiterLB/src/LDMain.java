@@ -1,7 +1,9 @@
 import LoadBalancer.EqualSharingLB;
 import LoadBalancer.LoadBalancer;
 import LoadBalancer.NaiveShardingLB;
+import LoadBalancer.EqualSharingMultiEDBLB;
 import Simulator.ConstantSimulator;
+import Simulator.InmemoryConstantSimulator;
 import Simulator.Simulator;
 
 import java.io.File;
@@ -20,6 +22,8 @@ public class LDMain {
            LB = new NaiveShardingLB();
         } else if(LBPolicy.equals("EqualSharing")){
            LB = new EqualSharingLB();
+        } else if(LBPolicy.equals("MultiSharing")){
+            LB = new EqualSharingMultiEDBLB();
         }
 
         Scanner scanner = null;
@@ -37,6 +41,7 @@ public class LDMain {
         }
 
         Simulator simulator = new ConstantSimulator(LB);
+        //Simulator simulator = new InmemoryConstantSimulator(LB);
         simulator.setTracefile(scanner.next());
 
         simulator.simulate();

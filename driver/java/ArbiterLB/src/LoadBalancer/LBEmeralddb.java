@@ -2,6 +2,7 @@ package LoadBalancer;
 
 import Message.Message;
 import Util.Operations;
+import Util.TimeLogger;
 import com.emeralddb.base.EDBMessage;
 import com.emeralddb.base.EmeralddbCommon;
 import com.emeralddb.base.EmeralddbConstants;
@@ -27,12 +28,15 @@ public class LBEmeralddb extends Thread {
 
     private OperationQueue jobQueue;
 
-    public LBEmeralddb(String tempFile, OperationQueue que) throws BaseException {
+    private TimeLogger timeLogger;
+
+    public LBEmeralddb(String tempFile, OperationQueue que, TimeLogger logger) throws BaseException {
         _edbCommon = new EmeralddbCommon();
 
         startStat();
         init(tempFile);
         setQueue(que);
+        timeLogger = logger;
     }
 
     public LBEmeralddb() throws BaseException {
@@ -208,14 +212,19 @@ public class LBEmeralddb extends Thread {
     }
 
     private void handleMessgae(Message e){
+        if (e == null){
+            return;
+        }
         Operations o = e.getOperation();
-
         if(o.equals(Operations.INSERT)){
-            insert(e.getKey(), e.getRecord());
+            EDBMessage message = insert(e.getKey(), e.getRecord());
+            timeLogger.addInsert();
         }else if(o.equals(Operations.DELETE)){
-            delete(e.getKey());
+            EDBMessage message = delete(e.getKey());
+            timeLogger.addDelete();
         }else if(o.equals(Operations.QUERY)){
-            query(e.getKey());
+            EDBMessage message = query(e.getKey());
+            timeLogger.addQuery();
         }else{
             return;
         }

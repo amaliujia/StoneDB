@@ -4,8 +4,15 @@
 public class Producer {
     public static void main(String[] args){
         Processor processor = new Processor();
-        processor.setStrategy(new ConsantInsertStrategy(Integer.parseInt(args[0])));
-        processor.setTracefile("trace_constantInsert.txt");
+        if(args[2].equals("Mixed")){
+            processor.setStrategy(new ConstantMixedStrategy(Integer.parseInt(args[0])));
+        }else if(args[2].equals("Insert")){
+            processor.setStrategy(new ConsantInsertStrategy(Integer.parseInt(args[0])));
+        }else{
+            return;
+        }
+
+        processor.setTracefile(args[1]);
         processor.run();
     }
 }

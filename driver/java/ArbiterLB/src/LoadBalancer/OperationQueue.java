@@ -20,7 +20,7 @@ public class OperationQueue {
     }
 
     public synchronized Message get() throws InterruptedException{
-        if(jobQuueue.size() == 0){
+        if(jobQuueue.size() <= 0){
             wait();
         }
 
