@@ -1,6 +1,6 @@
 package Simulator;
 
-import LoadBalancer.LoadBalancer;
+import LoadBalancer.Base.LoadBalancer;
 import Util.Operations;
 
 import java.io.*;

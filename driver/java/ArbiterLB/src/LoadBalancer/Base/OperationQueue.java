@@ -1,17 +1,23 @@
-package LoadBalancer;
+package LoadBalancer.Base;
 
 import Message.Message;
 
 import java.util.LinkedList;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by amaliujia on 15-4-17.
  */
 public class OperationQueue {
+    private static AtomicLong maxId = new AtomicLong(0);
+
     private LinkedList<Message> jobQuueue;
+
+    private long id;
 
     public OperationQueue(){
         jobQuueue = new LinkedList<Message>();
+        id = maxId.incrementAndGet();
     }
 
     public synchronized void put(Message e) throws InterruptedException{
@@ -35,4 +41,7 @@ public class OperationQueue {
         return false;
     }
 
+    public String toString(){
+       return "OperationQueue: " + this.id;
+    }
 }

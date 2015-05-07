@@ -1,9 +1,9 @@
-import LoadBalancer.EqualSharingLB;
-import LoadBalancer.LoadBalancer;
-import LoadBalancer.NaiveShardingLB;
-import LoadBalancer.EqualSharingMultiEDBLB;
+import LoadBalancer.ConsistencyHashingApproach.ConsistencyHashMultiQueueMultiEDBLB;
+import LoadBalancer.EqualSharingApproach.EqualSharingLB;
+import LoadBalancer.Base.LoadBalancer;
+import LoadBalancer.NaiveSharingApproach.NaiveShardingLB;
+import LoadBalancer.EqualSharingApproach.EqualSharingMultiEDBLB;
 import Simulator.ConstantSimulator;
-import Simulator.InmemoryConstantSimulator;
 import Simulator.Simulator;
 
 import java.io.File;
@@ -19,11 +19,13 @@ public class LDMain {
         String LBPolicy = args[1];
         LoadBalancer LB = null;
         if(LBPolicy.equals("NaiveSharing")){
-           LB = new NaiveShardingLB();
+            LB = new NaiveShardingLB();
         } else if(LBPolicy.equals("EqualSharing")){
-           LB = new EqualSharingLB();
+            LB = new EqualSharingLB();
         } else if(LBPolicy.equals("MultiSharing")){
             LB = new EqualSharingMultiEDBLB();
+        }else if(LBPolicy.equals("Consist")){
+            LB = new ConsistencyHashMultiQueueMultiEDBLB();
         }
 
         Scanner scanner = null;

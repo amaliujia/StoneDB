@@ -1,4 +1,4 @@
-package LoadBalancer;
+package LoadBalancer.Base;
 
 import Message.Message;
 import Util.Operations;

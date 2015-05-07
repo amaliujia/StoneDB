@@ -1,6 +1,6 @@
 package Simulator;
 
-import LoadBalancer.LoadBalancer;
+import LoadBalancer.Base.LoadBalancer;
 
 /**
  * Created by amaliujia on 15-4-13.

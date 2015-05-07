@@ -1,4 +1,4 @@
-package LoadBalancer;
+package LoadBalancer.Base;
 
 /**
  * Created by amaliujia on 15-4-13.
