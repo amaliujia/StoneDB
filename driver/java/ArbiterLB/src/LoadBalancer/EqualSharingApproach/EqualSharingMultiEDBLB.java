@@ -29,7 +29,7 @@ public class EqualSharingMultiEDBLB extends LoadBalancer {
     private long query;
     private long delete;
 
-    private final static int n = 3;
+    private final static int n = 6;
 
 //    private long[] count;
 
