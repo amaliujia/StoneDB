@@ -35,8 +35,12 @@ public class LDMain {
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
+        if(scanner == null){
+            System.out.println(config + "  " + LBPolicy);
+        }
 
         int numInstances = Integer.parseInt(scanner.next());
+        System.out.println("Instances num: " + numInstances);
         for(int i = 0; i < numInstances; i++){
             String[] l = scanner.next().split(":");
             LB.addInstance(l[0], Integer.parseInt(l[1]));

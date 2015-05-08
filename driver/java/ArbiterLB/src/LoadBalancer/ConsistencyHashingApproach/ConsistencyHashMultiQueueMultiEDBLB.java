@@ -69,17 +69,21 @@ public class ConsistencyHashMultiQueueMultiEDBLB extends LoadBalancer {
                 w.close();
 
 
-
                 for(int j = 0; j < n; j++){
                     OperationQueue que = new OperationQueue();
                     LBEmeralddb emeralddb = new LBEmeralddb(tempFile, que, logger);
                     threads.add(emeralddb);
                     emeralddb.start();
                     collection.add(que);
+                    ques.add(que);
                 }
             } catch (IOException e) {
                 e.printStackTrace();
             }
+        }
+
+        for(int i = 0; i < ques.size(); i++){
+            keys.add(new HashSet<String>());
         }
 
         HashFunction hashFunction = new BuiltinHashFunction();
@@ -157,8 +161,9 @@ public class ConsistencyHashMultiQueueMultiEDBLB extends LoadBalancer {
 
     private void assignInsert(String Key, String record){
         String completeRecord = String.format("{_id:'" + Key + "',data:'" + String4k +"'}");
-
         OperationQueue que = consistencyHashingPool.get(Key);
+        HashSet<String> aKey = keys.get((int) que.getId());
+        aKey.add(record);
         try {
             que.put(new Insert(Operations.INSERT, Key, completeRecord));
         } catch (InterruptedException e) {
@@ -168,6 +173,9 @@ public class ConsistencyHashMultiQueueMultiEDBLB extends LoadBalancer {
 
     private void assignDelete(String Key){
         OperationQueue que = consistencyHashingPool.get(Key);
+        HashSet<String> aKey = keys.get((int) que.getId());
+        aKey.remove(Key);
+
         try {
             que.put(new Delete(Operations.DELETE, Key));
         } catch (InterruptedException e) {

@@ -17,7 +17,7 @@ public class ConsistencyHashing<T> {
 
     private HashFunction hashFunction = null;
     private int numberOfReplicas = 1;
-    private final SortedMap<Long, T> circle = new TreeMap<Long, T>();
+    private SortedMap<Long, T> circle;
 
     public ConsistencyHashing(){
         virtualNodeToRealNode = new HashMap<Integer, Integer>();
@@ -26,8 +26,9 @@ public class ConsistencyHashing<T> {
     }
 
     public ConsistencyHashing(HashFunction function, int numberOfReplicas, Collection<T> nodes){
-        this.hashFunction = hashFunction;
+        this.hashFunction = function;
         this.numberOfReplicas = numberOfReplicas;
+        this.circle = new TreeMap<>();
 
         for (T node : nodes) {
             add(node);
@@ -36,13 +37,14 @@ public class ConsistencyHashing<T> {
 
     public void add(T node){
         for(int i = 0; i < numberOfReplicas; i++){
-            circle.put(hashFunction.hashString(node.toString() + i), node);
+            String nodeString = node.toString();
+            circle.put(this.hashFunction.hashString(nodeString), node);
         }
     }
 
     public void remove(T node){
         for(int i = 0; i < numberOfReplicas; i++){
-            circle.remove(hashFunction.hashString(node.toString() + i));
+            circle.remove(hashFunction.hashString(node.toString()));
         }
     }
 

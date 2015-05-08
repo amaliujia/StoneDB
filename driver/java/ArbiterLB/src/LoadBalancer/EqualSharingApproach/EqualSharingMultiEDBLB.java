@@ -156,7 +156,6 @@ public class EqualSharingMultiEDBLB extends LoadBalancer {
     private void assignDelete(String Key){
         for(int i = 0; i < keys.size(); i++){
             if(keys.get(i).contains(Key)){
-
                 try {
                     ques.get((i)).put(new Delete(Operations.DELETE, Key));
                     count.set(i, count.get(i) - 1);

@@ -9,11 +9,15 @@ import java.util.concurrent.atomic.AtomicLong;
  * Created by amaliujia on 15-4-17.
  */
 public class OperationQueue {
-    private static AtomicLong maxId = new AtomicLong(0);
+    private static AtomicLong maxId = new AtomicLong(-1);
 
     private LinkedList<Message> jobQuueue;
 
     private long id;
+
+    public long getId(){
+        return this.id;
+    }
 
     public OperationQueue(){
         jobQuueue = new LinkedList<Message>();
